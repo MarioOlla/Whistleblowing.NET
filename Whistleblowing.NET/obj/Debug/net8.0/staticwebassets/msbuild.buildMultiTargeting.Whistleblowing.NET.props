@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Whistleblowing.NET.props" />
+</Project>
