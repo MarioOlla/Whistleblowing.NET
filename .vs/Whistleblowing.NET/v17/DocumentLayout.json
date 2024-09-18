@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\lollo\\source\\repos\\Whistleblowing.NET\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\users\\lollo\\source\\repos\\whistleblowing.net\\whistleblowing.net\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\users\\lollo\\source\\repos\\whistleblowing.net\\whistleblowing.net\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\users\\lollo\\source\\repos\\whistleblowing.net\\whistleblowing.net\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\users\\lollo\\source\\repos\\whistleblowing.net\\whistleblowing.net\\data\\whistleblowingcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -41,30 +41,33 @@
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\lollo\\source\\repos\\Whistleblowing.NET\\Whistleblowing.NET\\Program.cs",
               "RelativeDocumentMoniker": "Whistleblowing.NET\\Program.cs",
               "ToolTip": "C:\\Users\\lollo\\source\\repos\\Whistleblowing.NET\\Whistleblowing.NET\\Program.cs",
               "RelativeToolTip": "Whistleblowing.NET\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACIAAAAAAAAA",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAAADgAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-17T14:40:49.134Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\lollo\\source\\repos\\Whistleblowing.NET\\Whistleblowing.NET\\appsettings.json",
               "RelativeDocumentMoniker": "Whistleblowing.NET\\appsettings.json",
               "ToolTip": "C:\\Users\\lollo\\source\\repos\\Whistleblowing.NET\\Whistleblowing.NET\\appsettings.json",
               "RelativeToolTip": "Whistleblowing.NET\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAEAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAA8AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-09-17T15:00:34.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-17T15:00:34.615Z"
             },
             {
               "$type": "Document",
@@ -76,12 +79,7 @@
               "RelativeToolTip": "Whistleblowing.NET\\Models\\SegnalazioneRegular.cs",
               "ViewState": "AQIAADoAAAAAAAAAAAAqwEgAAAAnAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-17T13:34:07.541Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "WhenOpened": "2024-09-17T13:34:07.541Z"
             },
             {
               "$type": "Document",
@@ -93,8 +91,7 @@
               "RelativeToolTip": "Whistleblowing.NET\\Data\\WhistleBlowingContext.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-17T14:44:37.711Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-17T14:44:37.711Z"
             },
             {
               "$type": "Document",
@@ -106,8 +103,11 @@
               "RelativeToolTip": "Whistleblowing.NET\\Models\\Ruolo.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-17T13:20:01.378Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-17T13:20:01.378Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
