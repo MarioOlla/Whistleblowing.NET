@@ -1,8 +1,14 @@
+using AspNetCoreRateLimit;
 using Microsoft.EntityFrameworkCore;
 using Whistleblowing.NET.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Aggiungi i servizi al container.
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 // Aggiungi il contesto del database
 builder.Services.AddDbContext<WhistleBlowingContext>(options =>
@@ -23,6 +29,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Aggiungi il middleware di rate limiting
+app.UseIpRateLimiting();
+
 app.UseStaticFiles();
 
 app.UseRouting();

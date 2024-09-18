@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Whistleblowing.NET")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+23e869a97783bb359b824709502fc4b143c634aa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec81b5a004af9f4a6e32fe6d34396ceab36a1593")]
 [assembly: System.Reflection.AssemblyProductAttribute("Whistleblowing.NET")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Whistleblowing.NET")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
