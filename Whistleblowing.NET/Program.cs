@@ -1,4 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Whistleblowing.NET.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Aggiungi il contesto del database
+builder.Services.AddDbContext<WhistleBlowingContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("WhistleBlowingContext")));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
