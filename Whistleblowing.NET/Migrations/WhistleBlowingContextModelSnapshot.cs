@@ -118,9 +118,9 @@ namespace Whistleblowing.NET.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("soggetto_colpevole");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserHashed")
                         .HasColumnType("int")
-                        .HasColumnName("user_id");
+                        .HasColumnName("user_hashed");
 
                     b.Property<int?>("status")
                         .HasColumnType("int")
@@ -236,6 +236,10 @@ namespace Whistleblowing.NET.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("cognome");
 
+                    b.Property<DateTime>("DataNascita")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("data_nascita");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -248,6 +252,11 @@ namespace Whistleblowing.NET.Migrations
                     b.Property<bool>("IsLoggedIn")
                         .HasColumnType("bit")
                         .HasColumnName("isLoggedIn");
+
+                    b.Property<string>("LuogoNascita")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("luogo_nascita");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -263,6 +272,11 @@ namespace Whistleblowing.NET.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("posizione");
+
+                    b.Property<string>("Provincia")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("provincia");
 
                     b.Property<int?>("RuoloId")
                         .HasColumnType("int");

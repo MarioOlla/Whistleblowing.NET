@@ -32,6 +32,15 @@ namespace Whistleblowing.NET.Models
         [Column("telefono")]
         public string Telefono { get; set; }
 
+        [Column("data_nascita")]
+        public DateTime DataNascita { get; set; }
+
+        [Column("luogo_nascita")]
+        public string LuogoNascita { get; set; }
+
+        [Column("provincia")]
+        public string Provincia { get; set; }
+
         [Column("isDeleted")]
         public Boolean IsDeleted { get; set; }
 

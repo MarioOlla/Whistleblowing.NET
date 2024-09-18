@@ -306,3 +306,5 @@ C:\Users\lollo\Source\Repos\Whistleblowing.NET\Whistleblowing.NET\obj\Debug\net8
 C:\Users\lollo\Source\Repos\Whistleblowing.NET\Whistleblowing.NET\obj\Debug\net8.0\ref\Whistleblowing.NET.dll
 C:\Users\lollo\Source\Repos\Whistleblowing.NET\Whistleblowing.NET\bin\Debug\net8.0\AspNetCoreRateLimit.dll
 C:\Users\lollo\Source\Repos\Whistleblowing.NET\Whistleblowing.NET\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\corso.net\WhistleBlowing.NET\Whistleblowing.NET\Whistleblowing.NET\bin\Debug\net8.0\AspNetCoreRateLimit.dll
+C:\corso.net\WhistleBlowing.NET\Whistleblowing.NET\Whistleblowing.NET\bin\Debug\net8.0\Newtonsoft.Json.dll

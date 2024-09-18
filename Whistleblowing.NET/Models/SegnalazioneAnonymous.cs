@@ -64,7 +64,7 @@ namespace Whistleblowing.NET.Models
         [Column("is_external")]
         public Boolean? IsExternal { get; set; }
 
-        [Column("user_id")]
-        public int UserId { get; set; }
+        [Column("user_hashed")]
+        public int UserHashed { get; set; }
     }
 }
