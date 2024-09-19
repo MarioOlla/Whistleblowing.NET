@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whistleblowing.NET", "Whistleblowing.NET\Whistleblowing.NET.csproj", "{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whistleblowing.NET", "Whistleblowing.NET\Whistleblowing.NET.csproj", "{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whistleblowing.NETAPI", "Whistleblowing.NETAPI\Whistleblowing.NETAPI.csproj", "{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A} = {E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,16 +3,36 @@
   "WorkspaceRootPath": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Migrations\\20240919075521_migrazioneuno.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Whistleblowing.NET\\Migrations\\20240919075521_migrazioneuno.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.net\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.net\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.netapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|solutionrelative:whistleblowing.netapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.net\\models\\ruolo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\models\\ruolo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.net\\whistleblowing.net.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\whistleblowing.net.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.netapi\\data\\whistleblowingcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|solutionrelative:whistleblowing.netapi\\data\\whistleblowingcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.netapi\\whistleblowing.netapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|solutionrelative:whistleblowing.netapi\\whistleblowing.netapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.netapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{EA9C5C9A-86A7-488A-AD1C-C08B62D1A0A5}|Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj|solutionrelative:whistleblowing.netapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.net\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|c:\\corso_java\\ws_visual_studio_corso_csharp\\whistleblowing.net\\whistleblowing.net\\models\\segnalazioneanonymous.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E39BC1ED-8DF3-4D62-9BB7-4420A0A6715A}|Whistleblowing.NET\\Whistleblowing.NET.csproj|solutionrelative:whistleblowing.net\\models\\segnalazioneanonymous.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 217,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -37,47 +57,112 @@
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "20240919075521_migrazioneuno.cs",
-              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Migrations\\20240919075521_migrazioneuno.cs",
-              "RelativeDocumentMoniker": "Whistleblowing.NET\\Migrations\\20240919075521_migrazioneuno.cs",
-              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Migrations\\20240919075521_migrazioneuno.cs",
-              "RelativeToolTip": "Whistleblowing.NET\\Migrations\\20240919075521_migrazioneuno.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-19T07:55:21.329Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Whistleblowing.NET\\Models\\User.cs",
-              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Models\\User.cs",
-              "RelativeToolTip": "Whistleblowing.NET\\Models\\User.cs",
-              "ViewState": "AQIAABQAAAAAAAAAAAAgwAAAAAAAAAAA",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NETAPI\\Program.cs",
+              "RelativeDocumentMoniker": "Whistleblowing.NETAPI\\Program.cs",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NETAPI\\Program.cs",
+              "RelativeToolTip": "Whistleblowing.NETAPI\\Program.cs",
+              "ViewState": "AQIAACEAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-19T07:49:05.017Z",
+              "WhenOpened": "2024-09-19T14:38:59.102Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Ruolo.cs",
-              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Models\\Ruolo.cs",
-              "RelativeDocumentMoniker": "Whistleblowing.NET\\Models\\Ruolo.cs",
-              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Models\\Ruolo.cs",
-              "RelativeToolTip": "Whistleblowing.NET\\Models\\Ruolo.cs",
+              "Title": "Whistleblowing.NET",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj",
+              "RelativeDocumentMoniker": "Whistleblowing.NET\\Whistleblowing.NET.csproj",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj",
+              "RelativeToolTip": "Whistleblowing.NET\\Whistleblowing.NET.csproj",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-19T07:48:59.264Z",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-19T14:31:31.722Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Whistleblowing.NETAPI",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj",
+              "RelativeDocumentMoniker": "Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj",
+              "RelativeToolTip": "Whistleblowing.NETAPI\\Whistleblowing.NETAPI.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-19T13:49:26.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WhistleBlowingContext.cs",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NETAPI\\Data\\WhistleBlowingContext.cs",
+              "RelativeDocumentMoniker": "Whistleblowing.NETAPI\\Data\\WhistleBlowingContext.cs",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NETAPI\\Data\\WhistleBlowingContext.cs",
+              "RelativeToolTip": "Whistleblowing.NETAPI\\Data\\WhistleBlowingContext.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAAgwBoAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-19T13:37:50.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NETAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "Whistleblowing.NETAPI\\appsettings.json",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NETAPI\\appsettings.json",
+              "RelativeToolTip": "Whistleblowing.NETAPI\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-19T13:37:44.642Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\appsettings.json",
+              "RelativeDocumentMoniker": "Whistleblowing.NET\\appsettings.json",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\appsettings.json",
+              "RelativeToolTip": "Whistleblowing.NET\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-19T13:37:39.4Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Program.cs",
+              "RelativeDocumentMoniker": "Whistleblowing.NET\\Program.cs",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Program.cs",
+              "RelativeToolTip": "Whistleblowing.NET\\Program.cs",
+              "ViewState": "AQIAACEAAAAAAAAAAAAwwDMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-19T13:25:11.975Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SegnalazioneAnonymous.cs",
+              "DocumentMoniker": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Models\\SegnalazioneAnonymous.cs",
+              "RelativeDocumentMoniker": "Whistleblowing.NET\\Models\\SegnalazioneAnonymous.cs",
+              "ToolTip": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\WhistleBlowing.NET\\Whistleblowing.NET\\Models\\SegnalazioneAnonymous.cs",
+              "RelativeToolTip": "Whistleblowing.NET\\Models\\SegnalazioneAnonymous.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAYwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-19T13:23:40.422Z",
+              "EditorCaption": ""
             }
           ]
         }
