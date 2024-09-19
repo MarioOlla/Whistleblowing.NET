@@ -1,7 +1,6 @@
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Whistleblowing.NET.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +10,7 @@ builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection(
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
-// Aggiungi il contesto del database
-builder.Services.AddDbContext<WhistleBlowingContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("WhistleBlowingContext")));
+
 
 // Configura l'autenticazione basata su cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -1,0 +1,6 @@
+@Whistleblowing.NETAPI_HostAddress = http://localhost:5089
+
+GET {{Whistleblowing.NETAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
