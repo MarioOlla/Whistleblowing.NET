@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj": {}
+    "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj": {}
   },
   "projects": {
-    "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj": {
+    "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj",
+        "projectUniqueName": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj",
         "projectName": "Whistleblowing.NET",
-        "projectPath": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj",
-        "packagesPath": "C:\\Users\\Solving\\.nuget\\packages\\",
-        "outputPath": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\obj\\",
+        "projectPath": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NET\\Whistleblowing.NET.csproj",
+        "packagesPath": "C:\\Users\\lollo\\.nuget\\packages\\",
+        "outputPath": "C:\\corso_java\\ws_visual_studio_corso_Csharp\\Whistleblowing.NET\\Whistleblowing.NET\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Solving\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lollo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
