@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\Whistleblowing.NET.bundle.scp.css"
     },
     {
+      "Id": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\wwwroot\\css\\navbar.css",
+      "PackagePath": "staticwebassets\\css\\navbar.css"
+    },
+    {
       "Id": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

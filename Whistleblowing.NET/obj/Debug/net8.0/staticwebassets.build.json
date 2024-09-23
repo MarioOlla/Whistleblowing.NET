@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "CKuere967sbaOasTMLKyKvzeooiQH+2lOj+8JwnAhFY=",
+  "Hash": "T91nX73MkBiWrvJ/Abgci5UxsZx1E1qZj5lvS8/mHBk=",
   "Source": "Whistleblowing.NET",
   "BasePath": "_content/Whistleblowing.NET",
   "Mode": "Default",
@@ -53,6 +53,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Whistleblowing.NET.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\wwwroot\\css\\navbar.css",
+      "SourceId": "Whistleblowing.NET",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\wwwroot\\",
+      "BasePath": "_content/Whistleblowing.NET",
+      "RelativePath": "css/navbar.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\navbar.css"
     },
     {
       "Identity": "C:\\corso.net\\WhistleBlowing.NET\\Whistleblowing.NET\\Whistleblowing.NET\\wwwroot\\css\\site.css",

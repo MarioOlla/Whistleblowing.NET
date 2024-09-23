@@ -2,7 +2,248 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whistleblowing</title>
+    <!-- Import Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        nav {
+            background-color: white;
+            border-bottom: none; /* Remove bottom border */
+            box-shadow: none; /* Remove shadow */
+        }
+
+        .nav-wrapper {
+            width: 100%; /* Make the nav-wrapper span the full width */
+        }
+
+        .navbar-left, .navbar-center, .navbar-right {
+            display: inline-block;
+        }
+
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .active-link {
+            color: blue !important;
+            border-radius: 4px;
+        }
+
+        .nav-wrapper a {
+            font-size: 1rem; /* Make all links the same size */
+        }
+
+        /* Hide the content by default */
+        .content {
+            display: none;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 15px; /* Add some margin on top */
+        }
+
+        /* FAQ Styles */
+        .faq-question {
+            cursor: pointer;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .faq-answer {
+            display: none;
+            margin-left: 20px;
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-wrapper">
+            <!-- Left Section: FAQs -->
+            <ul class="left">
+                <li><a href="#faqs" id="faq-link" class="active-link">FAQs</a></li>
+            </ul>
+
+            <!-- Center Section: Nuova Segnalazione -->
+            <ul class="navbar-center">
+                <li><a href="#nuova" id="nuova-link" class="active-link">Nuova Segnalazione</a></li>
+            </ul>
+
+            <!-- Right Section: Docs & Links -->
+            <ul class="right">
+                <li><a href="#docs" id="docs-link" class="active-link">Docs & Links</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content Sections -->
+    <div id="faqs-content" class="content">
+        <h5>FAQs</h5>
+        <!-- FAQ 1 -->
+        <div class="faq-question">Cosa significa Whistleblowing?</div>
+        <div class="faq-answer">Con il termine Whistleblowing si intende quella procedura mediante la quale un dipendente o un collaboratore oppure un fornitore 
+            (c.d. whistleblower), segnala all’Azienda di essere venuto a conoscenza, nello svolgimento del proprio lavoro/attività, della commissione di un qualsiasi 
+            illecito/irregolarità da parte di un soggetto. L’istituto del Whistleblowing è stato previsto dalla legge (cfr. “D.Lgs n. 24/2023 - Segnalazione di illeciti”) 
+            al fine di prevenire all’interno delle Aziende la commissione di fatti illeciti o irregolarità tali da recare pregiudizi e danni alle Aziende stesse. 
+            A tale scopo, tutte le Aziende del Gruppo GILOGICA S.p.A. applicano questo particolare strumento come misura anticorruzione nell’ambito sia del Piano di 
+            prevenzione della corruzione e della trasparenza e sia nel Modello di Gestione, Organizzazione e Controllo del Gruppo GILOGICA S.p.A. (cfr. D. Lgs. n. 231/2001)..</div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-question">Chi può presentare una Segnalazione ?</div>
+        <div class="faq-answer">
+            1) Tutti i dipendenti delle Aziende del Gruppo GILOGICA S.p.A. (con contratto a tempo determinato, indeterminato, apprendistato, somministrazione, tirocinio o stage)
+            <br />
+            2) Organi sociali del Gruppo GILOGICA S.p.A.
+            <br />
+            3) Collaboratori del Gruppo GILOGICA S.p.A. (a qualsiasi titolo)
+            <br />
+            4) Fornitori del Gruppo GILOGICA S.p.A.
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-question">Può essere presentata una Segnalazione anonima ?</div>
+        <div class="faq-answer">La Segnalazione anonima è consentita, comunque è preferibile inoltrare una Segnalazione non anonima poiché quest’ultima rientra in ogni caso
+            nell’ambito di tutela della legge che riguarda esclusivamente il soggetto che si identifica (il segnalante).
+        </div>
+
+        <div class="faq-question">Come scegliere il canale di segnalazione?</div>
+        <div class="faq-answer">
+            In via prioritaria, i segnalanti possono utilizzare il canale interno e possono effettuare una segnalazione esterna ad ANAC solo al ricorrere delle seguenti 
+            condizioni:
+            <br />
+            • la persona segnalante ha già effettuato una segnalazione interna e la stessa non ha avuto seguito;
+            <br />
+            • la persona segnalante ha fondati motivi di ritenere che, se effettuasse una segnalazione interna, alla stessa non sarebbe dato efficace seguito ovvero che 
+            la stessa segnalazione potrebbe determinare un rischio di ritorsione;
+            <br />
+            • la persona segnalante ha fondato motivo di ritenere che la violazione possa costituire un pericolo imminente o palese per il pubblico interesse.
+            <br />
+            I segnalanti possono effettuare una divulgazione pubblica quando:
+            <br />
+            • la persona segnalante ha previamente effettuato una segnalazione interna ed esterna ovvero ha effettuato direttamente una segnalazione esterna e non è stato 
+            dato riscontro entro i termini stabiliti in merito alle misure previste o adottate per dare seguito alle segnalazioni;
+            <br />
+            • la persona segnalante ha fondato motivo di ritenere che la violazione possa costituire un pericolo imminente o palese per il pubblico interesse;
+            <br />
+            • la persona segnalante ha fondato motivo di ritenere che la segnalazione esterna possa comportare il rischio di ritorsioni o possa non avere efficace seguito 
+            in ragione delle specifiche circostanze del caso concreto, come quelle in cui possano essere occultate o distrutte prove oppure in cui vi sia fondato timore 
+            che chi ha ricevuto la segnalazione possa essere colluso con l'autore della violazione o coinvolto nella violazione stessa.
+        </div>
+        <div class="faq-question">In che modo un dipendente può segnalare un illecito/irregolarità ?</div>
+        <div class="faq-answer">
+            Il Gruppo GILOGICA S.p.A. ha predisposto questa nuova sezione dell'applicativo per questo proposito. Si ricorda che, per una maggiore tutela del 
+            dipendente/segnalante, la modalità di presentazione preferibile è quella tramite l’Applicazione software dedicata. In alternativa, qualora non sia possibile 
+            presentare la Segnalazione tramite l’Applicazione software dedicata, il dipendente (oppure altro soggetto che ha rapporti con l’Azienda interessata), può 
+            inoltrare in modalità manuale la Segnalazione - in formato cartaceo - tramite la posta ordinaria o la posta interna. Per ognuno degli inoltri manuali 
+            sopraidescritti, la Segnalazione deve essere indirizzata al Responsabile delle Risorse Umane dell’Azienda interessata. A tale scopo, si possono utilizzare 
+            i Moduli di Segnalazione già predisposti dal Gruppo GILOGICA S.p.A. e resi disponibili tramite pubblicazione nei siti Internet delle Aziende del Gruppo nella
+            relativa Sezione: “D.Lgs n. 24/2023 - Segnalazione di illeciti”).
+            <br />
+            Note:sia nel caso della compilazione informatica della Segnalazione (tramite questa applicazione) e sia nel caso della compilazione manuale del Modulo di 
+            Segnalazione (tramite download dal sito aziendale) è presente anche una specifica “Informativa Privacy” coerente con le indicazioni del GDPR.
+        </div>
+        <div class="faq-question">Quali illeciti/irregolarità possono essere segnalati ?</div>
+        <div class="faq-answer">
+            La legge non prevede un elenco di casi oggetto di Segnalazione, ma ricomprende tutte le condotte ritenute illecite.Pertanto, possono considerarsi esempi di 
+            condotte illecite:
+            <br />
+            a) la commissione di un reato
+            <br />
+            b) le violazioni del “Modello di Organizzazione, Gestione e Controllo” ai sensi del D. Lgs. n. 231/2001 adottato dal Gruppo GILOGICA S.p.A.
+            <br />
+            c) la violazione di altre disposizioni aziendali che comportano l’applicazione di una sanzione disciplinare
+            <br />
+            d) qualsiasi fatto che possa comportare un rischio per l’integrità e l’esercizio lecito dell’attività del Gruppo GILOGICA S.p.A.
+        </div>
+        <div class="faq-question">Chi può essere segnalato ?</div>
+        <div class="faq-answer">
+            Il segnalante può presentare una Segnalazione per una condotta posta in essere da tutti gli altri dipendenti, dirigenti, organi sociali, collaboratori/consulenti, 
+            fornitori e tutti coloro che hanno rapporti con le Aziende del Gruppo GILOGICA S.p.A.
+        </div>
+        <div class="faq-question">Chi riceve le Segnalazioni ?</div>
+        <div class="faq-answer">
+            Competente per la gestione della Segnalazione è il Responsabile delle Risorse Umane delle Aziende del Gruppo GILOGICA S.p.A.
+        </div>
+        <div class="faq-question">Come viene tutelata l’identità del segnalante ?</div>
+        <div class="faq-answer">
+            La legge prevede una tutela specifica per il soggetto che presenta una Segnalazione. L’identità del segnalante non può essere rivelata, salvo i casi previsti 
+            dalla legge. A tale scopo, il Gruppo GILOGICA S.p.A. adotta ogni misura necessaria per tutelare la riservatezza del segnalante in osservanza della normativa in 
+            materia. L’Applicazione software dedicata per il “Whistleblowing” predisposta dal Gruppo GILOGICA S.p.A., offre una maggiore garanzia per l’identità del 
+            segnalante rispetto agli altri canali di trasmissione. L’Applicazione software dedicata, con modalità strettamente aderenti alla norma, separa la Segnalazione 
+            dall’identità del segnalante. L’accesso all’identità del segnalante è esclusivamente concesso al Responsabile delle Risorse Umane delle Aziende del Gruppo
+            GILOGICA S.p.A. (o soggetto espressamente identificato ed autorizzato formalmente).
+        </div>
+        <div class="faq-question">Quali altre tutele sono previste per il segnalante ?</div>
+        <div class="faq-answer">
+            Nei confronti del segnalante non sono consentite forme di ritorsione, misure discriminatorie e molestie sul luogo del lavoro. Pertanto, il dipendente non può 
+            essere licenziato, demansionato, trasferito o sanzionato in altro modo a causa della Segnalazione. Per qualsiasi altra informazione si rimanda al “Regolamento 
+            Whistleblowing” adottato dalle Aziende del Gruppo GILOGICA S.p.A. e pubblicato sia nei rispettivi Siti Internet (Sezione: “D.Lgs n. 24/2023 - Segnalazione di 
+            illeciti”) e sia nella Intranet aziendale del Gruppo GILOGICA S.p.A.
+        </div>
+    </div>
+
+    <div id="nuova-content" class="content">
+        <h5>Nuova Segnalazione</h5>
+        <p>Dettagli sulla nuova segnalazione.</p>
+    </div>
+
+    <div id="docs-content" class="content">
+        <h5>Docs & Links</h5>
+        <p>Documentazione e link utili.</p>
+    </div>
+
+    <!-- Import Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var links = document.querySelectorAll('.nav-wrapper a');
+            var contents = document.querySelectorAll('.content');
+
+            // Handle navbar links
+            links.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent the default anchor behavior
+
+                    // Hide all content sections
+                    contents.forEach(function (content) {
+                        content.style.display = 'none';
+                    });
+
+                    // Show the content related to the clicked link
+                    var targetId = link.getAttribute('href').substring(1); // Remove the hash
+                    var targetContent = document.getElementById(targetId + '-content');
+                    if (targetContent) {
+                        targetContent.style.display = 'block';
+                    }
+                });
+            });
+
+            // Handle FAQ click to show/hide answers
+            var faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(function (question) {
+                question.addEventListener('click', function () {
+                    var answer = this.nextElementSibling; // The answer is the next sibling element
+                    if (answer.style.display === 'none' || answer.style.display === '') {
+                        answer.style.display = 'block'; // Show the answer
+                    } else {
+                        answer.style.display = 'none'; // Hide the answer
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
