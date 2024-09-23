@@ -345,4 +345,8 @@ MigrationBackup/
 *.cache
 *.log
 *.tlog
+Whistleblowing.NET/bin/
+Whistleblowing.NETAPI/bin/
+Whistleblowing.NET/obj/
+Whistleblowing.NETAPI/obj/
 
