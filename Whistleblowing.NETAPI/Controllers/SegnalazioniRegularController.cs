@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Whistleblowing.NETAPI.Data;
+using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
 using Whistleblowing.NETAPI.Models.view;
 
@@ -99,6 +100,65 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 		}
+
+		/// <summary>
+		/// API per inserimento di una segnalazione Regular
+		/// </summary>
+		/// <param name="segnalazioneRegularDTOInserimento">segnalazione da inserire</param>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<IActionResult> PostSegnalazioneRegular(SegnalazioneRegularDTOInserimento segnalazioneRegularDTOInserimento)
+		{
+			//se la segnalazione è null torno errore
+			if(segnalazioneRegularDTOInserimento == null)
+			{
+				return BadRequest();
+			}
+
+			//se il context non trova la tabella ritorno errore
+			if(_context.segnalazioneRegulars == null)
+			{
+				return BadRequest();
+			}
+
+			// *** Creo il mio oggetto segnalazione per effettuare l' inserimento *** //
+			var _segnalazioneRegular = new SegnalazioneRegular()
+			{
+				FattoRiferitoA = segnalazioneRegularDTOInserimento.FattoRiferitoA,
+				DataEvento = segnalazioneRegularDTOInserimento.DataEvento,
+				LuogoEvento = segnalazioneRegularDTOInserimento.LuogoEvento,
+				SoggettoColpevole = segnalazioneRegularDTOInserimento.SoggettoColpevole,
+				AreaAziendale = segnalazioneRegularDTOInserimento.AreaAziendale,
+				SoggettiPrivatiCoinvolti = segnalazioneRegularDTOInserimento.SoggettiPrivatiCoinvolti,
+				ImpreseCoinvolte = segnalazioneRegularDTOInserimento.ImpreseCoinvolte,
+				PubbliciUfficialiPaCoinvolti = segnalazioneRegularDTOInserimento.PubbliciUfficialiPaCoinvolti,
+				ModalitaConoscenzaFatto = segnalazioneRegularDTOInserimento.ModalitaConoscenzaFatto,
+				SoggettiReferentiFatto = segnalazioneRegularDTOInserimento.SoggettiReferentiFatto,
+				AmmontarePagamentoOAltraUtilita = segnalazioneRegularDTOInserimento.AmmontarePagamentoOAltraUtilita,
+				CircostanzeViolenzaMinaccia = segnalazioneRegularDTOInserimento.CircostanzeViolenzaMinaccia,
+				DescrizioneFatto = segnalazioneRegularDTOInserimento.DescrizioneFatto,
+				MotivazioneFattoIllecito = segnalazioneRegularDTOInserimento.MotivazioneFattoIllecito,
+				Note = segnalazioneRegularDTOInserimento.Note,
+				// Imposto lo status su "APERTO" all'inserimento
+				status = SegnalazioneRegular.Status.APERTO,
+
+
+			};
+
+			//effettuo l' inserimento della segnalazione
+			_context.segnalazioneRegulars.Add(_segnalazioneRegular);
+
+			//salvo le modifiche del context
+			await _context.SaveChangesAsync();
+
+			return Ok(_segnalazioneRegular);
+
+		}
+
+
+
+
+
 
 
 
