@@ -2,6 +2,10 @@ using Whistleblowing.NETAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
+using Whistleblowing.NETAPI.Models;
+using Microsoft.Extensions.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,6 +70,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
 	c.CustomSchemaIds(type => type.FullName);
+
 }); ;
 
 var app = builder.Build();

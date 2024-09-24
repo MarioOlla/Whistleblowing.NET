@@ -67,5 +67,41 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 
+		/// <summary>
+		/// Metodo che utilizzo per ottenere una segnalazione Regolare in base al suo id e l' id utente
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <param name="segnalazioneRegularId"></param>
+		/// <returns></returns>
+		[HttpGet("getSegnalazioneRegularById")]
+		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById(int userId, int segnalazioneRegularId)
+		{
+			//Per prima cosa verifico che l' utente esista
+			var utenteEsistente = await _context.User.AnyAsync(u => u.Id == userId && !u.IsDeleted);
+
+			//se non esiste torno NotFound
+			if (!utenteEsistente)
+			{
+				return NotFound(new { message = "utente non trovato!" });
+			}
+
+			//se quindi esiste cerco la segnalazione con il suo id e quello dell' utente specificato
+			var segnalazione = await _context.SegnalazioneRegularViews.FirstOrDefaultAsync(s => s.UserId == userId && s.Id == segnalazioneRegularId);
+
+			//se invece non trovo la segnalazione restituisco un NotFound
+			if(segnalazione == null)
+			{
+				return NotFound(new { message = "segnalazione non trovata!" });
+			}
+
+			//se tutto è ok torno la segnalazione
+			return Ok(segnalazione);
+
+
+		}
+
+
+
+
 	}
 }

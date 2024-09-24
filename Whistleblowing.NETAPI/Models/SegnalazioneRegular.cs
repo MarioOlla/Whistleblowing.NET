@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Whistleblowing.NETAPI.Models
 {
@@ -63,6 +66,7 @@ namespace Whistleblowing.NETAPI.Models
 		public string? Note { get; set; }
 
 		[Column("status")]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public Status? status { get; set; }
 
 		[Column("is_external")]

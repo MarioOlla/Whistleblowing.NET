@@ -1,14 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Newtonsoft.Json.Converters;
 
 namespace Whistleblowing.NETAPI.Models.view
 {
+	public enum Status
+	{
+		APERTO, LAVORAZIONE, CHIUSO
+	}
 	public class SegnalazioneRegularView
 	{
-		public enum Status
-		{
-			APERTO, LAVORAZIONE, CHIUSO
-		}
+		
 
 
 		[Column("segnalazione_regular_id")]
