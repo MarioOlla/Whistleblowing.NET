@@ -14,23 +14,29 @@
         /* Custom Styles */
         nav {
             background-color: white;
-            border-bottom: none; /* Remove bottom border */
-            box-shadow: none; /* Remove shadow */
+            border-bottom: none;
+            box-shadow: none;
         }
 
         .nav-wrapper {
-            width: 100%; /* Make the nav-wrapper span the full width */
+            width: 100%;
+            display: flex;
+            justify-content: center; /* Centra gli elementi */
+            align-items: center; /* Centra verticalmente */
         }
 
-        .navbar-left, .navbar-center, .navbar-right {
-            display: inline-block;
-        }
+            .nav-wrapper ul {
+                display: flex;
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                width: 80%; /* Imposta una larghezza maggiore per la navbar */
+                justify-content: space-around; /* Spaziatura uniforme tra i link */
+            }
 
-        .navbar-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+                .nav-wrapper ul li {
+                    margin: 0 15px;
+                }
 
         .active-link {
             color: blue !important;
@@ -38,8 +44,16 @@
         }
 
         .nav-wrapper a {
-            font-size: 1rem; /* Make all links the same size */
+            font-size: 1.5rem; /* Aumenta la dimensione del font */
+            padding: 15px 20px; /* Aggiungi padding per rendere i link più visibili */
+            font-weight: 600; /* Testo più marcato */
+            color: black;
+            text-decoration: none;
         }
+
+            .nav-wrapper a:hover {
+                color: blue; /* Cambia colore al passaggio del mouse */
+            }
 
         /* Hide the content by default */
         .content {
@@ -48,15 +62,36 @@
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-top: 15px; /* Add some margin on top */
+            margin-top: 15px;
         }
 
         /* FAQ Styles */
+        .faqs-title {
+            margin-bottom: 15px;
+        }
+
         .faq-question {
             cursor: pointer;
             margin: 10px 0;
             font-weight: bold;
+            position: relative;
+            padding-bottom: 20px;
+            padding-top: 20px;
+            border-bottom: 1px solid #ccc;
         }
+
+            .faq-question::after {
+                content: '▼';
+                position: absolute;
+                right: 10px;
+                font-size: 1rem;
+                color: #888;
+                transition: transform 0.3s ease;
+            }
+
+            .faq-question.active::after {
+                transform: rotate(180deg);
+            }
 
         .faq-answer {
             display: none;
@@ -65,25 +100,26 @@
             background-color: #e0e0e0;
             border-radius: 4px;
         }
+
+        #faqs-content {
+            max-height: 80vh;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav>
         <div class="nav-wrapper">
-            <!-- Left Section: FAQs -->
-            <ul class="left">
+            <ul>
+                <!-- Left Section: FAQs -->
                 <li><a href="#faqs" id="faq-link" class="active-link">FAQs</a></li>
-            </ul>
 
-            <!-- Center Section: Nuova Segnalazione -->
-            <ul class="navbar-center">
+                <!-- Center Section: Nuova Segnalazione -->
                 <li><a href="#nuova" id="nuova-link" class="active-link">Nuova Segnalazione</a></li>
-            </ul>
 
-            <!-- Right Section: Docs & Links -->
-            <ul class="right">
+                <!-- Right Section: Docs & Links -->
                 <li><a href="#docs" id="docs-link" class="active-link">Docs & Links</a></li>
             </ul>
         </div>
@@ -91,15 +127,17 @@
 
     <!-- Content Sections -->
     <div id="faqs-content" class="content">
-        <h5>FAQs</h5>
+        <h5 class="faqs-title">FAQs</h5>
         <!-- FAQ 1 -->
         <div class="faq-question">Cosa significa Whistleblowing?</div>
-        <div class="faq-answer">Con il termine Whistleblowing si intende quella procedura mediante la quale un dipendente o un collaboratore oppure un fornitore 
-            (c.d. whistleblower), segnala all’Azienda di essere venuto a conoscenza, nello svolgimento del proprio lavoro/attività, della commissione di un qualsiasi 
-            illecito/irregolarità da parte di un soggetto. L’istituto del Whistleblowing è stato previsto dalla legge (cfr. “D.Lgs n. 24/2023 - Segnalazione di illeciti”) 
-            al fine di prevenire all’interno delle Aziende la commissione di fatti illeciti o irregolarità tali da recare pregiudizi e danni alle Aziende stesse. 
-            A tale scopo, tutte le Aziende del Gruppo GILOGICA S.p.A. applicano questo particolare strumento come misura anticorruzione nell’ambito sia del Piano di 
-            prevenzione della corruzione e della trasparenza e sia nel Modello di Gestione, Organizzazione e Controllo del Gruppo GILOGICA S.p.A. (cfr. D. Lgs. n. 231/2001)..</div>
+        <div class="faq-answer">
+            Con il termine Whistleblowing si intende quella procedura mediante la quale un dipendente o un collaboratore oppure un fornitore
+            (c.d. whistleblower), segnala all’Azienda di essere venuto a conoscenza, nello svolgimento del proprio lavoro/attività, della commissione di un qualsiasi
+            illecito/irregolarità da parte di un soggetto. L’istituto del Whistleblowing è stato previsto dalla legge (cfr. “D.Lgs n. 24/2023 - Segnalazione di illeciti”)
+            al fine di prevenire all’interno delle Aziende la commissione di fatti illeciti o irregolarità tali da recare pregiudizi e danni alle Aziende stesse.
+            A tale scopo, tutte le Aziende del Gruppo GILOGICA S.p.A. applicano questo particolare strumento come misura anticorruzione nell’ambito sia del Piano di
+            prevenzione della corruzione e della trasparenza e sia nel Modello di Gestione, Organizzazione e Controllo del Gruppo GILOGICA S.p.A. (cfr. D. Lgs. n. 231/2001)..
+        </div>
 
         <!-- FAQ 2 -->
         <div class="faq-question">Chi può presentare una Segnalazione ?</div>
@@ -115,50 +153,49 @@
 
         <!-- FAQ 3 -->
         <div class="faq-question">Può essere presentata una Segnalazione anonima ?</div>
-        <div class="faq-answer">La Segnalazione anonima è consentita, comunque è preferibile inoltrare una Segnalazione non anonima poiché quest’ultima rientra in ogni caso
+        <div class="faq-answer">
+            La Segnalazione anonima è consentita, comunque è preferibile inoltrare una Segnalazione non anonima poiché quest’ultima rientra in ogni caso
             nell’ambito di tutela della legge che riguarda esclusivamente il soggetto che si identifica (il segnalante).
         </div>
 
+        <!-- FAQ 4 -->
         <div class="faq-question">Come scegliere il canale di segnalazione?</div>
         <div class="faq-answer">
-            In via prioritaria, i segnalanti possono utilizzare il canale interno e possono effettuare una segnalazione esterna ad ANAC solo al ricorrere delle seguenti 
+            In via prioritaria, i segnalanti possono utilizzare il canale interno e possono effettuare una segnalazione esterna ad ANAC solo al ricorrere delle seguenti
             condizioni:
             <br />
             • la persona segnalante ha già effettuato una segnalazione interna e la stessa non ha avuto seguito;
             <br />
-            • la persona segnalante ha fondati motivi di ritenere che, se effettuasse una segnalazione interna, alla stessa non sarebbe dato efficace seguito ovvero che 
+            • la persona segnalante ha fondati motivi di ritenere che, se effettuasse una segnalazione interna, alla stessa non sarebbe dato efficace seguito ovvero che
             la stessa segnalazione potrebbe determinare un rischio di ritorsione;
             <br />
             • la persona segnalante ha fondato motivo di ritenere che la violazione possa costituire un pericolo imminente o palese per il pubblico interesse.
             <br />
             I segnalanti possono effettuare una divulgazione pubblica quando:
             <br />
-            • la persona segnalante ha previamente effettuato una segnalazione interna ed esterna ovvero ha effettuato direttamente una segnalazione esterna e non è stato 
+            • la persona segnalante ha previamente effettuato una segnalazione interna ed esterna ovvero ha effettuato direttamente una segnalazione esterna e non è stato
             dato riscontro entro i termini stabiliti in merito alle misure previste o adottate per dare seguito alle segnalazioni;
             <br />
             • la persona segnalante ha fondato motivo di ritenere che la violazione possa costituire un pericolo imminente o palese per il pubblico interesse;
             <br />
-            • la persona segnalante ha fondato motivo di ritenere che la segnalazione esterna possa comportare il rischio di ritorsioni o possa non avere efficace seguito 
-            in ragione delle specifiche circostanze del caso concreto, come quelle in cui possano essere occultate o distrutte prove oppure in cui vi sia fondato timore 
+            • la persona segnalante ha fondato motivo di ritenere che la segnalazione esterna possa comportare il rischio di ritorsioni o possa non avere efficace seguito
+            in ragione delle specifiche circostanze del caso concreto, come quelle in cui possano essere occultate o distrutte prove oppure in cui vi sia fondato timore
             che chi ha ricevuto la segnalazione possa essere colluso con l'autore della violazione o coinvolto nella violazione stessa.
         </div>
+
+        <!-- FAQ 5 -->
         <div class="faq-question">In che modo un dipendente può segnalare un illecito/irregolarità ?</div>
         <div class="faq-answer">
-            Il Gruppo GILOGICA S.p.A. ha predisposto questa nuova sezione dell'applicativo per questo proposito. Si ricorda che, per una maggiore tutela del 
-            dipendente/segnalante, la modalità di presentazione preferibile è quella tramite l’Applicazione software dedicata. In alternativa, qualora non sia possibile 
-            presentare la Segnalazione tramite l’Applicazione software dedicata, il dipendente (oppure altro soggetto che ha rapporti con l’Azienda interessata), può 
-            inoltrare in modalità manuale la Segnalazione - in formato cartaceo - tramite la posta ordinaria o la posta interna. Per ognuno degli inoltri manuali 
-            sopraidescritti, la Segnalazione deve essere indirizzata al Responsabile delle Risorse Umane dell’Azienda interessata. A tale scopo, si possono utilizzare 
-            i Moduli di Segnalazione già predisposti dal Gruppo GILOGICA S.p.A. e resi disponibili tramite pubblicazione nei siti Internet delle Aziende del Gruppo nella
-            relativa Sezione: “D.Lgs n. 24/2023 - Segnalazione di illeciti”).
-            <br />
-            Note:sia nel caso della compilazione informatica della Segnalazione (tramite questa applicazione) e sia nel caso della compilazione manuale del Modulo di 
-            Segnalazione (tramite download dal sito aziendale) è presente anche una specifica “Informativa Privacy” coerente con le indicazioni del GDPR.
+            Il Gruppo GILOGICA S.p.A. ha predisposto questa nuova sezione dell'applicativo per questo proposito. Si ricorda che, per una maggiore tutela del
+            dipendente/segnalante, la modalità di presentazione preferibile è quella tramite l’Applicazione software dedicata. In alternativa, qualora non sia possibile
+            presentare la Segnalazione tramite l’Applicazione software dedicata, il dipendente (oppure altro soggetto che ha rapporti con l’Azienda interessata), può
+            inoltrare in modalità manuale la Segnalazione - in formato cartaceo - tramite la posta ordinaria o la posta interna. Per ognuno degli inoltri manuali
+            sopraidescritti, la Segnalazione deve essere indirizzata al Responsabile della Prevenzione della Corruzione e della Trasparenza dell’Azienda del Gruppo.
         </div>
+
         <div class="faq-question">Quali illeciti/irregolarità possono essere segnalati ?</div>
         <div class="faq-answer">
-            La legge non prevede un elenco di casi oggetto di Segnalazione, ma ricomprende tutte le condotte ritenute illecite.Pertanto, possono considerarsi esempi di 
-            condotte illecite:
+            La legge non prevede un elenco di casi oggetto di Segnalazione, ma ricomprende tutte le condotte ritenute illecite.Pertanto, possono considerarsi esempi di condotte illecite:
             <br />
             a) la commissione di un reato
             <br />
@@ -168,62 +205,174 @@
             <br />
             d) qualsiasi fatto che possa comportare un rischio per l’integrità e l’esercizio lecito dell’attività del Gruppo GILOGICA S.p.A.
         </div>
+
         <div class="faq-question">Chi può essere segnalato ?</div>
         <div class="faq-answer">
-            Il segnalante può presentare una Segnalazione per una condotta posta in essere da tutti gli altri dipendenti, dirigenti, organi sociali, collaboratori/consulenti, 
-            fornitori e tutti coloro che hanno rapporti con le Aziende del Gruppo GILOGICA S.p.A.
+            Il segnalante può presentare una Segnalazione per una condotta posta in essere da tutti gli altri dipendenti, dirigenti, organi sociali,
+            collaboratori/consulenti, fornitori e tutti coloro che hanno rapporti con le Aziende del Gruppo GILOGICA S.p.A.
         </div>
+
         <div class="faq-question">Chi riceve le Segnalazioni ?</div>
         <div class="faq-answer">
             Competente per la gestione della Segnalazione è il Responsabile delle Risorse Umane delle Aziende del Gruppo GILOGICA S.p.A.
         </div>
+
         <div class="faq-question">Come viene tutelata l’identità del segnalante ?</div>
         <div class="faq-answer">
-            La legge prevede una tutela specifica per il soggetto che presenta una Segnalazione. L’identità del segnalante non può essere rivelata, salvo i casi previsti 
-            dalla legge. A tale scopo, il Gruppo GILOGICA S.p.A. adotta ogni misura necessaria per tutelare la riservatezza del segnalante in osservanza della normativa in 
-            materia. L’Applicazione software dedicata per il “Whistleblowing” predisposta dal Gruppo GILOGICA S.p.A., offre una maggiore garanzia per l’identità del 
-            segnalante rispetto agli altri canali di trasmissione. L’Applicazione software dedicata, con modalità strettamente aderenti alla norma, separa la Segnalazione 
+            La legge prevede una tutela specifica per il soggetto che presenta una Segnalazione. L’identità del segnalante non può essere rivelata, salvo i casi previsti
+            dalla legge. A tale scopo, il Gruppo GILOGICA S.p.A. adotta ogni misura necessaria per tutelare la riservatezza del segnalante in osservanza della normativa in
+            materia. L’Applicazione software dedicata per il “Whistleblowing” predisposta dal Gruppo GILOGICA S.p.A., offre una maggiore garanzia per l’identità del
+            segnalante rispetto agli altri canali di trasmissione. L’Applicazione software dedicata, con modalità strettamente aderenti alla norma, separa la Segnalazione
             dall’identità del segnalante. L’accesso all’identità del segnalante è esclusivamente concesso al Responsabile delle Risorse Umane delle Aziende del Gruppo
             GILOGICA S.p.A. (o soggetto espressamente identificato ed autorizzato formalmente).
         </div>
+
         <div class="faq-question">Quali altre tutele sono previste per il segnalante ?</div>
         <div class="faq-answer">
-            Nei confronti del segnalante non sono consentite forme di ritorsione, misure discriminatorie e molestie sul luogo del lavoro. Pertanto, il dipendente non può 
-            essere licenziato, demansionato, trasferito o sanzionato in altro modo a causa della Segnalazione. Per qualsiasi altra informazione si rimanda al “Regolamento 
-            Whistleblowing” adottato dalle Aziende del Gruppo GILOGICA S.p.A. e pubblicato sia nei rispettivi Siti Internet (Sezione: “D.Lgs n. 24/2023 - Segnalazione di 
-            illeciti”) e sia nella Intranet aziendale del Gruppo GILOGICA S.p.A.
+            Nei confronti del segnalante non sono consentite forme di ritorsione, misure discriminatorie e molestie sul luogo del lavoro. Pertanto, il dipendente non può
+            essere licenziato, demansionato, trasferito o sanzionato in altro modo a causa della Segnalazione. Per qualsiasi altra informazione si rimanda al
+            “Regolamento Whistleblowing” adottato dalle Aziende del Gruppo GILOGICA S.p.A. e pubblicato sia nei rispettivi Siti Internet
+            (Sezione: “D.Lgs n. 24/2023 - Segnalazione di illeciti”) e sia nella Intranet aziendale del Gruppo GILOGICA S.p.A.
         </div>
+
+        <div class="faq-question">Cosa si intende per ritorsione al segnalante?</div>
+        <div class="faq-answer">
+            Qualsiasi comportamento, atto od omissione, anche solo tentato o minacciato, posto in essere in ragione della segnalazione che può provocare al segnalante un
+            danno ingiusto, da intendersi come danno ingiustificato.
+        </div>
+
+        <div class="faq-question">Chi è competente ad accertare la ritorsione?</div>
+        <div class="faq-answer">
+            La gestione delle comunicazioni di ritorsioni compete ad ANAC che può avvalersi, per quanto di rispettiva competenza, della collaborazione dell'Ispettorato della Funzione Pubblica e dell'Ispettorato Nazionale del Lavoro.
+            La dichiarazione di nullità degli atti ritorsivi spetta all’Autorità giudiziaria.
+        </div>
+
+        <div class="faq-question">In quali casi è possibile risalire all'identità del segnalante?</div>
+        <div class="faq-answer">
+            Fermo restando quanto sopra, sono previsti i seguenti casi in cui è possibile risalire all'identità del segnalante:
+            - eventuali richieste di autorità giudiziarie/di vigilanza o eventuali obblighi di legge;
+            - segnalazioni in malafede, ingiuriose, calunniose o diffamatorie.
+        </div>
+
+        <div class="faq-question">Sono previsti provvedimenti a carico del segnalante che effettua una segnalazione in malafede, ingiuriosa, calunniosa o diffamatoria?</div>
+        <div class="faq-answer">
+            Le tutele non sono garantite quando è accertata, anche con sentenza di primo grado, la responsabilità penale della persona segnalante per i reati di
+            diffamazione o di calunnia o comunque per i medesimi reati commessi con la denuncia all’autorità giudiziaria o contabile ovvero la sua responsabilità civile,
+            per lo stesso titolo, nei casi di dolo o colpa grave; in tali casi alla persona segnalante o denunciante può essere irrogata una sanzione disciplinare.
+        </div>
+
+        <div class="faq-question">Che cosa si intende per segnalazione circostanziata?</div>
+        <div class="faq-answer">
+            Si considera “circostanziata” la segnalazione che permette di individuare in modo sufficientemente dettagliato gli elementi oggettivi che consentono di avviare
+            un’istruttoria, quali a titolo esemplificativo: modalità e finalità della condotta o dell’illecito, periodo di riferimento della condotta, attori coinvolti,
+            quantificazione del danno, modalità di raggiro del sistema di controllo, copia della documentazione citata, ecc.
+        </div>
+
+        <div class="faq-question">Che cosa si intende per segnalazione in malafede?</div>
+        <div class="faq-answer">
+            Per “malafede” si intende la segnalazione artificiosamente strutturata in modo da apparire oggettiva e circostanziata, ma che in realtà cela l’intenzione del
+            segnalante di procurare un vantaggio a sé o a terzi a danno del segnalato o comunque un danno al segnalato, anche in assenza di vantaggio per il segnalante o
+            per terzi.
+
+            Per “malafede” non si intende la segnalazione circostanziata, ma erronea, effettuata dal segnalante con la franca convinzione di agire in maniera corretta.
+        </div>
+
+
     </div>
 
+    <!-- content nuova segnalazione -->
     <div id="nuova-content" class="content">
         <h5>Nuova Segnalazione</h5>
-        <p>Dettagli sulla nuova segnalazione.</p>
+
+        <!-- Form di esempio per una nuova segnalazione -->
+        <form id="segnalazione-form" action="/submitSegnalazione" method="POST">
+            <!-- Tipologia di segnalazione -->
+            <div class="input-field col s10 mt-2">
+                <select id="tipologia" name="tipologia" required>
+                    <option value="" disabled selected>Seleziona una tipologia</option>
+                    <option value="reclutamento del personale">Reclutamento del Personale</option>
+                    <option value="contatti">Contatti</option>
+                    <option value="concessionevantaggieconomici">Concessione di vantaggi economici comunque denominati</option>
+                    <option value="concessionealtrivantaggi">Concessione di altri tipi di vantaggi</option>
+                    <option value="nomine">Nomine, promozioni e deleghe</option>
+                    <option value="autorizzazioni">Autorizzazioni</option>
+                    <option value="ispezioni">Ispezioni</option>
+                    <option value="rapportipauffpubblici">Rapporti con la P.A., Ufficiali Pubblici, ecc.</option>
+                    <option value="pagamentoagevolativorichiesto">Pagamento agevolativo richiesto</option>
+                    <option value="pagamentoagevolativoeffettuato">Pagamento agevolativo effettuato</option>
+                    <option value="pagamentoestorto">Pagamento estorto</option>
+                    <option value="altro">Altro, specificare:</option>
+
+
+
+                </select>
+@*                 <label for="tipologia">Tipologia di Segnalazione</label>
+ *@            </div>
+
+            <div class="row">
+                <!-- Nome -->
+                <div class="input-field col s12">
+                    <input id="nome" name="nome" type="text" class="validate" required>
+                    <label for="nome">Nome</label>
+                </div>
+
+                <!-- Email -->
+                <div class="input-field col s12">
+                    <input id="email" name="email" type="email" class="validate" required>
+                    <label for="email">Email</label>
+                </div>
+
+              
+
+                <!-- Descrizione della segnalazione -->
+                <div class="input-field col s12">
+                    <textarea id="descrizione" name="descrizione" class="materialize-textarea" required></textarea>
+                    <label for="descrizione">Descrizione</label>
+                </div>
+
+                <!-- Checkbox per anonimato -->
+                <div class="col s12">
+                    <label>
+                        <input type="checkbox" id="anonimo" name="anonimo" />
+                        <span>Invia la segnalazione in forma anonima</span>
+                    </label>
+                </div>
+
+                <!-- Bottone di invio -->
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">
+                        Invia Segnalazione
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div id="docs-content" class="content">
         <h5>Docs & Links</h5>
-        <p>Documentazione e link utili.</p>
+        <p>Contenuto della sezione Docs & Links.</p>
     </div>
 
-    <!-- Import Materialize JS -->
+    <!-- Import jQuery and Materialize JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var links = document.querySelectorAll('.nav-wrapper a');
             var contents = document.querySelectorAll('.content');
 
-            // Handle navbar links
+            // Gestisci i link della navbar
             links.forEach(function (link) {
                 link.addEventListener('click', function (event) {
-                    event.preventDefault(); // Prevent the default anchor behavior
+                    event.preventDefault(); // Previene il comportamento di default del link
 
-                    // Hide all content sections
+                    // Nascondi tutte le sezioni dei contenuti
                     contents.forEach(function (content) {
                         content.style.display = 'none';
                     });
 
-                    // Show the content related to the clicked link
-                    var targetId = link.getAttribute('href').substring(1); // Remove the hash
+                    // Mostra il contenuto corrispondente al link cliccato
+                    var targetId = link.getAttribute('href').substring(1); // Rimuove il hash
                     var targetContent = document.getElementById(targetId + '-content');
                     if (targetContent) {
                         targetContent.style.display = 'block';
@@ -231,19 +380,26 @@
                 });
             });
 
-            // Handle FAQ click to show/hide answers
+            // Gestisci click sulle domande delle FAQ per mostrare/nascondere le risposte
             var faqQuestions = document.querySelectorAll('.faq-question');
             faqQuestions.forEach(function (question) {
                 question.addEventListener('click', function () {
-                    var answer = this.nextElementSibling; // The answer is the next sibling element
+                    var answer = this.nextElementSibling; // La risposta è l'elemento fratello successivo
+                    this.classList.toggle('active'); // Aggiunge/rimuove la classe active per girare la freccia
                     if (answer.style.display === 'none' || answer.style.display === '') {
-                        answer.style.display = 'block'; // Show the answer
+                        answer.style.display = 'block'; // Mostra la risposta
                     } else {
-                        answer.style.display = 'none'; // Hide the answer
+                        answer.style.display = 'none'; // Nasconde la risposta
                     }
                 });
             });
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inizializza i selettori del menu a tendina di Materialize
+            var elems = document.querySelectorAll('select');
+            M.FormSelect.init(elems);
+        });
     </script>
+
 </body>
 </html>
