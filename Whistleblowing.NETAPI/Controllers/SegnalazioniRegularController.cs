@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
@@ -154,6 +155,75 @@ namespace Whistleblowing.NETAPI.Controllers
 			return Ok(_segnalazioneRegular);
 
 		}
+
+
+		/// <summary>
+		/// API per modificare una segnalazione Regular, consentito solo agli utenti con ruolo OPERATORE
+		/// </summary>
+		/// <param name="userid"></param>
+		/// <param name="segnalazione"></param>
+		/// <returns></returns>
+		[HttpPut]
+		public async Task<ActionResult> PutSegnalazioneRegular([FromQuery] int userid,SegnalazioneRegularDTOInserimento segnalazione)
+		{
+			//trovo l' utente corrente e ne controllo il ruolo
+			var user = _context.User.Include(u=> u.Ruolo).FirstOrDefault(u=> u.Id == userid );
+
+
+			//se l'utente è null, restituisco errore
+			if (user == null)
+			{
+				return NotFound("Utente non trovato");
+			}
+
+			// Verifico se l'utente è un operatore (codice 2)
+			var isOperatore = user.Ruolo?.codice == 2;
+
+			//se l' utente non è un OPERATORE, ritorno un errore di accesso negato
+			if(!isOperatore)
+			{
+				return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
+			}
+
+
+			// Trovo la segnalazione da modificare
+			var segnalazioneEdit = await _context.segnalazioneRegulars.FindAsync(segnalazione.Id);
+
+			//se la segnalazione è null restituisco errore
+			if(segnalazioneEdit == null)
+			{
+				return Problem("non è stata trovata alcuna segnalazione con l' id fornito!");
+			}
+
+			//aggiorno i campi della segnalazione con i campi forniti dal DTO 
+			if(!segnalazione.FattoRiferitoA.IsNullOrEmpty()) segnalazioneEdit.FattoRiferitoA = segnalazione.FattoRiferitoA;
+			if(segnalazione.DataEvento.HasValue) segnalazioneEdit.DataEvento = segnalazione.DataEvento.Value;
+			if(!segnalazione.LuogoEvento.IsNullOrEmpty()) segnalazioneEdit.LuogoEvento = segnalazione.LuogoEvento;
+			if (!segnalazione.SoggettoColpevole.IsNullOrEmpty()) segnalazioneEdit.SoggettoColpevole = segnalazione.SoggettoColpevole;
+			if(!segnalazione.AreaAziendale.IsNullOrEmpty()) segnalazioneEdit.AreaAziendale = segnalazione.AreaAziendale;
+			if (!segnalazione.SoggettiPrivatiCoinvolti.IsNullOrEmpty()) segnalazioneEdit.SoggettiPrivatiCoinvolti = segnalazione.SoggettiPrivatiCoinvolti;
+			if (!segnalazione.ImpreseCoinvolte.IsNullOrEmpty()) segnalazioneEdit.ImpreseCoinvolte = segnalazione.ImpreseCoinvolte;
+			if (!segnalazione.PubbliciUfficialiPaCoinvolti.IsNullOrEmpty()) segnalazioneEdit.PubbliciUfficialiPaCoinvolti = segnalazione.PubbliciUfficialiPaCoinvolti;
+			if (!segnalazione.ModalitaConoscenzaFatto.IsNullOrEmpty()) segnalazioneEdit.ModalitaConoscenzaFatto = segnalazione.ModalitaConoscenzaFatto;
+			if (!segnalazione.SoggettiReferentiFatto.IsNullOrEmpty()) segnalazioneEdit.SoggettiReferentiFatto = segnalazione.SoggettiReferentiFatto;
+			if (!segnalazione.AmmontarePagamentoOAltraUtilita.IsNullOrEmpty()) segnalazioneEdit.AmmontarePagamentoOAltraUtilita = segnalazione.AmmontarePagamentoOAltraUtilita;
+			if(!segnalazione.CircostanzeViolenzaMinaccia.IsNullOrEmpty()) segnalazioneEdit.CircostanzeViolenzaMinaccia = segnalazione.CircostanzeViolenzaMinaccia;
+			if (!segnalazione.DescrizioneFatto.IsNullOrEmpty()) segnalazioneEdit.DescrizioneFatto = segnalazione.DescrizioneFatto;
+			if(!segnalazione.MotivazioneFattoIllecito.IsNullOrEmpty()) segnalazioneEdit.MotivazioneFattoIllecito = segnalazione.MotivazioneFattoIllecito;
+			if (!segnalazione.Note.IsNullOrEmpty()) segnalazioneEdit.Note = segnalazione.Note;
+
+			//eseguo la modifica dei dati
+			_context.segnalazioneRegulars.Update(segnalazioneEdit);
+
+			//salvo le modifiche effettuate
+			await _context.SaveChangesAsync();
+
+			return Ok(segnalazioneEdit);
+
+
+		}
+
+
 
 
 
