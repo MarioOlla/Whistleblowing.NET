@@ -6,12 +6,19 @@ using Newtonsoft.Json.Converters;
 
 namespace Whistleblowing.NETAPI.Models
 {
+	public enum Status
+	{
+
+		APERTO,
+		LAVORAZIONE,
+		CHIUSO
+
+	}
+
 	public class SegnalazioneRegular
 	{
-		public enum Status
-		{
-			APERTO, LAVORAZIONE, CHIUSO
-		}
+
+		
 
 		[Key]
 		[Column("segnalazione_regular_id")]
@@ -71,6 +78,9 @@ namespace Whistleblowing.NETAPI.Models
 
 		[Column("is_external")]
 		public Boolean? IsExternal { get; set; }
+
+		[Column("is_deleted")]
+		public Boolean? IsDeleted { get; set; }	
 
 		[Column("user_id")]
 		public int UserId { get; set; }

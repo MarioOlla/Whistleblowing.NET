@@ -6,6 +6,7 @@ using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
 using Whistleblowing.NETAPI.Models.view;
+using Status = Whistleblowing.NETAPI.Models.Status;
 
 namespace Whistleblowing.NETAPI.Controllers
 {
@@ -141,7 +142,7 @@ namespace Whistleblowing.NETAPI.Controllers
 				MotivazioneFattoIllecito = segnalazioneRegularDTOInserimento.MotivazioneFattoIllecito,
 				Note = segnalazioneRegularDTOInserimento.Note,
 				// Imposto lo status su "APERTO" all'inserimento
-				status = SegnalazioneRegular.Status.APERTO,
+				status = Status.APERTO,
 
 
 			};
@@ -222,6 +223,61 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 		}
+
+
+		[HttpPut("{id}")]
+		public async Task<ActionResult<SegnalazioneRegular>> DeleteSegnalazioneRegular( int id, [FromQuery] int userid)
+		{
+
+			//trovo l' utente corrente e ne controllo il ruolo
+			var user = _context.User.Include(u => u.Ruolo).FirstOrDefault(u => u.Id == userid);
+
+
+			//se l'utente è null, restituisco errore
+			if (user == null)
+			{
+				return NotFound("Utente non trovato");
+			}
+
+			// Verifico se l'utente è un operatore (codice 2)
+			var isOperatore = user.Ruolo?.codice == 2;
+
+			//se l' utente non è un OPERATORE, ritorno un errore di accesso negato
+			if (!isOperatore)
+			{
+				return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
+			}
+
+
+			//se l' id segnalazione risulta null, oppure dal context risulta null o il suo id è inferiore a zero torno NotFound
+			if (_context.segnalazioneRegulars == null || id == null || id < 0)
+			{
+				return NotFound();
+			}
+
+			//il context cerca a database la segnalazione da eliminare
+			SegnalazioneRegular segnalazione = await _context.segnalazioneRegulars.FindAsync(id);
+
+			//se la segnlazione è null torno errore
+			if (segnalazione == null)
+			{
+				return NotFound();
+			}
+
+			//se tutto va bene imposto il booleano a true
+			segnalazione.IsDeleted = true;
+
+			//salvo le modifiche 
+			await _context.SaveChangesAsync();
+
+			//modifico la segnalazione
+			_context.segnalazioneRegulars.Update(segnalazione);
+
+			return Ok();
+
+
+		}
+
 
 
 
