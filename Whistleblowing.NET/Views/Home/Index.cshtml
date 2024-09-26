@@ -106,6 +106,10 @@
             overflow-y: auto;
             margin-bottom: 20px;
         }
+
+        .btn{
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -280,13 +284,11 @@
 
     </div>
 
-    <!-- content nuova segnalazione -->
+    <!-- Content Nuova Segnalazione -->
     <div id="nuova-content" class="content">
         <h5>Nuova Segnalazione</h5>
-
-        <!-- Form di esempio per una nuova segnalazione -->
+        <!-- Form di segnalazione -->
         <form id="segnalazione-form" action="/submitSegnalazione" method="POST">
-            <!-- Tipologia di segnalazione -->
             <div class="input-field col s10 mt-2">
                 <select id="tipologia" name="tipologia" required>
                     <option value="" disabled selected>Seleziona una tipologia</option>
@@ -302,34 +304,75 @@
                     <option value="pagamentoagevolativoeffettuato">Pagamento agevolativo effettuato</option>
                     <option value="pagamentoestorto">Pagamento estorto</option>
                     <option value="altro">Altro, specificare:</option>
-
-
-
                 </select>
-@*                 <label for="tipologia">Tipologia di Segnalazione</label>
- *@            </div>
+            </div>
 
             <div class="row">
-                <!-- Nome -->
+
                 <div class="input-field col s12">
-                    <input id="nome" name="nome" type="text" class="validate" required>
-                    <label for="nome">Nome</label>
+                    <input id="dataevento" name="dataevento" type="date" class="validate" required>
+                    <label for="dataevento">Data evento</label>
                 </div>
 
-                <!-- Email -->
+                
                 <div class="input-field col s12">
-                    <input id="email" name="email" type="email" class="validate" required>
-                    <label for="email">Email</label>
+                    <input id="luogoevento" name="luogoevento" type="text" class="validate" required>
+                    <label for="luogoevento">Luogo evento </label>
                 </div>
 
-              
-
-                <!-- Descrizione della segnalazione -->
                 <div class="input-field col s12">
-                    <textarea id="descrizione" name="descrizione" class="materialize-textarea" required></textarea>
-                    <label for="descrizione">Descrizione</label>
+                    <input id="soggetti" name="soggetti" type="text" class="validate" required>
+                    <label for="soggetti">Soggetti che hanno commesso il fatto </label>
                 </div>
 
+             </div>
+             <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="areafunzioneaziendale" name="areafunzioneaziendale" class="materialize-textarea" required></textarea>
+                    <label for="areafunzioneaziendale">Area / Funzione Aziendale</label>
+                </div>
+                <div class="input-field col s12">
+                    <textarea id="soggettiprivati" name="soggettiprivati" class="materialize-textarea" ></textarea>
+                    <label for="soggettiprivati">Eventuali soggetti privati coinvolti</label>
+                </div>
+                <div class="input-field col s12">
+                    <textarea id="impresecoinvolte" name="impresecoinvolte" class="materialize-textarea" ></textarea>
+                    <label for="impresecoinvolte">Eventuali imprese coinvolte</label>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="pubbliciufficialipa" name="pubbliciufficialipa" class="materialize-textarea"></textarea>
+                        <label for="pubbliciufficialipa">Eventuali pubblici ufficiali / P.A. coinvolti</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <textarea id="modalita" name="modalita" class="materialize-textarea"></textarea>
+                        <label for="modalita">Modalità con cui è venuto a conoscenza del fatto</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="soggettireferenti" name="soggettireferenti" class="materialize-textarea"></textarea>
+                        <label for="soggettireferenti">Eventuali altri soggetti che possono riferire sul fatto</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <textarea id="ammontarepagamentooutilita" name="ammontarepagamentooutilita" class="materialize-textarea"></textarea>
+                        <label for="ammontarepagamentooutilita">Ammontare del pagamento o altra utilità / beneficio</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="circostanze" name="circostanze" class="materialize-textarea"></textarea>
+                        <label for="circostanze">Circostanze oggettive di violenza o minaccia</label>
+                    </div>
+               
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="descrizione" name="descrizione" class="materialize-textarea" rows="6"></textarea>
+                        <label for="descrizione">Descrizione</label>
+                    </div>
+                </div>
+            </div>
                 <!-- Checkbox per anonimato -->
                 <div class="col s12">
                     <label>
@@ -344,9 +387,9 @@
                         Invia Segnalazione
                     </button>
                 </div>
-            </div>
         </form>
     </div>
+
 
     <div id="docs-content" class="content">
         <h5>Docs & Links</h5>
