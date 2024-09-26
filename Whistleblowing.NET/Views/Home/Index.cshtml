@@ -110,6 +110,41 @@
         .btn{
             margin-top: 15px;
         }
+
+        .dropdown-trigger {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            margin-top: 15px; /* Margine per separare dal contenuto */
+        }
+
+        .dropdown-content {
+            display: none; /* Nascondi di default */
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            max-height: 200px; /* Limita l'altezza */
+            overflow-y: auto; /* Abilita lo scroll se necessario */
+            z-index: 1;
+        }
+
+            .dropdown-content label {
+                display: block;
+                padding: 10px;
+                cursor: pointer;
+            }
+            
+           
+
+      
+
+               
+
+       /*  .input-field label {
+            margin-top: 20px; /* Aggiusta questo valore per spostare la label più in basso */
+        } */
     </style>
 </head>
 <body>
@@ -290,22 +325,26 @@
         <!-- Form di segnalazione -->
         <form id="segnalazione-form" action="/submitSegnalazione" method="POST">
             <div class="input-field col s10 mt-2">
-                <select id="tipologia" name="tipologia" required>
-                    <option value="" disabled selected>Seleziona una tipologia</option>
+                <select id="tipologia" name="tipologia" multiple required>
+
                     <option value="reclutamento del personale">Reclutamento del Personale</option>
                     <option value="contatti">Contatti</option>
-                    <option value="concessionevantaggieconomici">Concessione di vantaggi economici comunque denominati</option>
-                    <option value="concessionealtrivantaggi">Concessione di altri tipi di vantaggi</option>
-                    <option value="nomine">Nomine, promozioni e deleghe</option>
+                    <option value="concessione vantaggi economici">Concessione di vantaggi economici</option>
+                    <option value="concessione altri vantaggi">Concessione di altri tipi di vantaggi</option>
+                    <option value="nomine">Nomine</option>
                     <option value="autorizzazioni">Autorizzazioni</option>
                     <option value="ispezioni">Ispezioni</option>
-                    <option value="rapportipauffpubblici">Rapporti con la P.A., Ufficiali Pubblici, ecc.</option>
-                    <option value="pagamentoagevolativorichiesto">Pagamento agevolativo richiesto</option>
-                    <option value="pagamentoagevolativoeffettuato">Pagamento agevolativo effettuato</option>
-                    <option value="pagamentoestorto">Pagamento estorto</option>
+                    <option value="rapporti con la P.A.">Rapporti con la P.A.</option>
                     <option value="altro">Altro, specificare:</option>
                 </select>
+                <label style="font-size: 15px; margin-top: 10px">Seleziona una o più tipologie</label>
             </div>
+            <!-- Textarea nascosta inizialmente, verrà mostrata solo quando si seleziona "Altro" -->
+            <div id="specifica-altro-container" class="input-field col s10 mt-2" style="display: none;">
+                <textarea id="altro-specifica" name="altro-specifica" class="materialize-textarea"></textarea>
+                <label for="altro-specifica">Specifica "Altro"</label>
+            </div>
+
 
             <div class="row">
 
@@ -373,6 +412,26 @@
                     </div>
                 </div>
             </div>
+            <div class="input-field col s10 mt-2">
+                <select id="perche" name="perche" multiple required>
+
+                    <option value="penalmente rilevante">È penalmente rilevante</option>
+                    <option value="viola la Politica aziendale, il Codice Etico o altre disposizioni sanzionabili in via disciplinare">Viola la Politica aziendale, il Codice Etico o altre disposizioni sanzionabili in via disciplinare</option>
+                    <option value="arreca un danno patrimoniale all’Organizzazionei">Arreca un danno patrimoniale all’Organizzazione</option>
+                    <option value="arreca un danno di immagine all’Organizzazione">Arreca un danno di immagine all’Organizzazione</option>
+                    <option value="viola le norme ambientali e di sicurezza sul lavoro">Viola le norme ambientali e di sicurezza sul lavoro</option>
+                    <option value="Costituisce un caso di mala-gestione delle risorse">Costituisce un caso di mala-gestione delle risorse</option>
+                    <option value="comporta una discriminazione nei confronti del segnalante">Comporta una discriminazione nei confronti del segnalante</option>
+                    <option value="altro">Altro, specificare:</option>
+                </select>
+                <label style="font-size: 15px">Seleziona una o più tipologie</label>
+            </div>
+            <!-- Textarea nascosta inizialmente, viene mostrata solo se viene selezionata l'opzione "Altro" -->
+            <div id="specifica-altro-container-perche" class="input-field col s10 mt-2" style="display: none;">
+                <textarea id="altro-specifica-perche" name="altro-specifica-perche" class="materialize-textarea"></textarea>
+                <label for="altro-specifica-perche">Specifica "Altro"</label>
+            </div>
+
                 <!-- Checkbox per anonimato -->
                 <div class="col s12">
                     <label>
@@ -437,10 +496,49 @@
                 });
             });
         });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     // Inizializza i selettori del menu a tendina di Materialize
+        //     var elems = document.querySelectorAll('select');
+        //     M.FormSelect.init(elems);
+        // });
         document.addEventListener('DOMContentLoaded', function () {
-            // Inizializza i selettori del menu a tendina di Materialize
+            // Inizializza il selettore del menu a tendina di Materialize
             var elems = document.querySelectorAll('select');
             M.FormSelect.init(elems);
+
+            // Riferimenti per il primo menu a tendina (tipologia) e la sua textarea
+            var selectTipologia = document.getElementById('tipologia');
+            var specificaAltroContainerTipologia = document.getElementById('specifica-altro-container');
+
+            // Riferimenti per il secondo menu a tendina (perche) e la sua textarea
+            var selectPerche = document.getElementById('perche');
+            var specificaAltroContainerPerche = document.getElementById('specifica-altro-container-perche');
+
+            // Funzione per mostrare/nascondere la textarea per "tipologia"
+            selectTipologia.addEventListener('change', function () {
+                var selectedValues = Array.from(selectTipologia.selectedOptions).map(option => option.value);
+
+                if (selectedValues.includes('altro')) {
+                    // Se "Altro" è selezionato, mostra la textarea
+                    specificaAltroContainerTipologia.style.display = 'block';
+                } else {
+                    // Se "Altro" non è selezionato, nascondi la textarea
+                    specificaAltroContainerTipologia.style.display = 'none';
+                }
+            });
+
+            // Funzione per mostrare/nascondere la textarea per "perche"
+            selectPerche.addEventListener('change', function () {
+                var selectedValues = Array.from(selectPerche.selectedOptions).map(option => option.value);
+
+                if (selectedValues.includes('altro')) {
+                    // Se "Altro" è selezionato, mostra la textarea
+                    specificaAltroContainerPerche.style.display = 'block';
+                } else {
+                    // Se "Altro" non è selezionato, nascondi la textarea
+                    specificaAltroContainerPerche.style.display = 'none';
+                }
+            });
         });
     </script>
 
