@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace Whistleblowing.NETAPI.Models
 {
-	public class User
+	public class User : IdentityUser
 	{
 
 		[Key]
@@ -15,6 +16,9 @@ namespace Whistleblowing.NETAPI.Models
 
 		[Column("cognome")]
 		public string Cognome { get; set; }
+
+		[Column("codiceFiscale")]
+		public string CodiceFiscale { get; set; }
 
 		[Column("email")]
 		public string Email { get; set; }

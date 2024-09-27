@@ -6,9 +6,28 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Whistleblowing.NETAPI.Models;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+	builder.Services.AddDbContext<WhistleBlowingContext>(options =>
+		options.UseSqlServer(builder.Configuration.GetConnectionString("WhistleBlowingContext") ?? throw new InvalidOperationException("Connection string 'WhistleBlowingContext' not found.")));
+	builder.Services.AddIdentity<User, IdentityRole>(options =>
+	{
+		options.Password.RequireDigit = true;
+		options.Password.RequireLowercase = true;
+		options.Password.RequireUppercase = true;
+		options.Password.RequireNonAlphanumeric = false;
+		options.Password.RequiredLength = 6;
+
+
+	})
+		.AddEntityFrameworkStores<WhistleBlowingContext>()
+		.AddDefaultTokenProviders();
+
+
+
 
 // Aggiungi il contesto del database
 builder.Services.AddDbContext<WhistleBlowingContext>(options =>
