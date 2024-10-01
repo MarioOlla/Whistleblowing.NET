@@ -9,6 +9,8 @@ namespace Whistleblowing.NETAPI.Data
 {
 	public class WhistleBlowingContext : DbContext
 	{
+		
+
 		public WhistleBlowingContext(DbContextOptions<WhistleBlowingContext> options)
 		 : base(options)
 		{
@@ -23,6 +25,8 @@ namespace Whistleblowing.NETAPI.Data
 		public DbSet<SegnalazioneAnonymous> SegnalazioneAnonymous { get; set; } = default!;
 
 		public DbSet<SegnalazioneRegularView> SegnalazioneRegularViews { get; set; } = default!;
+
+		public DbSet<CryptoKey> CryptoKey { get; set; } = default!;
 
 
 		

@@ -67,8 +67,6 @@ namespace Whistleblowing.NETAPI.Models.view
 		[Column("status")]
 		public Status? status { get; set; }
 
-		[Column("is_external")]
-		public bool? IsExternal { get; set; }
 
 		[Column("user_id")]
 		public int UserId { get; set; }

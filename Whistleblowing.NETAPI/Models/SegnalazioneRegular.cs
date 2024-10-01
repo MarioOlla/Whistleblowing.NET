@@ -76,8 +76,6 @@ namespace Whistleblowing.NETAPI.Models
 		[JsonConverter(typeof(StringEnumConverter))]
 		public Status? status { get; set; }
 
-		[Column("is_external")]
-		public Boolean? IsExternal { get; set; }
 
 		[Column("is_deleted")]
 		public Boolean? IsDeleted { get; set; }	

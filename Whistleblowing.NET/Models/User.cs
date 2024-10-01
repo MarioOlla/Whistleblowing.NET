@@ -34,6 +34,8 @@ namespace Whistleblowing.NET.Models
 
         public Boolean IsLoggedIn { get; set; }
 
+        
+
         public Ruolo? Ruolo { get; set; }
            
     }

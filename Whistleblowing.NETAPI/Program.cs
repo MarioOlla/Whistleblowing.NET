@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 	builder.Services.AddDbContext<WhistleBlowingContext>(options =>
 		options.UseSqlServer(builder.Configuration.GetConnectionString("WhistleBlowingContext") ?? throw new InvalidOperationException("Connection string 'WhistleBlowingContext' not found.")));
 	builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -25,7 +26,6 @@ var builder = WebApplication.CreateBuilder(args);
 	})
 		.AddEntityFrameworkStores<WhistleBlowingContext>()
 		.AddDefaultTokenProviders();
-
 
 
 

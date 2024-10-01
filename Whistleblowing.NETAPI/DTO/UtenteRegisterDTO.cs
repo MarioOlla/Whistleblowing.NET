@@ -1,16 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
-namespace Whistleblowing.NETAPI.Models
+namespace Whistleblowing.NETAPI.DTO
 {
-	public class User : IdentityUser
+	/// <summary>
+	/// DTO UtenteRegister per registrazione utente
+	/// <see cref="https://learn.microsoft.com/it-it/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-5"/>
+	/// </summary>
+	[Table("User")]
+	public class UtenteRegisterDTO
 	{
-
-		[Key]
-		[Column("user_id")]
-		public int Id { get; set; }
-
 		[Column("nome")]
 		public string Nome { get; set; }
 
@@ -43,20 +41,5 @@ namespace Whistleblowing.NETAPI.Models
 
 		[Column("provincia")]
 		public string Provincia { get; set; }
-
-		//proprietà per il dto di registrazione fino a qui ^^
-
-		[Column("isDeleted")]
-		public Boolean IsDeleted { get; set; }
-
-		[Column("isLoggedIn")]
-		public Boolean IsLoggedIn { get; set; }
-
-		[Column("isExternal")]
-		public Boolean IsExternal { get; set; }
-
-		[Column("RuoloId")]
-		public Ruolo? Ruolo { get; set; }
-
 	}
 }

@@ -61,8 +61,6 @@ namespace Whistleblowing.NETAPI.Models
 		[Column("status")]
 		public Status? status { get; set; }
 
-		[Column("is_external")]
-		public Boolean? IsExternal { get; set; }
 
 		[Column("user_hashed")]
 		public int UserHashed { get; set; }

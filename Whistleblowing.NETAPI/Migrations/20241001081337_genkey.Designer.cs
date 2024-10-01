@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Whistleblowing.NETAPI.Data;
 
@@ -11,9 +12,11 @@ using Whistleblowing.NETAPI.Data;
 namespace Whistleblowing.NETAPI.Migrations
 {
     [DbContext(typeof(WhistleBlowingContext))]
-    partial class WhistleBlowingContextModelSnapshot : ModelSnapshot
+    [Migration("20241001081337_genkey")]
+    partial class genkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,6 +122,10 @@ namespace Whistleblowing.NETAPI.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("imprese_coinvolte");
 
+                    b.Property<bool?>("IsExternal")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_external");
+
                     b.Property<string>("LuogoEvento")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("luogo_evento");
@@ -204,6 +211,10 @@ namespace Whistleblowing.NETAPI.Migrations
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("is_deleted");
+
+                    b.Property<bool?>("IsExternal")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_external");
 
                     b.Property<string>("LuogoEvento")
                         .HasColumnType("nvarchar(max)")
@@ -295,10 +306,6 @@ namespace Whistleblowing.NETAPI.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("isDeleted");
-
-                    b.Property<bool>("IsExternal")
-                        .HasColumnType("bit")
-                        .HasColumnName("isExternal");
 
                     b.Property<bool>("IsLoggedIn")
                         .HasColumnType("bit")
@@ -407,6 +414,10 @@ namespace Whistleblowing.NETAPI.Migrations
                     b.Property<string>("ImpreseCoinvolte")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("imprese_coinvolte");
+
+                    b.Property<bool?>("IsExternal")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_external");
 
                     b.Property<string>("LuogoEvento")
                         .HasColumnType("nvarchar(max)")
