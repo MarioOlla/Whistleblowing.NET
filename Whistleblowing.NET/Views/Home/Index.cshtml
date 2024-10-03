@@ -498,6 +498,12 @@
                 });
             });
 
+            // Mostra di default la sezione "Nuova Segnalazione" e nascondi le altre
+            contents.forEach(function (content) {
+                content.style.display = 'none'; // Nascondi tutte le sezioni
+            });
+            document.getElementById('nuova-content').style.display = 'block'; // Mostra Nuova Segnalazione
+
             // Gestisci click sulle domande delle FAQ per mostrare/nascondere le risposte
             var faqQuestions = document.querySelectorAll('.faq-question');
             faqQuestions.forEach(function (question) {
