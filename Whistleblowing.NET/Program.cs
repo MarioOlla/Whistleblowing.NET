@@ -12,6 +12,11 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 
 
 
+
+
+
+
+
 // Configura l'autenticazione basata su cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie(options =>
@@ -42,12 +47,15 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
+
 // Aggiungi il middleware di rate limiting
 app.UseIpRateLimiting();
 
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 // Attiva l'autenticazione e autorizzazione
 app.UseAuthentication(); // Deve venire prima di UseAuthorization
