@@ -46,8 +46,7 @@ namespace Whistleblowing.NET.Models
 
         public Status? status { get; set; }
 
-        public Boolean? IsExternal { get; set; }
-
+       
         public int UserHashed { get; set; }
     }
 }
