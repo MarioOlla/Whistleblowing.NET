@@ -6,28 +6,44 @@
     <title>@ViewData["Title"] - Whistleblowing.NET</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-  
     <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-
     <!-- Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <!-- CSS del progetto -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Whistleblowing.NET.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Altezza minima del viewport */
+        }
+
+        .container {
+            flex: 1; /* Permette al contenuto di espandersi */
+            padding: 20px; /* Padding per il contenuto principale */
+            box-sizing: border-box; /* Assicura che il padding non influisca sull'altezza totale */
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: auto; /* Spinge il footer in basso */
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" >Whistleblowing</a>
-                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Whistleblowing</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button> 
-            
+                </button>
             </div>
         </nav>
     </header>
@@ -37,14 +53,94 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="text-center text-lg-start bg-body-tertiary text-muted">
+        <!-- Section: Social media -->
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        </section>
+        <!-- Section: Social media -->
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <a class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none" href="https://www.solvingteam.it/">
+                            <img src="https://www.geeklogica.it/wp-content/uploads/2022/02/Group-17.png" alt="Solving Team" height="92">
+                        </a>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <p class="fw-bold text-dark">
+                            Sede Legale e Operativa
+                        </p>
+                        <p class="mb-4">
+                            Via Mosca, 52
+                            00142 ROMA - ITALIA
+                            <br />
+                            Telefono: (+ 39) 06 51607174
+                        </p>
+
+                        <p class="fw-bold text-dark">
+                            Sede Legale e Operativa Napoli
+                        </p>
+                        <p>
+                            Centro Direzionale Isola G7
+                            80143 NAPOLI - ITALIA
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4 text-dark">
+                            Contatti
+                        </h6>
+                        <p>
+                            Email: <a href="mailto:jobs@solvingteam.it" class="text-reset" style="color: #eb132c !important;"><b>jobs@solvingteam.it</b></a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4 text-dark">Social</h6>
+                        <div class="socials-icon-container d-flex gap-2 align-items-center">
+                            <a href="https://www.facebook.com/SolvingTeam/" class="me-4 text-reset">
+                                <i class="bi bi-facebook" style="color: #eb132c; font-size: 25px"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/company/solving-team/" class="me-4 text-reset">
+                                <i class="bi bi-linkedin" style="color: #eb132c; font-size: 25px"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+        <!-- Copyright -->
         <div class="container">
-            &copy; 2024 - Whistleblowing.NET - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <hr class="solid" style="margin: 0rem 10rem;" />
+            <div class="text-center p-4">
+                <p class="footer-copyright">
+                    © 2024 Solvingteam Srl -  P.IVA 06925571009 |
+                    <a href="https://lnx.solvingteam.it/web/privacy-policy/?customize_changeset_uuid=89766af3-ef7a-4b96-8806-dd8044cb8b5e&amp;customize_messenger_channel=preview-0" class="text-primary" style="text-decoration: none">Privacy Policy</a>
+                </p>
+            </div>
         </div>
+        <!-- Copyright -->
     </footer>
+    <!-- Footer -->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
