@@ -139,6 +139,22 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 
+		[HttpPost]
+		public async Task<IActionResult> Logout()
+		{ 
+
+
+			//Eseguo il logout dell' utente
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+			//Reindirizzo l' utente alla pagina di login
+			return Ok(new { message = "Logged out succesfully" });
+
+		}
+
+
+
 
 
 
