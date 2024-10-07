@@ -26,6 +26,8 @@ namespace Whistleblowing.NETAPI.Data
 
 		public DbSet<SegnalazioneRegularView> SegnalazioneRegularViews { get; set; } = default!;
 
+		public DbSet<SegnalazioneAnonimaView> SegnalazioneAnonimaViews { get; set; } = default!;
+
 		public DbSet<CryptoKey> CryptoKey { get; set; } = default!;
 
 
@@ -39,6 +41,9 @@ namespace Whistleblowing.NETAPI.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<SegnalazioneRegularView>().HasNoKey().ToView("SegnalazioneRegularView");
+			modelBuilder.Entity<SegnalazioneAnonimaView>().HasNoKey().ToView("SegnalazioneAnonimaView");
+
+
 		}
 
 	}

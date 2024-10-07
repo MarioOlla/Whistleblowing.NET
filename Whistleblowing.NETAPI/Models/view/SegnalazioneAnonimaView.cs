@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Whistleblowing.NETAPI.Models
+namespace Whistleblowing.NETAPI.Models.view
 {
-	public class SegnalazioneAnonymous
+	public class SegnalazioneAnonimaView
 	{
-		[Key]
 		[Column("segnalazione_anonima_id")]
 		public int Id { get; set; }
 
@@ -58,7 +57,7 @@ namespace Whistleblowing.NETAPI.Models
 		public string? Note { get; set; }
 
 		[Column("status")]
-		public Status? status { get; set; }
+		public Status status { get; set; }
 
 
 		[Column("user_hashed")]

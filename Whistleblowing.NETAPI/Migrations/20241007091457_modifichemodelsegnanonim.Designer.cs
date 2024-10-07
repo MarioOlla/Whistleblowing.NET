@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Whistleblowing.NETAPI.Data;
 
@@ -11,9 +12,11 @@ using Whistleblowing.NETAPI.Data;
 namespace Whistleblowing.NETAPI.Migrations
 {
     [DbContext(typeof(WhistleBlowingContext))]
-    partial class WhistleBlowingContextModelSnapshot : ModelSnapshot
+    [Migration("20241007091457_modifichemodelsegnanonim")]
+    partial class modifichemodelsegnanonim
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,6 +155,7 @@ namespace Whistleblowing.NETAPI.Migrations
                         .HasColumnName("soggetto_colpevole");
 
                     b.Property<string>("UserHashed")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("user_hashed");
 
