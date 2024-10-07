@@ -11,6 +11,7 @@ using System.Text;
 using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
+using Whistleblowing.NETAPI.Service;
 
 namespace Whistleblowing.NETAPI.Controllers
 {
@@ -20,11 +21,15 @@ namespace Whistleblowing.NETAPI.Controllers
 	{
 
 		public readonly WhistleBlowingContext _context;
+		private readonly IEmailService _emailService;
+
+		private readonly Random _random;
 
 
-		public AuthController(WhistleBlowingContext context)
+		public AuthController(WhistleBlowingContext context, IEmailService emailService)
 		{
-
+			_emailService = emailService;
+			_random = new Random();
 			_context = context;
 		}
 
@@ -62,6 +67,7 @@ namespace Whistleblowing.NETAPI.Controllers
 					LuogoNascita = utenteRegister.LuogoNascita,
 					Provincia = utenteRegister.Provincia,
 					CodiceFiscale = utenteRegister.CodiceFiscale,
+					HasChangedPassword = utenteRegister.HasChangedPassword = true,
 
 					Ruolo = await _context.Ruolo.FirstOrDefaultAsync(r => r.descrizione == "Utente") // Imposta ruolo utente
 				};
@@ -138,10 +144,13 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 
-
+		/// <summary>
+		/// metodo che permette di effettuare il Logout dell' utente
+		/// </summary>
+		/// <returns></returns>
 		[HttpPost]
 		public async Task<IActionResult> Logout()
-		{ 
+		{
 
 
 			//Eseguo il logout dell' utente
@@ -153,6 +162,88 @@ namespace Whistleblowing.NETAPI.Controllers
 
 		}
 
+
+		/// <summary>
+		/// metodo che genera una password casuale in caso di password dimenticata
+		/// </summary>
+		/// <returns></returns>
+		private string GenerateRandomPassword()
+		{
+			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			var random = new Random();
+			return new string(Enumerable.Repeat(chars, 8)
+			  .Select(s => s[random.Next(s.Length)]).ToArray());
+		}
+
+		/// <summary>
+		/// metodo che assegna una nuova password all' utente
+		/// </summary>
+		/// <param name="emailRequest"></param>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<IActionResult> ForgotPassword([FromBody] EmailRequest emailRequest)
+		{
+			if (string.IsNullOrEmpty(emailRequest.Email))
+			{
+				return BadRequest("Email non valida.");
+			}
+
+			var user = await _context.User.FirstOrDefaultAsync(u => u.Email == emailRequest.Email);
+			if (user == null)
+			{
+				return NotFound("Utente non trovato.");
+			}
+
+			string newPassword = GenerateRandomPassword();
+			user.HasChangedPassword = false;
+			user.Password = Convert.ToBase64String(Encoding.UTF8.GetBytes(newPassword));
+			_context.User.Update(user);
+			await _context.SaveChangesAsync();
+
+			string subject = "Nuova password per il ripristino dell'account";
+			string message = $"La tua nuova password è: {newPassword}. Ti consigliamo di cambiarla al più presto.";
+			await _emailService.SendEmailAsync(emailRequest.Email, subject, message);
+
+			return Ok();
+		}
+
+
+		/// <summary>
+		/// metodo che utilizzo per cambiare la password dopo aver ottenuto quella temporanea
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+		{
+			// Controllo se la richiesta è valida
+			if (string.IsNullOrEmpty(request.Mail) || string.IsNullOrEmpty(request.NewPassword))
+			{
+				return BadRequest("Impossibile cambiare la password.");
+			}
+
+			// Cerco l'utente nel database con l'email fornita
+			var user = await _context.User.FirstOrDefaultAsync(u => u.Email == request.Mail);
+			if (user == null)
+			{
+				return NotFound("Utente non trovato.");
+			}
+
+			// Aggiorno la password nel database
+			user.Password = Convert.ToBase64String(Encoding.UTF8.GetBytes(request.NewPassword));
+			user.HasChangedPassword = true;
+			_context.User.Update(user);
+			await _context.SaveChangesAsync();
+
+			// Restituisco un'esito positivo
+			return Ok();
+		}
+
+
+
+
+
+		
 
 
 

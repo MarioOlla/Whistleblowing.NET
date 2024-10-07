@@ -52,6 +52,9 @@ namespace Whistleblowing.NETAPI.Models
 		[Column("isLoggedIn")]
 		public Boolean IsLoggedIn { get; set; }
 
+		[Column("HasChangedPassword")]
+		public bool HasChangedPassword { get; set; }
+
 		[Column("isExternal")]
 		public Boolean IsExternal { get; set; }
 

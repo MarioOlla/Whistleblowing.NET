@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Whistleblowing.NETAPI.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Whistleblowing.NETAPI.Service;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -91,6 +92,13 @@ builder.Services.AddSwaggerGen(c =>
 	c.CustomSchemaIds(type => type.FullName);
 
 }); ;
+
+
+//configurazione email
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+// Registrazione dei servizi
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var app = builder.Build();
 

@@ -36,6 +36,10 @@ namespace Whistleblowing.NETAPI.DTO
 		[Column("data_nascita")]
 		public DateTime DataNascita { get; set; }
 
+		[Column("HasChangedPassword")]
+		public bool HasChangedPassword { get; set; }
+
+
 		[Column("luogo_nascita")]
 		public string LuogoNascita { get; set; }
 
