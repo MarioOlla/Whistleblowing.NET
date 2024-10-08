@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using Whistleblowing.NETAPI.Crypto;
 using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
@@ -15,15 +18,16 @@ namespace Whistleblowing.NETAPI.Controllers
 	{
 
 
-		//aggiungo il Db_Context
+		// Aggiungo il Db_Context e CryptoService
 		private readonly WhistleBlowingContext _context;
+		private readonly CryptoService _cryptoService; // Aggiungi il servizio Crypto
 
-		public SegnalazioniAnonimeController(WhistleBlowingContext context)
+		// Modifico il costruttore per includere anche CryptoService
+		public SegnalazioniAnonimeController(WhistleBlowingContext context, CryptoService cryptoService)
 		{
 			_context = context;
+			_cryptoService = cryptoService; // Inietto il servizio Crypto
 		}
-
-
 
 
 
@@ -82,35 +86,37 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 
-
-
-
-
-
-
-
-
 		/// <summary>
 		/// API per inserimento di una segnalazione Anonima
 		/// </summary>
-		/// <param name="segnalazioneRegularDTOInserimento">segnalazione da inserire</param>
+		/// <param name="segnalazioneAnonimaDTO">segnalazione da inserire</param>
 		/// <returns></returns>
 		[HttpPost]
-		public async Task<IActionResult> PostSegnalazioneRegular(SegnalazioneAnonimaDTO segnalazioneAnonimaDTO)
+		public async Task<IActionResult> PostSegnalazioneAnonima(SegnalazioneAnonimaDTO segnalazioneAnonimaDTO)
 		{
-			//se la segnalazione è null torno errore
+			// Se la segnalazione è null, ritorno un errore
 			if (segnalazioneAnonimaDTO == null)
 			{
 				return BadRequest();
 			}
 
-			//se il context non trova la tabella ritorno errore
+			// Se il context non trova la tabella ritorno errore
 			if (_context.SegnalazioneAnonymous == null)
 			{
 				return BadRequest();
 			}
 
-			// *** Creo il mio oggetto segnalazione per effettuare l' inserimento *** //
+			// *** Estraggo l'utente autenticato dal cookie tramite i claims ***
+			var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+			var userName = User.FindFirst(ClaimTypes.Name)?.Value;
+			var userSurname = User.FindFirst(ClaimTypes.Surname)?.Value;
+
+			if (userEmail == null || userName == null || userSurname == null)
+			{
+				return Unauthorized("Non è stato possibile identificare l'utente dal cookie.");
+			}
+
+			// *** Creo il mio oggetto segnalazione per effettuare l'inserimento *** //
 			var _segnalazioneAnonima = new SegnalazioneAnonymous()
 			{
 				FattoRiferitoA = segnalazioneAnonimaDTO.FattoRiferitoA,
@@ -118,7 +124,7 @@ namespace Whistleblowing.NETAPI.Controllers
 				LuogoEvento = segnalazioneAnonimaDTO.LuogoEvento,
 				SoggettoColpevole = segnalazioneAnonimaDTO.SoggettoColpevole,
 				AreaAziendale = segnalazioneAnonimaDTO.AreaAziendale,
-				SoggettiPrivatiCoinvolti =	segnalazioneAnonimaDTO.SoggettiPrivatiCoinvolti,
+				SoggettiPrivatiCoinvolti = segnalazioneAnonimaDTO.SoggettiPrivatiCoinvolti,
 				ImpreseCoinvolte = segnalazioneAnonimaDTO.ImpreseCoinvolte,
 				PubbliciUfficialiPaCoinvolti = segnalazioneAnonimaDTO.PubbliciUfficialiPaCoinvolti,
 				ModalitaConoscenzaFatto = segnalazioneAnonimaDTO.ModalitaConoscenzaFatto,
@@ -128,18 +134,33 @@ namespace Whistleblowing.NETAPI.Controllers
 				DescrizioneFatto = segnalazioneAnonimaDTO.DescrizioneFatto,
 				MotivazioneFattoIllecito = segnalazioneAnonimaDTO.MotivazioneFattoIllecito,
 				Note = segnalazioneAnonimaDTO.Note,
-				// Imposto lo status su "APERTO" all'inserimento
-				status = Status.APERTO,
+				status = Status.APERTO,  // Imposto lo status su "APERTO" all'inserimento
 			};
 
-			//effettuo l' inserimento della segnalazione
+			// *** Crittografo il nome e cognome dell'utente ***
+			string dataToEncrypt = $"{userName} {userSurname}";
+
+			// Recupero la chiave pubblica dal database per cifrare i dati
+			var cryptoKey = _cryptoService.fetchCryptoInfo();
+			if (cryptoKey == null)
+			{
+				return BadRequest("Chiave crittografica non trovata.");
+			}
+
+			// Carico la chiave pubblica
+			RSAParameters publicKey = CryptoService.LoadPublicKey(cryptoKey.RsaPublicKey);
+
+			// Cifro il nome e cognome dell'utente
+			byte[] encryptedUserHashed = CryptoService.EncryptWithRSA(publicKey, dataToEncrypt);
+			_segnalazioneAnonima.UserHashed = Convert.ToBase64String(encryptedUserHashed);
+
+			// Effettuo l'inserimento della segnalazione
 			_context.SegnalazioneAnonymous.Add(_segnalazioneAnonima);
 
-			//salvo le modifiche del context
+			// Salvo le modifiche del context
 			await _context.SaveChangesAsync();
 
 			return Ok(_segnalazioneAnonima);
-
 		}
 	}
 }

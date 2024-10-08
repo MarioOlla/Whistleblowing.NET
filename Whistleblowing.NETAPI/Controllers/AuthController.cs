@@ -123,6 +123,7 @@ namespace Whistleblowing.NETAPI.Controllers
 					new Claim("Ruolo", existingUser.Ruolo.Id.ToString()),
 				};
 
+				
 				var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
 				var authProperties = new AuthenticationProperties
