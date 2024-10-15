@@ -78,9 +78,9 @@ namespace Whistleblowing.NETAPI.Models
 
 
 		[Column("is_deleted")]
-		public Boolean? IsDeleted { get; set; }	
+		public Boolean? IsDeleted { get; set; }
 
-		[Column("user_id")]
+		[ForeignKey("user_id"), Column("user_id")] 
 		public int UserId { get; set; }
 
 

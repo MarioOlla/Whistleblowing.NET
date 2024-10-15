@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Whistleblowing.NETAPI.Crypto;
 using System.Security.Cryptography;
 using Whistleblowing.NETAPI.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,19 +61,32 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers().AddJsonOptions(x =>
 	x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-	   .AddCookie(options =>
-	   {
 
-		   options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-		   options.Cookie.Name = "Cookie"; // Specifica il nome del cookie
-										   //options.Cookie.HttpOnly = true;
-										   //options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Imposta la politica di sicurezza del cookie
-										   //options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None; // Imposta SameSite su Strict per proteggere da attacchi CSRF
-		   options.Cookie.IsEssential = true; // Imposta il cookie come essenziale per le richieste
-		   options.AccessDeniedPath = "/Unauthorized/ErrorPage"; // Imposta il percorso di accesso negato per il reindirizzamento
-		   options.LoginPath = "/Auth/Login";
-	   });
+
+
+
+// Configura l'autenticazione JWT
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+		ValidIssuer = builder.Configuration["Jwt:Issuer"],
+		ValidAudience = builder.Configuration["Jwt:Audience"],
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+	};
+});
+
+builder.Services.AddScoped<JwtUtils>();
+
 
 //
 // Add services to the container.
@@ -156,7 +172,13 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+app.UseMiddleware<JwtMiddleware>();
+
+
 app.UseHttpsRedirection();
+
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

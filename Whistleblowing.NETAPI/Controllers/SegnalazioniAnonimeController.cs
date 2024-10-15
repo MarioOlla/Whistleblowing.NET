@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -85,38 +86,51 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 
-
 		/// <summary>
 		/// API per inserimento di una segnalazione Anonima
 		/// </summary>
 		/// <param name="segnalazioneAnonimaDTO">segnalazione da inserire</param>
 		/// <returns></returns>
+		[Authorize] // Richiede che l'utente sia autenticato tramite JWT
 		[HttpPost]
 		public async Task<IActionResult> PostSegnalazioneAnonima(SegnalazioneAnonimaDTO segnalazioneAnonimaDTO)
 		{
 			// Se la segnalazione è null, ritorno un errore
 			if (segnalazioneAnonimaDTO == null)
 			{
-				return BadRequest();
+				return BadRequest("La segnalazione non può essere vuota.");
 			}
 
-			// Se il context non trova la tabella ritorno errore
+			// Verifico che il context abbia la tabella
 			if (_context.SegnalazioneAnonymous == null)
 			{
-				return BadRequest();
+				return BadRequest("Impossibile trovare il contesto della segnalazione anonima.");
 			}
 
-			// *** Estraggo l'utente autenticato dal cookie tramite i claims ***
-			var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-			var userName = User.FindFirst(ClaimTypes.Name)?.Value;
-			var userSurname = User.FindFirst(ClaimTypes.Surname)?.Value;
-
-			if (userEmail == null || userName == null || userSurname == null)
+			// Estrazione dell'ID dell'utente autenticato dalle claim nel token JWT
+			var userIdString = User.FindFirst("UserId")?.Value;
+			if (string.IsNullOrEmpty(userIdString))
 			{
-				return Unauthorized("Non è stato possibile identificare l'utente dal cookie.");
+				return Unauthorized("Non è stato possibile identificare l'utente dai claims.");
 			}
 
-			// *** Creo il mio oggetto segnalazione per effettuare l'inserimento *** //
+			// Converto l'ID utente in un intero
+			if (!int.TryParse(userIdString, out int userId))
+			{
+				return BadRequest("ID utente non valido.");
+			}
+
+			// Recupero l'utente dal database usando l'ID estratto dal token JWT
+			var user = await _context.User.FindAsync(userId);
+			if (user == null)
+			{
+
+				return NotFound("Utente non trovato.");
+			}
+
+			Console.WriteLine(user.Id.ToString(), user.Nome, user.Cognome, user.Email);
+
+			// Creo l'oggetto segnalazione per l'inserimento
 			var _segnalazioneAnonima = new SegnalazioneAnonymous()
 			{
 				FattoRiferitoA = segnalazioneAnonimaDTO.FattoRiferitoA,
@@ -134,33 +148,34 @@ namespace Whistleblowing.NETAPI.Controllers
 				DescrizioneFatto = segnalazioneAnonimaDTO.DescrizioneFatto,
 				MotivazioneFattoIllecito = segnalazioneAnonimaDTO.MotivazioneFattoIllecito,
 				Note = segnalazioneAnonimaDTO.Note,
-				status = Status.APERTO,  // Imposto lo status su "APERTO" all'inserimento
+				status = Status.APERTO, // Imposto lo status su "APERTO" all'inserimento
 			};
 
-			// *** Crittografo il nome e cognome dell'utente ***
-			string dataToEncrypt = $"{userName} {userSurname}";
+			// Crittografia del nome e cognome dell'utente
+			string dataToEncrypt = $"{user.Nome} {user.Cognome}";
 
-			// Recupero la chiave pubblica dal database per cifrare i dati
+			// Recupero la chiave pubblica per cifrare i dati
 			var cryptoKey = _cryptoService.fetchCryptoInfo();
 			if (cryptoKey == null)
 			{
 				return BadRequest("Chiave crittografica non trovata.");
 			}
 
-			// Carico la chiave pubblica
 			RSAParameters publicKey = CryptoService.LoadPublicKey(cryptoKey.RsaPublicKey);
 
-			// Cifro il nome e cognome dell'utente
+			// Crittografia del nome e cognome dell'utente
 			byte[] encryptedUserHashed = CryptoService.EncryptWithRSA(publicKey, dataToEncrypt);
 			_segnalazioneAnonima.UserHashed = Convert.ToBase64String(encryptedUserHashed);
 
-			// Effettuo l'inserimento della segnalazione
+			// Inserimento della segnalazione nel database
 			_context.SegnalazioneAnonymous.Add(_segnalazioneAnonima);
 
-			// Salvo le modifiche del context
+			// Salvo le modifiche
 			await _context.SaveChangesAsync();
 
 			return Ok(_segnalazioneAnonima);
 		}
+
+
 	}
 }

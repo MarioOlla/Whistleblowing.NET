@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
 using Whistleblowing.NETAPI.Models.view;
 using Status = Whistleblowing.NETAPI.Models.Status;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using Whistleblowing.NETAPI.Crypto;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Whistleblowing.NETAPI.Controllers
 {
