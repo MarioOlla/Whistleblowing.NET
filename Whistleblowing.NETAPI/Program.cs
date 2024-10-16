@@ -18,6 +18,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
+//##################################################################### DB CONTEXT ########################################################################################
+
+
 	builder.Services.AddDbContext<WhistleBlowingContext>(options =>
 		options.UseSqlServer(builder.Configuration.GetConnectionString("WhistleBlowingContext") ?? throw new InvalidOperationException("Connection string 'WhistleBlowingContext' not found.")));
 	builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -38,6 +41,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Aggiungi il contesto del database
 builder.Services.AddDbContext<WhistleBlowingContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("WhistleBlowingContext")));
+
+
+
+//#################################################################### CORS ##############################################################################################
 
 // servizio web e applicazione che effettua richieste hanno domini differenti
 // quindi, abilitando CORS, consento ad altri domini di chiamare l'API
@@ -63,7 +70,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 	x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 
-
+//################################################################ JSON WEB TOKEN ###########################################################################################
 
 // Configura l'autenticazione JWT
 builder.Services.AddAuthentication(options =>
@@ -98,7 +105,7 @@ builder.Services.AddControllers()
 
 
 
-
+//############################################################# SWAGGER ##################################################################################################
 
 // Add services to the container.
 
@@ -111,9 +118,11 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 
+
+
 builder.Services.AddTransient<CryptoService>();
 
-
+//############################################################ EMAIL SERVICE #############################################################################################
 
 //configurazione email
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -122,6 +131,11 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 var app = builder.Build();
+
+
+//########################################################## CRYPTO SERVICE ##############################################################################################
+
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -163,6 +177,9 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("Errore durante il setup della crittografia: {0} \n\n {1}",ex.Message, ex.StackTrace);
     }
 }
+
+
+//########################################################### CONFIGURAZIONI DI AVVIO SERVIZI ############################################################################
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())

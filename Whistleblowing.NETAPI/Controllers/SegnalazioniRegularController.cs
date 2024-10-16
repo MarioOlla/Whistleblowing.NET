@@ -126,6 +126,32 @@ namespace Whistleblowing.NETAPI.Controllers
 				return BadRequest();
 			}
 
+			//estraggo l' ID dell' utente autenticato dalle claim del token JWT
+			var userIdString = User.FindFirst("UserId")?.Value;
+
+			//controllo per vedere se le claims non abbiano problemi
+			if (string.IsNullOrEmpty(userIdString))
+			{
+				return Unauthorized("Non è stato possibile identificare l'utente dalle claims");
+			}
+
+			//Converto l' ID Utente in un intero
+			if(!int.TryParse(userIdString, out int userId))
+			{
+				return BadRequest("ID Utente non valido");
+			}
+
+			//Recupero l' utente dal database usando l' ID estratto dal token JWT
+			var user = await _context.User.FindAsync(userId);
+
+			if(user == null)
+			{
+				return NotFound("Utente non trovato");
+			}
+
+			//stampa per visualizzare se i dati arrivano correttamente
+			Console.WriteLine(user.Id.ToString(), user.Nome, user.Cognome, user.Email);
+
 			// *** Creo il mio oggetto segnalazione per effettuare l' inserimento *** //
 			var _segnalazioneRegular = new SegnalazioneRegular()
 			{
