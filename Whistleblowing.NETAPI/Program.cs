@@ -130,6 +130,14 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 // Registrazione dei servizi
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+//########################################################## PDF SERVICE #################################################################################################
+
+
+//registro il servizio pdf
+builder.Services.AddScoped<PdfService>();
+
+
+
 var app = builder.Build();
 
 
@@ -179,10 +187,12 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+
+
 //########################################################### CONFIGURAZIONI DI AVVIO SERVIZI ############################################################################
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();

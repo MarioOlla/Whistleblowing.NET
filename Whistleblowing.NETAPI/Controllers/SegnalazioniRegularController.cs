@@ -10,6 +10,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Whistleblowing.NETAPI.Crypto;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Whistleblowing.NETAPI.Service;
 
 namespace Whistleblowing.NETAPI.Controllers
 {
@@ -20,9 +23,13 @@ namespace Whistleblowing.NETAPI.Controllers
 		//aggiungo il Db_Context
 		private readonly WhistleBlowingContext _context;
 
-		public SegnalazioniRegularController(WhistleBlowingContext context)
+		//aggiungo il pdfService
+		private readonly PdfService _pdfService;
+
+		public SegnalazioniRegularController(WhistleBlowingContext context, PdfService pdfService)
 		{
 			_context = context;
+			_pdfService = pdfService;
 		}
 
 		/// <summary>
@@ -76,23 +83,14 @@ namespace Whistleblowing.NETAPI.Controllers
 		/// <summary>
 		/// Metodo che utilizzo per ottenere una segnalazione Regolare in base al suo id e l' id utente
 		/// </summary>
-		/// <param name="userId"></param>
 		/// <param name="segnalazioneRegularId"></param>
 		/// <returns></returns>
 		[HttpGet("getSegnalazioneRegularById")]
-		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById(int userId, int segnalazioneRegularId)
+		[Authorize]
+		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById( int segnalazioneRegularId)
 		{
-			//Per prima cosa verifico che l' utente esista
-			var utenteEsistente = await _context.User.AnyAsync(u => u.Id == userId && !u.IsDeleted);
-
-			//se non esiste torno NotFound
-			if (!utenteEsistente)
-			{
-				return NotFound(new { message = "utente non trovato!" });
-			}
-
-			//se quindi esiste cerco la segnalazione con il suo id e quello dell' utente specificato
-			var segnalazione = await _context.SegnalazioneRegularViews.FirstOrDefaultAsync(s => s.UserId == userId && s.Id == segnalazioneRegularId);
+			//e cerco la segnalazione con il suo id e quello dell' utente specificato
+			var segnalazione = await _context.SegnalazioneRegularViews.FirstOrDefaultAsync(s =>  s.Id == segnalazioneRegularId);
 
 			//se invece non trovo la segnalazione restituisco un NotFound
 			if(segnalazione == null)
@@ -107,11 +105,37 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 		/// <summary>
+		/// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
+		/// </summary>
+		/// <param name="segnlazioneRegularId"></param>
+		/// <returns></returns>
+		[HttpGet("SegnalazioneRegularPdfById")]
+		[Authorize]
+		public async Task<IActionResult> GetSegnalazioneRegularPdfById(int segnalazioneRegularId)
+		{
+			//Recupero la segnalazione dal database
+			var segnalazione = await _context.SegnalazioneRegularViews.FirstOrDefaultAsync(s => s.Id == segnalazioneRegularId);
+
+			//controllo se la segnalazione è a null
+			if(segnalazione == null)
+			{
+				return NotFound(new { message = "Segnalazione non trovata!" });
+			}
+
+			//Genero il pdf utilizzando pdfService
+			var pdfBytes = _pdfService.GenerateSegnalazioneRegularPdf(segnalazione);
+
+			//Restituisce il PDF come File
+			return File(pdfBytes, "application/pdf", $"segnalazione_{segnalazioneRegularId}.pdf");
+		}
+
+		/// <summary>
 		/// API per inserimento di una segnalazione Regular
 		/// </summary>
 		/// <param name="segnalazioneRegularDTOInserimento">segnalazione da inserire</param>
 		/// <returns></returns>
 		[HttpPost]
+		[Authorize] // Richiede che l'utente sia autenticato tramite JWT
 		public async Task<IActionResult> PostSegnalazioneRegular(SegnalazioneRegularDTOInserimento segnalazioneRegularDTOInserimento)
 		{
 			//se la segnalazione è null torno errore
@@ -170,6 +194,7 @@ namespace Whistleblowing.NETAPI.Controllers
 				DescrizioneFatto = segnalazioneRegularDTOInserimento.DescrizioneFatto,
 				MotivazioneFattoIllecito = segnalazioneRegularDTOInserimento.MotivazioneFattoIllecito,
 				Note = segnalazioneRegularDTOInserimento.Note,
+				UserId = userId,
 				// Imposto lo status su "APERTO" all'inserimento
 				status = Status.APERTO,
 
