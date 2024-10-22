@@ -114,5 +114,117 @@ namespace Whistleblowing.NETAPI.Service
                 return stream.ToArray();
             }
         }
-    }
+
+
+
+
+
+
+
+		public byte[] GenerateSegnalazioneAnonimaPdf(SegnalazioneAnonimaView segnalazioneAnonima)
+		{
+			using (var stream = new MemoryStream())
+			{
+				// Creo il pdf Writer
+				PdfWriter writer = new PdfWriter(stream);
+
+				// pdfDocument
+				PdfDocument pdf = new PdfDocument(writer);
+
+				// documento pdf
+				Document document = new Document(pdf);
+
+				// Creo il titolo del documento
+				document.Add(new Paragraph("Dettaglio Segnalazione")
+					.SetTextAlignment(TextAlignment.CENTER)
+					.SetFontSize(18)
+					.SetBold());
+
+				// creo uno spazio vuoto
+				document.Add(new Paragraph("\n"));
+
+				// Definisco la tabella con due colonne
+				Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 4 })) // Prima colonna piccola (1 parte) e seconda più grande (4 parti)
+					.SetWidth(UnitValue.CreatePercentValue(100)); // Imposta la larghezza al 100% della pagina
+
+				// Colore per la prima colonna (blu chiaro)
+				Color lightBlue = new DeviceRgb(173, 216, 230);
+
+				// Funzione di utilità per creare una cella con lo stile personalizzato
+				Action<string, bool, bool> AddTableCell = (string text, bool isHeader, bool isLargeText) =>
+				{
+					Cell cell = new Cell().Add(new Paragraph(text));
+					if (isHeader)
+					{
+						cell.SetBold(); // Grassetto per l'intestazione
+						cell.SetFontSize(10); // Testo più piccolo per la prima colonna
+						cell.SetBackgroundColor(lightBlue); // Colore blu chiaro per la prima colonna
+					}
+					else
+					{
+						if (isLargeText)
+						{
+							cell.SetHeight(100); // Imposta un'altezza maggiore per le celle con molto testo
+						}
+					}
+					table.AddCell(cell);
+				};
+
+				// Popolo la tabella con i dettagli della segnalazione
+				AddTableCell("ID Segnalazione", true, false);
+				AddTableCell(segnalazioneAnonima.Id.ToString(), false, false);
+
+				AddTableCell("Fatto Riferito A", true, false);
+				AddTableCell(segnalazioneAnonima.FattoRiferitoA, false, true); // Campo grande per Fatto Riferito A
+
+				AddTableCell("Data Evento", true, false);
+				AddTableCell(segnalazioneAnonima.DataEvento.HasValue
+					? segnalazioneAnonima.DataEvento.Value.ToString("dd/MM/yyyy")
+					: "Non disponibile", false, false);
+
+				AddTableCell("Luogo Evento", true, false);
+				AddTableCell(segnalazioneAnonima.LuogoEvento, false, false);
+
+				AddTableCell("Soggetto Colpevole", true, false);
+				AddTableCell(segnalazioneAnonima.SoggettoColpevole, false, false);
+
+				AddTableCell("Area Aziendale", true, false);
+				AddTableCell(segnalazioneAnonima.AreaAziendale, false, false);
+
+				AddTableCell("Imprese Coinvolte", true, false);
+				AddTableCell(segnalazioneAnonima.ImpreseCoinvolte, false, false);
+
+				AddTableCell("Pubblici Ufficiali/PA Coinvolti", true, false);
+				AddTableCell(segnalazioneAnonima.PubbliciUfficialiPaCoinvolti, false, false);
+
+				AddTableCell("Modalità Conoscenza Fatto", true, false);
+				AddTableCell(segnalazioneAnonima.ModalitaConoscenzaFatto, false, false);
+
+				AddTableCell("Ammontare Pagamento o Utilità", true, false);
+				AddTableCell(segnalazioneAnonima.AmmontarePagamentoOAltraUtilita, false, false);
+
+				AddTableCell("Circostanze Violenza/Minaccia", true, false);
+				AddTableCell(segnalazioneAnonima.CircostanzeViolenzaMinaccia, false, false);
+
+				AddTableCell("Descrizione Fatto", true, false);
+				AddTableCell(segnalazioneAnonima.DescrizioneFatto, false, true); // Campo grande per Descrizione Fatto
+
+				AddTableCell("Motivazione Fatto Illecito", true, false);
+				AddTableCell(segnalazioneAnonima.MotivazioneFattoIllecito, false, false);
+
+				AddTableCell("Note", true, false);
+				AddTableCell(segnalazioneAnonima.Note, false, true); // Campo grande per Note
+
+                
+                // Aggiungo la tabella al documento
+                document.Add(table);
+
+				// una volta inserito tutto chiudo il documento
+				document.Close();
+
+				// ritorno il pdf come array di byte
+				return stream.ToArray();
+			}
+		}
+	}
 }
