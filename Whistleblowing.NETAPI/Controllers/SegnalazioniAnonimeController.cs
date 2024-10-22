@@ -9,6 +9,7 @@ using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
 using Whistleblowing.NETAPI.Models.view;
+using Whistleblowing.NETAPI.Service;
 using Status = Whistleblowing.NETAPI.Models.Status;
 
 namespace Whistleblowing.NETAPI.Controllers
@@ -21,13 +22,15 @@ namespace Whistleblowing.NETAPI.Controllers
 
 		// Aggiungo il Db_Context e CryptoService
 		private readonly WhistleBlowingContext _context;
-		private readonly CryptoService _cryptoService; // Aggiungi il servizio Crypto
+		private readonly CryptoService _cryptoService; // Aggiungi il servizio Crypto										
+		private readonly PdfService _pdfService;   //aggiungo il pdfService
 
 		// Modifico il costruttore per includere anche CryptoService
-		public SegnalazioniAnonimeController(WhistleBlowingContext context, CryptoService cryptoService)
+		public SegnalazioniAnonimeController(WhistleBlowingContext context, CryptoService cryptoService, PdfService pdfService)
 		{
 			_context = context;
 			_cryptoService = cryptoService; // Inietto il servizio Crypto
+			_pdfService = pdfService;
 		}
 
 
@@ -175,6 +178,61 @@ namespace Whistleblowing.NETAPI.Controllers
 
 			return Ok(_segnalazioneAnonima);
 		}
+
+
+
+		/// <summary>
+		/// Metodo che utilizzo per ottenere una segnalazione Anonima in base al suo id
+		/// </summary>
+		/// <param name="segnalazioneAnonimaId"></param>
+		/// <returns></returns>
+		[HttpGet("getSegnalazioneAnonimaById")]
+		[Authorize]
+		public async Task<ActionResult<SegnalazioneAnonimaView>> getSegnalazioneAnonimaById(int segnalazioneAnonimaId)
+		{
+			//e cerco la segnalazione con il suo id
+			var segnalazione = await _context.SegnalazioneAnonimaViews.FirstOrDefaultAsync(s => s.Id == segnalazioneAnonimaId);
+
+			//se invece non trovo la segnalazione restituisco un NotFound
+			if (segnalazione == null)
+			{
+				return NotFound(new { message = "segnalazione non trovata!" });
+			}
+
+			//se tutto è ok torno la segnalazione
+			return Ok(segnalazione);
+
+
+		}
+
+
+
+		/// <summary>
+		/// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
+		/// </summary>
+		/// <param name="segnalazioneAnonimaId"></param>
+		/// <returns></returns>
+		[HttpGet("SegnalazioneAnonimaPdfById")]
+		[Authorize]
+		public async Task<IActionResult> GetSegnalazioneAnonimaPdfById(int segnalazioneAnonimaId)
+		{
+			//Recupero la segnalazione dal database
+			var segnalazione = await _context.SegnalazioneAnonimaViews.FirstOrDefaultAsync(s => s.Id == segnalazioneAnonimaId);
+
+			//controllo se la segnalazione è a null
+			if (segnalazione == null)
+			{
+				return NotFound(new { message = "Segnalazione non trovata!" });
+			}
+
+			//Genero il pdf utilizzando pdfService
+			var pdfBytes = _pdfService.GenerateSegnalazioneAnonimaPdf(segnalazione);
+
+			//Restituisce il PDF come File
+			return File(pdfBytes, "application/pdf", $"segnalazione_{segnalazioneAnonimaId}.pdf");
+		}
+
+
 
 
 	}
