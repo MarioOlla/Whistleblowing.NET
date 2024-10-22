@@ -104,37 +104,39 @@ namespace Whistleblowing.NETAPI.Controllers
 
 		}
 
-		/// <summary>
-		/// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
-		/// </summary>
-		/// <param name="segnlazioneRegularId"></param>
-		/// <returns></returns>
-		[HttpGet("SegnalazioneRegularPdfById")]
-		[Authorize]
-		public async Task<IActionResult> GetSegnalazioneRegularPdfById(int segnalazioneRegularId)
-		{
-			//Recupero la segnalazione dal database
-			var segnalazione = await _context.SegnalazioneRegularViews.FirstOrDefaultAsync(s => s.Id == segnalazioneRegularId);
+        [HttpGet("SegnalazioneRegularPdfById")]
+        [Authorize]
+        public async Task<IActionResult> GetSegnalazioneRegularPdfById(int segnalazioneRegularId)
+        {
+            // Recupero la segnalazione dal database
+            var segnalazione = await _context.SegnalazioneRegularViews
+                .FirstOrDefaultAsync(s => s.Id == segnalazioneRegularId);
 
-			//controllo se la segnalazione è a null
-			if(segnalazione == null)
-			{
-				return NotFound(new { message = "Segnalazione non trovata!" });
-			}
+            // Controllo se la segnalazione è a null
+            if (segnalazione == null)
+            {
+                return NotFound(new { message = "Segnalazione non trovata!" });
+            }
 
-			//Genero il pdf utilizzando pdfService
-			var pdfBytes = _pdfService.GenerateSegnalazioneRegularPdf(segnalazione);
+            // Verifica se l'utente associato esiste
+            var user = await _context.User.FindAsync(segnalazione.UserId);
+            if (user == null)
+            {
+                return NotFound(new { message = "Utente associato non trovato!" });
+            }
 
-			//Restituisce il PDF come File
-			return File(pdfBytes, "application/pdf", $"segnalazione_{segnalazioneRegularId}.pdf");
-		}
+            // Genero il PDF utilizzando pdfService
+            var pdfBytes = _pdfService.GenerateSegnalazioneRegularPdf(segnalazione, user.Nome, user.Cognome);
 
-		/// <summary>
-		/// API per inserimento di una segnalazione Regular
-		/// </summary>
-		/// <param name="segnalazioneRegularDTOInserimento">segnalazione da inserire</param>
-		/// <returns></returns>
-		[HttpPost]
+            // Restituisce il PDF come File
+            return File(pdfBytes, "application/pdf", $"segnalazione_{segnalazioneRegularId}.pdf");
+        }
+        /// <summary>
+        /// API per inserimento di una segnalazione Regular
+        /// </summary>
+        /// <param name="segnalazioneRegularDTOInserimento">segnalazione da inserire</param>
+        /// <returns></returns>
+        [HttpPost]
 		[Authorize] // Richiede che l'utente sia autenticato tramite JWT
 		public async Task<IActionResult> PostSegnalazioneRegular(SegnalazioneRegularDTOInserimento segnalazioneRegularDTOInserimento)
 		{
