@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NETAPI.DTO
 {
@@ -61,8 +62,11 @@ namespace Whistleblowing.NETAPI.DTO
 		[Column("note")]
 		public string? Note { get; set; }
 
-		
 
-		
+
+
+
+
+
 	}
 }

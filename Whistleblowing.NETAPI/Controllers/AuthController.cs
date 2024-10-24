@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Whistleblowing.NETAPI.Data;
@@ -23,14 +25,18 @@ namespace Whistleblowing.NETAPI.Controllers
 		public readonly WhistleBlowingContext _context;
 		private readonly IEmailService _emailService;
 
+		private readonly IConfiguration _configuration;
+
+
 		private readonly Random _random;
 
 
-		public AuthController(WhistleBlowingContext context, IEmailService emailService)
+		public AuthController(WhistleBlowingContext context, IEmailService emailService, IConfiguration configuration)
 		{
 			_emailService = emailService;
 			_random = new Random();
 			_context = context;
+			_configuration = configuration;
 		}
 
 		/// <summary>
@@ -112,31 +118,32 @@ namespace Whistleblowing.NETAPI.Controllers
 					return BadRequest(ModelState);
 				}
 
-				// Creo l'identità dell'utente che sarà salvata nel cookie
+				// Creo l'identità dell'utente che sarà salvata nel jwt
 				var claims = new[]
 				{
-					new Claim(ClaimTypes.Email, existingUser.Email),
-					new Claim(ClaimTypes.Role, existingUser.Ruolo.Id.ToString()),
-					new Claim(ClaimTypes.Name, existingUser.Nome),
-					new Claim(ClaimTypes.Surname, existingUser.Cognome),
-					new Claim("UserId", existingUser.Id.ToString()),
-					new Claim("Ruolo", existingUser.Ruolo.Id.ToString()),
+					 //creo le claim da aggiungere nel jwt
+                new Claim(JwtRegisteredClaimNames.Sub, existingUser.Email),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim("Nome", existingUser.Nome),
+				new Claim("Cognome", existingUser.Cognome),
+				new Claim("UserId", existingUser.Id.ToString()),
+				new Claim("Ruolo", existingUser.Ruolo.codice.ToString()),
+				new Claim("HasChangedPassword", existingUser.HasChangedPassword.ToString())
 				};
 
-				var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-				var authProperties = new AuthenticationProperties
-				{
-					IsPersistent = utenteLogin.IsLoggedIn
-				};
+				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+				//utilizzo algoritmo  HmacSha256
+				var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-					new ClaimsPrincipal(identity), authProperties);
-
-				Console.WriteLine($"L'utente con email {existingUser.Email} ha effettuato il login con successo.");
-
-
-				return Ok(existingUser);
+				var token = new JwtSecurityToken(
+					issuer: _configuration["Jwt:Issuer"],
+					audience: _configuration["Jwt:Audience"],
+					claims: claims,
+					expires: DateTime.Now.AddMinutes(30),
+					signingCredentials: creds);
+				//retituisco il token
+				return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
 			}
 
 			return BadRequest(ModelState);
