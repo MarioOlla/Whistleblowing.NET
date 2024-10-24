@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Whistleblowing.NETAPI.Models;
+using Whistleblowing.NETAPI.Models.view;
 
 namespace Whistleblowing.NETAPI.DTO
 {
@@ -58,7 +59,7 @@ namespace Whistleblowing.NETAPI.DTO
 		public string? Note { get; set; }
 
 		[Column("status")]
-		public Status? status { get; set; }
+		public Models.Status? status { get; set; }
 
 
 		

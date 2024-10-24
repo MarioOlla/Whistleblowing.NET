@@ -1,5 +1,4 @@
-﻿using static Whistleblowing.NET.Models.SegnalazioneRegular;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace Whistleblowing.NET.Models

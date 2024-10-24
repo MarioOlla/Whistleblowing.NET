@@ -332,7 +332,7 @@
     <div id="nuova-content" class="content">
         <h5>Nuova Segnalazione</h5>
         <!-- Form di segnalazione -->
-        <form id="segnalazione-form" action="/submitSegnalazione" method="POST">
+        <form id="segnalazione-form" asp-controller="SegnalazioniRegular" asp-action="InviaSegnalazioneRegular" method="POST">
             <div class="input-field col s10 mt-2">
                 <select id="tipologia" name="tipologia" multiple required>
 
@@ -562,6 +562,41 @@
                 }
             });
         });
+
+
+        // document.getElementById("segnalazione-form").addEventListener("submit", async function (event) {
+        //     event.preventDefault(); // Impedisce il comportamento di invio predefinito
+
+        //     const formData = new FormData(this);
+        //     const data = {};
+
+        //     formData.forEach((value, key) => {
+        //         data[key] = value;
+        //     });
+
+        //     try {
+        //         const response = await fetch(this.action, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify(data),
+        //         });
+
+        //         if (!response.ok) {
+        //             const error = await response.text();
+        //             console.error('Errore:', error);
+        //             alert('Si è verificato un errore durante l\'invio della segnalazione.');
+        //         } else {
+        //             const result = await response.json();
+        //             console.log('Segnalazione inviata:', result);
+        //             alert('Segnalazione inviata con successo!');
+        //         }
+        //     } catch (error) {
+        //         console.error('Errore nella richiesta:', error);
+        //         alert('Si è verificato un errore durante la richiesta.');
+        //     }
+        // });
     </script>
 
 </body>

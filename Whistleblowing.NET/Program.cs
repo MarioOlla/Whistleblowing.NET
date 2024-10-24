@@ -31,6 +31,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 		options.SlidingExpiration = true; // Rigenera il cookie prima della scadenza per estendere la sessione
 	});
 
+// Aggiungi HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
 // Aggiungi i controller e le viste
 builder.Services.AddControllersWithViews();

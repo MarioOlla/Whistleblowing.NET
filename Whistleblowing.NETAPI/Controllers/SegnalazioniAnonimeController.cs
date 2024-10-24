@@ -5,7 +5,7 @@ using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
 using Whistleblowing.NETAPI.Models.view;
-using Status = Whistleblowing.NETAPI.Models.Status;
+using Status = Whistleblowing.NETAPI.Models;
 
 namespace Whistleblowing.NETAPI.Controllers
 {
@@ -129,7 +129,7 @@ namespace Whistleblowing.NETAPI.Controllers
 				MotivazioneFattoIllecito = segnalazioneAnonimaDTO.MotivazioneFattoIllecito,
 				Note = segnalazioneAnonimaDTO.Note,
 				// Imposto lo status su "APERTO" all'inserimento
-				status = Status.APERTO,
+				//status = Status.APERTO,
 			};
 
 			//effettuo l' inserimento della segnalazione
