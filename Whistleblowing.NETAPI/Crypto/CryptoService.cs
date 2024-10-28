@@ -98,6 +98,8 @@ namespace Whistleblowing.NETAPI.Crypto
             }
         }
 
+       
+
         private static string EncryptPrivateKeyWithPassword(byte[] privateKey, string password, byte[] salt, int iterations, int aesKeySize)
         {
             if (salt.Length == 0)
@@ -185,5 +187,7 @@ namespace Whistleblowing.NETAPI.Crypto
             Console.WriteLine("aes key size: {0}\n\n", data.AesKeySize);
             Console.WriteLine("aes iterations: {0}\n\n", data.AesIterations);
         }
+
+
     }
 }

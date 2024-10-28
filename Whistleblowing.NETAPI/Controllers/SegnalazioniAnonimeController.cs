@@ -155,7 +155,7 @@ namespace Whistleblowing.NETAPI.Controllers
 			};
 
 			// Crittografia del nome e cognome dell'utente
-			string dataToEncrypt = $"{user.Nome} {user.Cognome}";
+			string dataToEncrypt = $"{user.Id} {user.Email} {user.CodiceFiscale}";
 
 			// Recupero la chiave pubblica per cifrare i dati
 			var cryptoKey = _cryptoService.fetchCryptoInfo();
@@ -233,7 +233,65 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 
+        /// <summary>
+        /// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
+        /// </summary>
+        /// <param name="decryptedUserHashed"></param>
+        /// <returns></returns>
+        [HttpGet("DecryptUserHashed")]
+        //[Authorize]
+        public async Task<IActionResult> DecryptUserHashed([FromQuery] string userHashed, string pwd)
+        {
+            if (pwd == null)
+            {
+				return BadRequest("Nessuna password fornita per la lettura");
+            }
+            // Recupero la chiave crittografica per la decifratura
+            var cryptoKey = _cryptoService.fetchCryptoInfo();
+            if (cryptoKey == null)
+            {
+                return BadRequest("Chiave crittografica non trovata.");
+            }
+
+            // Carica la chiave privata per decifrare l'UserHashed
+            RSAParameters privateKey;
+            try
+            {
+                privateKey = CryptoService.LoadPrivateKey(pwd, cryptoKey.EncryptedRsaPrivateKey, cryptoKey.Salt, cryptoKey.AesIterations, cryptoKey.AesKeySize);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Errore: password non corretta. Verifica che la password sia corretta.");
+            }
+
+            // Decodifica l'UserHashed dalla stringa base64 e tenta di decifrarlo
+            byte[] encryptedData = Convert.FromBase64String(userHashed);
+            string decryptedUserData;
+            try
+            {
+                decryptedUserData = CryptoService.DecryptWithRSA(privateKey, encryptedData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Errore durante la decifratura dell'UserHashed: {ex.Message}");
+            }
+
+            // Ritorna nome e cognome decifrati come JSON
+            var userDetails = decryptedUserData.Split(' ');
+            if (userDetails.Length == 3)
+            {
+                var id = userDetails[0];
+                var email = userDetails[1];
+				var codiceFiscale = userDetails[2];
+                return Ok(new { Id = id, Email = email, CodiceFiscale = codiceFiscale });
+            }
+            else
+            {
+                return BadRequest("Formato dati decifrati non valido.");
+            }
+        }
 
 
-	}
+
+    }
 }
