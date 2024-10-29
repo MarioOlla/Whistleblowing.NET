@@ -1,0 +1,228 @@
+﻿@model Whistleblowing.NET.Models.PaginatedSegnalazioniRegularViewModel
+@using System.Text.Json
+@using System.IdentityModel.Tokens.Jwt
+
+<link rel="stylesheet" href="~/css/table.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Pagination.css" asp-append-version="true" />
+
+<style>
+    /* Stile per l'allerta di successo */
+    #success-alert {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        transition: opacity 0.5s ease;
+    }
+
+    /* Stile per il testo del titolo */
+    .title-text {
+        font-size: 1.5rem;
+        margin-top: 10px;
+    }
+
+    /* Stile per il mini-card */
+    .mini-card {
+        background-color: #d4edda;
+        border-radius: 7px;
+        padding: 15px;
+        width: 100%; /* Rende il card responsive */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Stile per il card delle segnalazioni totali */
+    .card {
+        border-radius: 10px;
+        margin-bottom: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Stile per le intestazioni della tabella */
+    .styled-table thead {
+        background-color: #4CAF50; /* Colore verde per l'intestazione */
+        color: white;
+    }
+
+    .styled-table th, .styled-table td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    .styled-table tbody tr:nth-child(even) {
+        background-color: #f2f2f2; /* Colore grigio chiaro per le righe pari */
+    }
+
+    /* Stile per le righe della tabella */
+    .styled-table tbody tr:hover {
+        background-color: #e0e0e0; /* Colore di evidenziazione al passaggio del mouse */
+    }
+
+    /* Stile per il contenitore della tabella */
+    .table-responsive {
+        margin-top: 20px;
+    }
+
+    /* Stile per la paginazione */
+    .pagination-custom {
+        justify-content: center;
+        padding: 20px 0;
+    }
+
+        .pagination-custom .page-item {
+            margin: 0 5px;
+        }
+
+        .pagination-custom .page-link {
+            border-radius: 5px;
+            padding: 10px 15px;
+            background-color: #007BFF; /* Colore blu */
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+            .pagination-custom .page-link:hover {
+                background-color: #0056b3; /* Colore blu scuro al passaggio del mouse */
+            }
+
+        .pagination-custom .active .page-link {
+            background-color: #0056b3;
+            color: white;
+            pointer-events: none; /* Disabilita il clic sui link attivi */
+        }
+
+    .record-not-found {
+        color: #dc3545; /* Colore rosso per il messaggio di assenza di segnalazioni */
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* Transizione per il messaggio di successo */
+    .alert {
+        opacity: 1;
+        transition: opacity 0.5s ease;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="mini-card">
+            <h3>Gestione Segnalazioni</h3>
+        </div>
+        <p class="title-text mt-2">
+            In questa sezione del programma è possibile visualizzare tutte le segnalazioni.
+        </p>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-3 mt-1">
+        <div class="card" style="border-radius: 7px; margin-bottom: 24px;">
+            <div class="card-body">
+                <div class="d-flex align-items-center" style="justify-content: space-between;">
+                    <div>
+                        <h6 class="card-subtitle mb-1 text-muted">Segnalazioni Totali:</h6>
+                        <p class="font-weight-bold" style="font-size:28px;">@Model.TotalItems</p>
+                    </div>
+                    <i class="bi bi-exclamation-circle" style="color: black; font-size:28px;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="border-grey bg-white tab-content">
+    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="table-responsive">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <a style="color: white;" asp-action="Index" asp-route-PageSize="@Model.PageSize" asp-route-pageNumber="@Model.PageNumber" asp-route-sortBy="Id" asp-route-sortDesc="@(Model.SortBy == "Id" && !Model.SortDesc)">
+                                ID @(Model.SortBy == "Id" ? (Model.SortDesc ? "▼" : "▲") : "")
+                            </a>
+                        </th>
+                        <th> ID </th>
+                        <th>Data Evento</th>
+                        <th>Soggetto Colpevole</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.TotalItems != 0 && Model.SeganalazioniRegulars != null && Model.SeganalazioniRegulars.Any())
+                    {
+                        foreach (var segnalazione in Model.SeganalazioniRegulars)
+                        {
+                            <tr>
+                                <td style="vertical-align: middle;">@segnalazione.Id</td>
+                                <td style="vertical-align: middle;">@segnalazione.DataEvento</td>
+                                <td style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3">
+                                <div class="record-not-found" role="alert">
+                                    Nessuna segnalazione trovata.
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="align-content">
+            @if (Model.TotalItems != 0)
+            {
+                <p style="margin-bottom: 0px;">
+                    Segnalazioni:
+                    @((Model.PageNumber - 1) * Model.PageSize + 1) - @(Model.PageNumber * Model.PageSize) di @Model.TotalItems
+                </p>
+            }
+            <nav>
+                <ul class="pagination-custom">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">Prima pagina</a>
+                    </li>
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Precedente</a>
+                    </li>
+                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalItems / Model.PageSize); i++)
+                    {
+                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageNumber == Math.Ceiling((double)Model.TotalItems / Model.PageSize) ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Successivo</a>
+                    </li>
+                    <li class="page-item @(Model.PageNumber == Math.Ceiling((double)Model.TotalItems / Model.PageSize) ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Math.Ceiling((double)Model.TotalItems / Model.PageSize))" asp-route-pageSize="@Model.PageSize">Ultima pagina</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="success-alert" class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<script>
+    $(document).ready(() => {
+        function mostraAlert() {
+            $("#success-alert").hide();
+        }
+        setInterval(mostraAlert, 5000);
+    });
+</script>

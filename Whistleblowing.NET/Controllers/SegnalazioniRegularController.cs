@@ -24,17 +24,25 @@ namespace Whistleblowing.NET.Controllers
 			_contextAccessor = _contextAccs;
 		}
 
-		public IActionResult Index()
-		{
-			return View();
-		}
+        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
+        {
+            var viewModel = new PaginatedSegnalazioniRegularViewModel
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalItems = 0, // Inizializza con il numero totale di elementi (da una query, ad esempio)
+                SeganalazioniRegulars = new List<SegnalazioneRegular>() // Popola con la lista di segnalazioni
+            };
 
-		/// <summary>
-		/// Invia una segnalazione regolare
-		/// </summary>
-		/// <param name="segnalazioneRegular">Oggetto contenente i dati della segnalazione.</param>
-		/// <returns>Risultato dell'operazione di invio.</returns>
-		[HttpPost]
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Invia una segnalazione regolare
+        /// </summary>
+        /// <param name="segnalazioneRegular">Oggetto contenente i dati della segnalazione.</param>
+        /// <returns>Risultato dell'operazione di invio.</returns>
+        [HttpPost]
 		public async Task<IActionResult> InviaSegnalazioneRegular([FromBody] SegnalazioneRegular segnalazioneRegular)
 		{
 			// Controlla se l'oggetto è valido
