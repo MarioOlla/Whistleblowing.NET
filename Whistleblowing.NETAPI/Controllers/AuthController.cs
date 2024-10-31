@@ -73,7 +73,7 @@ namespace Whistleblowing.NETAPI.Controllers
 					LuogoNascita = utenteRegister.LuogoNascita,
 					Provincia = utenteRegister.Provincia,
 					CodiceFiscale = utenteRegister.CodiceFiscale,
-					HasChangedPassword = utenteRegister.HasChangedPassword = true,
+					HasChangedPassword = utenteRegister.HasChangedPassword = false,
 
 					Ruolo = await _context.Ruolo.FirstOrDefaultAsync(r => r.descrizione == "Utente") // Imposta ruolo utente
 				};

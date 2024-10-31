@@ -11,7 +11,7 @@ namespace Whistleblowing.NET.Controllers
     {
         private readonly JwtHelper _jwtHelper;
         private readonly HttpClient _client;
-        private readonly Uri baseAddress = new Uri("https://localhost:44316/api");
+        private readonly Uri baseAddress = new Uri("https://localhost:44300/api");
         private readonly IHttpContextAccessor _contextAccessor;
 
 
@@ -63,7 +63,7 @@ namespace Whistleblowing.NET.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(User user)
+        public async Task<IActionResult> Login(UtenteDTOLogin user)
         {
             if (ModelState.IsValid)
             {
@@ -98,10 +98,10 @@ namespace Whistleblowing.NET.Controllers
                     {
                         return RedirectToAction("ChangePassword", "Auth");
                     }
-                    if (claims.GetValueOrDefault("Ruolo").Equals("Amministratore"))
-                    {
-                        return RedirectToAction("Index", "Amministration");
-                    }
+                    //if (claims.GetValueOrDefault("Ruolo").Equals("Amministratore"))
+                    //{
+                    //    return RedirectToAction("Index", "Amministration");
+                    //}
                     return RedirectToAction("Index", "Home");
                 }
                 else
