@@ -1,0 +1,13 @@
+﻿.pagination-custom {
+    justify-content: center;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+}
+.align-content {
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
