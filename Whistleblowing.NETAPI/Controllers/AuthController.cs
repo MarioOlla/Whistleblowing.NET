@@ -14,6 +14,8 @@ using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
 using Whistleblowing.NETAPI.Models;
 using Whistleblowing.NETAPI.Service;
+using Whistleblowing.NET.Models.DTO;
+
 
 namespace Whistleblowing.NETAPI.Controllers
 {
@@ -45,7 +47,7 @@ namespace Whistleblowing.NETAPI.Controllers
 		/// <param name="user">utente effettua il register</param>
 		/// <returns></returns>
 		[HttpPost]
-		public async Task<IActionResult> Register(UtenteRegisterDTO utenteRegister)
+		public async Task<IActionResult> Register(UtenteDTORegister utenteRegister)
 		{
 			if (ModelState.IsValid)
 			{

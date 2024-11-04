@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Whistleblowing.NET.Validations;
 
 namespace Whistleblowing.NET.Models.DTO
 {
@@ -7,10 +8,12 @@ namespace Whistleblowing.NET.Models.DTO
     {
         [Required(ErrorMessage = "Il nome è obbligatorio.")]
         [StringLength(50, ErrorMessage = "Il nome non può superare i 50 caratteri.")]
+        [OnlyLetters(ErrorMessage = "Il nome può contenere solo lettere e spazi.")]
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "Il cognome è obbligatorio.")]
         [StringLength(50, ErrorMessage = "Il cognome non può superare i 50 caratteri.")]
+        [OnlyLetters(ErrorMessage = "Il cognome può contenere solo lettere e spazi.")]
         public string Cognome { get; set; }
 
         [Required(ErrorMessage = "Il codice fiscale è obbligatorio.")]

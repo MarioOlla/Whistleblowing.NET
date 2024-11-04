@@ -13,5 +13,7 @@ namespace Whistleblowing.NET.Models.DTO
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "La password deve essere almeno di 5 caratteri.")]
         public string Password { get; set; }
+
+
     }
 }
