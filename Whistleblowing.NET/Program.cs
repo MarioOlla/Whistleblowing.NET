@@ -7,9 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Aggiungi i servizi al container.
 builder.Services.AddMemoryCache();
-builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
-builder.Services.AddInMemoryRateLimiting();
-builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+//builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+//builder.Services.AddInMemoryRateLimiting();
+//builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddSession(options =>
 {
@@ -57,7 +57,7 @@ app.UseHttpsRedirection();
 
 
 // Aggiungi il middleware di rate limiting
-app.UseIpRateLimiting();
+//app.UseIpRateLimiting();
 
 app.UseStaticFiles();
 

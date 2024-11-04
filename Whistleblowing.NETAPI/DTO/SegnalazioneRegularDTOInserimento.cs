@@ -11,7 +11,7 @@ namespace Whistleblowing.NETAPI.DTO
 	/// DTO segnalazione Regular per inserimento e modifica (privo di navigatori)
 	/// <see cref="https://learn.microsoft.com/it-it/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-5"/>
 	/// </summary>
-	[Table("segnalazioneRegulars")]
+	[Table("SegnalazioneRegulars")]
 	public class SegnalazioneRegularDTOInserimento
 	{
 		[Column("segnalazione_regular_id")]

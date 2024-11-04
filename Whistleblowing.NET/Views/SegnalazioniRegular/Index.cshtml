@@ -6,103 +6,23 @@
 <link rel="stylesheet" href="~/css/Pagination.css" asp-append-version="true" />
 
 <style>
-    /* Stile per l'allerta di successo */
     #success-alert {
         position: absolute;
         top: 20px;
         right: 20px;
         z-index: 1050;
-        transition: opacity 0.5s ease;
     }
 
-    /* Stile per il testo del titolo */
     .title-text {
-        font-size: 1.5rem;
-        margin-top: 10px;
+        font-size: 1.2rem;
     }
 
-    /* Stile per il mini-card */
     .mini-card {
         background-color: #d4edda;
         border-radius: 7px;
-        padding: 15px;
-        width: 100%; /* Rende il card responsive */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        width: 20%;
     }
-
-    /* Stile per il card delle segnalazioni totali */
-    .card {
-        border-radius: 10px;
-        margin-bottom: 24px;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Stile per le intestazioni della tabella */
-    .styled-table thead {
-        background-color: #4CAF50; /* Colore verde per l'intestazione */
-        color: white;
-    }
-
-    .styled-table th, .styled-table td {
-        padding: 12px;
-        text-align: left;
-    }
-
-    .styled-table tbody tr:nth-child(even) {
-        background-color: #f2f2f2; /* Colore grigio chiaro per le righe pari */
-    }
-
-    /* Stile per le righe della tabella */
-    .styled-table tbody tr:hover {
-        background-color: #e0e0e0; /* Colore di evidenziazione al passaggio del mouse */
-    }
-
-    /* Stile per il contenitore della tabella */
-    .table-responsive {
-        margin-top: 20px;
-    }
-
-    /* Stile per la paginazione */
-    .pagination-custom {
-        justify-content: center;
-        padding: 20px 0;
-    }
-
-        .pagination-custom .page-item {
-            margin: 0 5px;
-        }
-
-        .pagination-custom .page-link {
-            border-radius: 5px;
-            padding: 10px 15px;
-            background-color: #007BFF; /* Colore blu */
-            color: white;
-            transition: background-color 0.3s;
-        }
-
-            .pagination-custom .page-link:hover {
-                background-color: #0056b3; /* Colore blu scuro al passaggio del mouse */
-            }
-
-        .pagination-custom .active .page-link {
-            background-color: #0056b3;
-            color: white;
-            pointer-events: none; /* Disabilita il clic sui link attivi */
-        }
-
-    .record-not-found {
-        color: #dc3545; /* Colore rosso per il messaggio di assenza di segnalazioni */
-        text-align: center;
-        padding: 20px;
-    }
-
-    /* Transizione per il messaggio di successo */
-    .alert {
-        opacity: 1;
-        transition: opacity 0.5s ease;
-    }
-
 </style>
 
 <div class="row">
@@ -145,16 +65,14 @@
                                 ID @(Model.SortBy == "Id" ? (Model.SortDesc ? "▼" : "▲") : "")
                             </a>
                         </th>
-                        <th> ID </th>
                         <th>Data Evento</th>
                         <th>Soggetto Colpevole</th>
-
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.TotalItems != 0 && Model.SeganalazioniRegulars != null && Model.SeganalazioniRegulars.Any())
+                    @if (Model.TotalItems != 0 && Model.SegnalazioniRegulars != null && Model.SegnalazioniRegulars.Any())
                     {
-                        foreach (var segnalazione in Model.SeganalazioniRegulars)
+                        foreach (var segnalazione in Model.SegnalazioniRegulars)
                         {
                             <tr>
                                 <td style="vertical-align: middle;">@segnalazione.Id</td>
@@ -220,9 +138,9 @@
 
 <script>
     $(document).ready(() => {
-        function mostraAlert() {
-            $("#success-alert").hide();
-        }
-        setInterval(mostraAlert, 5000);
+        // Nasconde l'alert di successo dopo 5 secondi
+        setTimeout(() => {
+            $("#success-alert").fadeOut();
+        }, 5000);
     });
 </script>

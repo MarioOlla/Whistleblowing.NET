@@ -24,18 +24,33 @@ namespace Whistleblowing.NET.Controllers
 			_contextAccessor = _contextAccs;
 		}
 
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
-            var viewModel = new PaginatedSegnalazioniRegularViewModel
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalItems = 0, // Inizializza con il numero totale di elementi (da una query, ad esempio)
-                SeganalazioniRegulars = new List<SegnalazioneRegular>() // Popola con la lista di segnalazioni
-            };
+            var model = new PaginatedSegnalazioniRegularViewModel();
 
-            return View(viewModel);
+            try
+            {
+                // Chiamata all'endpoint per ottenere tutte le segnalazioni
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserializza la risposta JSON in un modello fortemente tipizzato
+                    model = await response.Content.ReadFromJsonAsync<PaginatedSegnalazioniRegularViewModel>();
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Errore nel recupero delle segnalazioni.";
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+            }
+
+            return View(model);
         }
+
 
         /// <summary>
         /// Invia una segnalazione regolare
@@ -73,8 +88,45 @@ namespace Whistleblowing.NET.Controllers
 				return StatusCode(500, $"Errore nella comunicazione con l'API: {ex.Message}");
 			}
 		}
-	}
+
+        /// <summary>
+        /// Ottiene tutte le segnalazioni indipendentemente dall'utente.
+        /// </summary>
+        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
+        /// <param name="pageSize">Numero di elementi per pagina</param>
+        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
+        [HttpGet("GetAllSegnalazioniRegularTotali")]
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                // Chiamata all'endpoint del backend
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Leggi i dati della risposta
+                    var data = await response.Content.ReadFromJsonAsync<dynamic>(); // Usa dynamic per il debug
+                    if (data != null)
+                    {
+                        return Ok(data); // Ritorna i dati ricevuti
+                    }
+                }
+
+                // Se la risposta non è andata a buon fine
+                return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni.");
+            }
+            catch (HttpRequestException ex)
+            {
+                // Gestisci le eccezioni di rete
+                return StatusCode(500, $"Errore di rete: {ex.Message}");
+            }
+        }
+    }
 }
+
+
+
 
 
 

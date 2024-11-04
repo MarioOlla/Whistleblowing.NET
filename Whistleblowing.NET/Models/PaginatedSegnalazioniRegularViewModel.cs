@@ -2,13 +2,11 @@
 {
     public class PaginatedSegnalazioniRegularViewModel
     {
-        public int Id { get; set; }
-
         public DateTime DataEvento { get; set; }
 
         public string? SoggettoColpevole { get; set; }
 
-        public List<SegnalazioneRegular> SeganalazioniRegulars { get; set; } = new List<SegnalazioneRegular>();
+        public List<SegnalazioneRegular> SegnalazioniRegulars { get; set; }
 
         //paginazione
         public List<int> number { get; set; } = new List<int> { 5, 10, 15 };

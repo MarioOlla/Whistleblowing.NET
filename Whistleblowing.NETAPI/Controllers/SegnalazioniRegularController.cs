@@ -79,13 +79,48 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 
+        /// <summary>
+        /// Endpoint che serve per ottenere tutte le segnalazioni indipendentemente dall'utente
+        /// </summary>
+        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
+        /// <param name="pageSize">Numero di elementi per pagina</param>
+        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
+        [HttpGet("GetAllSegnalazioniRegularTotali")]
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+         {
+            // Recupero tutte le segnalazioni senza filtro su UserId
+            IQueryable<SegnalazioneRegularView> segnalazioniQuery = _context.SegnalazioneRegularViews;
 
-		/// <summary>
-		/// Metodo che utilizzo per ottenere una segnalazione Regolare in base al suo id e l' id utente
-		/// </summary>
-		/// <param name="segnalazioneRegularId"></param>
-		/// <returns></returns>
-		[HttpGet("getSegnalazioneRegularById")]
+            // Applico la paginazione
+            segnalazioniQuery = segnalazioniQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            // Converto la query in lista per eseguire la richiesta
+            List<SegnalazioneRegularView> segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
+
+            // Calcolo il numero totale di record per la paginazione
+            var totalRecords = await _context.SegnalazioneRegularViews.CountAsync();
+
+            // Organizzo il risultato in un oggetto con dati e paginazione
+            var paginatedResult = new
+            {
+                TotalRecords = totalRecords,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Data = segnalazioniRegolari
+            };
+
+            // Ritorno il risultato paginato
+            return Ok(paginatedResult);
+        }
+
+
+
+        /// <summary>
+        /// Metodo che utilizzo per ottenere una segnalazione Regolare in base al suo id e l' id utente
+        /// </summary>
+        /// <param name="segnalazioneRegularId"></param>
+        /// <returns></returns>
+        [HttpGet("getSegnalazioneRegularById")]
 		[Authorize]
 		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById( int segnalazioneRegularId)
 		{

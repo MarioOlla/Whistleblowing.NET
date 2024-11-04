@@ -11,7 +11,6 @@ namespace Whistleblowing.NET.Models
     public class SegnalazioneRegular
     {
 
-
         [JsonPropertyName("segnalazione_regular_id")]
         public int Id { get; set; }
 
