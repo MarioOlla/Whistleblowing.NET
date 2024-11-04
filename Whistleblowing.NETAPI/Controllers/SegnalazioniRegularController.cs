@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Whistleblowing.NETAPI.Service;
+using Whistleblowing.NET.Models;
 
 namespace Whistleblowing.NETAPI.Controllers
 {
@@ -89,13 +90,13 @@ namespace Whistleblowing.NETAPI.Controllers
         public async Task<IActionResult> GetAllSegnalazioniRegularTotali([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
          {
             // Recupero tutte le segnalazioni senza filtro su UserId
-            IQueryable<SegnalazioneRegularView> segnalazioniQuery = _context.SegnalazioneRegularViews;
+            IQueryable<PaginatedSegnalazioniRegularViewModel> segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels;
 
             // Applico la paginazione
             segnalazioniQuery = segnalazioniQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             // Converto la query in lista per eseguire la richiesta
-            List<SegnalazioneRegularView> segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
+            List<PaginatedSegnalazioniRegularViewModel> segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
 
             // Calcolo il numero totale di record per la paginazione
             var totalRecords = await _context.SegnalazioneRegularViews.CountAsync();

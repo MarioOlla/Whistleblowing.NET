@@ -1,11 +1,15 @@
-﻿namespace Whistleblowing.NET.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Whistleblowing.NET.Models
 {
     public class PaginatedSegnalazioniRegularViewModel
     {
-
+        [Column("Id_segnalazioneRegular")]
         public int? Id_segnalazioneRegular { get; set; }
+        [Column("DataEvento")]
 
         public DateTime? DataEvento { get; set; }
+        [Column("SoggettoColpevole")]
 
         public string? SoggettoColpevole { get; set; }
 
