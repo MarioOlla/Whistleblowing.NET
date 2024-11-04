@@ -2,7 +2,10 @@
 {
     public class PaginatedSegnalazioniRegularViewModel
     {
-        public DateTime DataEvento { get; set; }
+
+        public int? Id_segnalazioneRegular { get; set; }
+
+        public DateTime? DataEvento { get; set; }
 
         public string? SoggettoColpevole { get; set; }
 
