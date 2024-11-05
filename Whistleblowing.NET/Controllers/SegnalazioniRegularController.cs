@@ -33,22 +33,23 @@ namespace Whistleblowing.NET.Controllers
                 // Chiamata all'endpoint per ottenere tutte le segnalazioni
                 var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    // Deserializza la risposta JSON in un modello fortemente tipizzato
-                    model = await response.Content.ReadFromJsonAsync<PaginatedSegnalazioniRegularViewModel>();
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "Errore nel recupero delle segnalazioni.";
-                }
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    // Deserializza la risposta JSON in un modello fortemente tipizzato
+                //    model = await response.Content.ReadFromJsonAsync<PaginatedSegnalazioniRegularViewModel>();
+                //}
+                //else
+                //{
+                //    ViewBag.ErrorMessage = "Errore nel recupero delle segnalazioni.";
+                //}
+                return View(response);
             }
             catch (HttpRequestException ex)
             {
                 ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
             }
-
-            return View(model);
+            return View();
+ 
         }
 
 

@@ -85,31 +85,31 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="pageSize">Numero di elementi per pagina</param>
         /// <returns>Risultato paginato con tutte le segnalazioni</returns>
         [HttpGet("GetAllSegnalazioniRegularTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniRegularTotali([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(/*[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10*/)
          {
             // Recupero tutte le segnalazioni senza filtro su UserId
             IQueryable<PaginatedSegnalazioniRegularViewModel> segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels;
 
             // Applico la paginazione
-            segnalazioniQuery = segnalazioniQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            //segnalazioniQuery = segnalazioniQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             // Converto la query in lista per eseguire la richiesta
             List<PaginatedSegnalazioniRegularViewModel> segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
 
             // Calcolo il numero totale di record per la paginazione
-            var totalRecords = await _context.SegnalazioneRegularViews.CountAsync();
+            //var totalRecords = await _context.SegnalazioneRegularViews.CountAsync();
 
             // Organizzo il risultato in un oggetto con dati e paginazione
-            var paginatedResult = new
-            {
-                TotalRecords = totalRecords,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Data = segnalazioniRegolari
-            };
+            //var paginatedResult = new
+            //{
+            //    TotalRecords = totalRecords,
+            //    PageNumber = pageNumber,
+            //    PageSize = pageSize,
+            //    Data = segnalazioniRegolari
+            //};
 
             // Ritorno il risultato paginato
-            return Ok(paginatedResult);
+            return Ok(segnalazioniRegolari);
         }
 
 
