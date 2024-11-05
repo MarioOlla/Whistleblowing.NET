@@ -13,8 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Whistleblowing.NETAPI.Service;
-using Whistleblowing.NET.Models;
-
 namespace Whistleblowing.NETAPI.Controllers
 {
 	[Route("api/[controller]")]

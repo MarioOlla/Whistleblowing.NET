@@ -3,7 +3,6 @@ using Whistleblowing.NETAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Whistleblowing.NETAPI.Models.view;
-using Whistleblowing.NET.Models;
 
 
 namespace Whistleblowing.NETAPI.Data

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Whistleblowing.NETAPI.Models;
 
-namespace Whistleblowing.NET.Models
+namespace Whistleblowing.NETAPI.Models
 {
     public class PaginatedSegnalazioniRegularViewModel
     {
