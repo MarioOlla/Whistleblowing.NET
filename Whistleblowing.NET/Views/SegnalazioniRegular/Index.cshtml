@@ -1,8 +1,4 @@
-﻿
-@model Whistleblowing.NET.Models.PaginatedSegnalazioniRegularViewModel
-
-@using System.Text.Json
-@using System.IdentityModel.Tokens.Jwt
+﻿@model Whistleblowing.NET.Models.PaginatedSegnalazioniRegularViewModel
 
 <link rel="stylesheet" href="~/css/table.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/Pagination.css" asp-append-version="true" />
@@ -29,7 +25,7 @@
 
 <div class="row">
     <div class="col-md-10">
-        <div class>
+        <div>
             <h3>Gestione Segnalazioni</h3>
         </div>
         <p class="title-text mt-2">
@@ -47,7 +43,7 @@
                 <div class="d-flex align-items-center" style="justify-content: space-between;">
                     <div>
                         <h6 class="card-subtitle mb-1 text-muted">Segnalazioni Totali:</h6>
-                        @* <p class="font-weight-bold" style="font-size:28px;">@Model.TotalItems</p> *@
+                        <p class="font-weight-bold" style="font-size:28px;">@Model.SegnalazioniRegulars.Count()</p> <!-- Visualizza il numero totale -->
                     </div>
                     <i class="bi bi-exclamation-circle" style="color: black; font-size:28px;"></i>
                 </div>
@@ -64,25 +60,21 @@
                     <tr>
                         <th>
                             <a style="color: white;" asp-action="Index">
-                                ID 
+                                ID
                             </a>
                         </th>
-
                         <th>Data Evento</th>
-                        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }))
-
                         <th>Soggetto Colpevole</th>
-                       
                     </tr>
                 </thead>
                 <tbody>
-                    @if ( Model.SegnalazioniRegulars != null )
+                    @if (Model.SegnalazioniRegulars != null && Model.SegnalazioniRegulars.Count > 0)
                     {
                         foreach (var segnalazione in Model.SegnalazioniRegulars)
                         {
                             <tr>
-                                <td style="vertical-align: middle;">@segnalazione.Id</td>
-                                <td style="vertical-align: middle;">@segnalazione.DataEvento</td>
+                                <td style="vertical-align: middle;">@segnalazione.Id_segnalazioneRegular</td>
+                                <td style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
                                 <td style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
                             </tr>
                         }
@@ -98,6 +90,7 @@
                         </tr>
                     }
                 </tbody>
+
             </table>
         </div>
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using Whistleblowing.NET.Models;
 
 namespace Whistleblowing.NET.Controllers
@@ -30,27 +31,49 @@ namespace Whistleblowing.NET.Controllers
 
             try
             {
-                // Chiamata all'endpoint per ottenere tutte le segnalazioni
                 var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
 
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    // Deserializza la risposta JSON in un modello fortemente tipizzato
-                //    model = await response.Content.ReadFromJsonAsync<PaginatedSegnalazioniRegularViewModel>();
-                //}
-                //else
-                //{
-                //    ViewBag.ErrorMessage = "Errore nel recupero delle segnalazioni.";
-                //}
-                return View(response);
+                if (response.IsSuccessStatusCode)
+                {
+                    // Leggi il contenuto JSON come stringa e stampa nei log
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Risposta JSON ricevuta:");
+                    Console.WriteLine(jsonResponse);
+
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+                    };
+
+                    // Deserializza la risposta usando la classe wrapper
+                    var wrapper = System.Text.Json.JsonSerializer.Deserialize<Wrapper>(jsonResponse);
+
+                    if (wrapper != null && wrapper.Values != null)
+                    {
+                        model.SegnalazioniRegulars = wrapper.Values;
+                    }
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Errore nel recupero delle segnalazioni.";
+                }
             }
             catch (HttpRequestException ex)
             {
                 ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
             }
-            return View();
- 
+            catch (JsonException ex)
+            {
+                Console.WriteLine("Errore nella deserializzazione della risposta JSON:");
+                Console.WriteLine(ex.Message);
+                ViewBag.ErrorMessage = "Errore nella deserializzazione dei dati.";
+            }
+
+            return View(model); // Passa il modello alla vista
         }
+
+
 
 
         /// <summary>

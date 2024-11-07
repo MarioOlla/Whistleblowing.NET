@@ -1,20 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NET.Models
 {
     public class PaginatedSegnalazioniRegularViewModel
     {
+        [JsonPropertyName("id_segnalazioneRegular")]
         [Column("Id_segnalazioneRegular")]
         public int? Id_segnalazioneRegular { get; set; }
+
+
+        [JsonPropertyName("dataEvento")]
         [Column("DataEvento")]
-
         public DateTime? DataEvento { get; set; }
-        [Column("SoggettoColpevole")]
 
+
+        [JsonPropertyName("soggettoColpevole")]
+        [Column("SoggettoColpevole")]
         public string? SoggettoColpevole { get; set; }
 
-        public List<SegnalazioneRegular> SegnalazioniRegulars { get; set; }
-
+        // Aggiungi questa proprietà
+        public List<PaginatedSegnalazioniRegularViewModel>? SegnalazioniRegulars { get; set; }
         //paginazione
         //public List<int> number { get; set; } = new List<int> { 5, 10, 15 };
         //public int numberSelected { get; set; } = 5;

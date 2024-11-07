@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Whistleblowing.NETAPI.Models.view;
 
 namespace Whistleblowing.NETAPI.Models
 {
@@ -6,14 +7,15 @@ namespace Whistleblowing.NETAPI.Models
     {
         [Column("Id_segnalazioneRegular")]
         public int? Id_segnalazioneRegular { get; set; }
+     
         [Column("DataEvento")]
-
         public DateTime? DataEvento { get; set; }
-        [Column("SoggettoColpevole")]
 
+        [Column("SoggettoColpevole")]
         public string? SoggettoColpevole { get; set; }
 
-        public List<SegnalazioneRegular> SegnalazioniRegulars { get; set; }
+        // Aggiungi questa proprietà
+        public List<PaginatedSegnalazioniRegularViewModel>? SegnalazioniRegulars { get; set; }
 
         //paginazione
         //public List<int> number { get; set; } = new List<int> { 5, 10, 15 };
