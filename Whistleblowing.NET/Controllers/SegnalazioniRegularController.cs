@@ -123,7 +123,9 @@ namespace Whistleblowing.NET.Controllers
         public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int pageNumber = 1, int pageSize = 10)
         {
             try
+
             {
+
                 // Chiamata all'endpoint del backend
                 var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
 

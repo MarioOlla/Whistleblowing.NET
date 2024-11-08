@@ -21,7 +21,21 @@
         padding: 10px;
         width: 20%;
     }
+
+
+    .btn-danger {
+        background-color: #dc3545 !important; /* Forza il colore rosso */
+        border-color: #dc3545 !important;
+    }
+
+    th {
+        font-size: 1.1rem; /* Dimensione del testo (opzionale) */
+        vertical-align: middle;
+    }
+
 </style>
+
+
 
 <div class="row">
     <div class="col-md-10">
@@ -58,13 +72,12 @@
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th>
-                            <a style="color: white;" asp-action="Index">
-                                ID
-                            </a>
+                        <th class="text-center font-weight-bold">
+                            <a style="color: white; text-decoration: none;" asp-action="Index">ID</a>
                         </th>
-                        <th>Data Evento</th>
-                        <th>Soggetto Colpevole</th>
+                        <th> Data Evento</th>
+                        <th class="text-center  class="text-center font-weight-bold">Soggetto Colpevole</th>
+                        <th class="text-center  class="text-center font-weight-bold">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,24 +86,42 @@
                         foreach (var segnalazione in Model.SegnalazioniRegulars)
                         {
                             <tr>
-                                <td style="vertical-align: middle;">@segnalazione.Id_segnalazioneRegular</td>
-                                <td style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
-                                <td style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+                                <!-- Campo ID cliccabile -->
+                                <td style="vertical-align: middle;">
+                                    <a asp-action="Details" asp-route-id="@segnalazione.Id_segnalazioneRegular" style="color: inherit; text-decoration: none;">
+                                        @segnalazione.Id_segnalazioneRegular
+                                    </a>
+                                </td>
+                                <td class="text-center"  style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
+                                <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+
+
+                                <!-- Colonna Azioni centrata -->
+                                <td class="text-center" style="vertical-align: middle;">
+                                    <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@segnalazione.Id_segnalazioneRegular">
+                                        <i class="bi bi-pencil-square"></i> Modifica
+                                    </a>
+                                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@segnalazione.Id_segnalazioneRegular">
+                                        <i class="bi bi-eye"></i> Visualizza
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('@segnalazione.Id_segnalazioneRegular')">
+                                        <i class="bi bi-trash"></i> Elimina
+                                    </button>
+                                </td>
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="3">
-                                <div class="record-not-found" role="alert">
+                            <td colspan="4">
+                                <div class="record-not-found text-center" role="alert">
                                     Nessuna segnalazione trovata.
                                 </div>
                             </td>
                         </tr>
                     }
                 </tbody>
-
             </table>
         </div>
 

@@ -85,8 +85,15 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="pageSize">Numero di elementi per pagina</param>
         /// <returns>Risultato paginato con tutte le segnalazioni</returns>
         [HttpGet("GetAllSegnalazioniRegularTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(/*[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10*/)
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(/*[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10*/ int userId)
          {
+   //         var user = await _context.User.FindAsync(userId);
+   //         var isOperatore = user.Ruolo?.codice == 2;
+
+			//if(!isOperatore){
+			//	return Forbid("Accesso negato: Solo gli operatori possono visualizzare i dati");
+			//}
+
             // Recupero tutte le segnalazioni senza filtro su UserId
             IQueryable<PaginatedSegnalazioniRegularViewModel> segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels;
 
