@@ -1,10 +1,16 @@
 ﻿@model Whistleblowing.NET.Models.SegnalazioneRegularView
 
+@{
+    ViewData["Title"] = "Dettaglio Segnalazione";
+}
+
 <h2>Dettagli della Segnalazione</h2>
 
+<!-- Card con i dettagli -->
 <div class="card">
     <div class="card-body">
         <h5>ID Segnalazione: @Model.Id</h5>
+        <br />
         <p><strong>Fatto Riferito A:</strong> @Model.FattoRiferitoA</p>
         <p><strong>Data Evento:</strong> @Model.DataEvento?.ToString("yyyy-MM-dd")</p>
         <p><strong>Luogo Evento:</strong> @Model.LuogoEvento</p>
@@ -14,11 +20,151 @@
         <p><strong>Imprese Coinvolte:</strong> @Model.ImpreseCoinvolte</p>
         <p><strong>Pubblici Ufficiali Coinvolti:</strong> @Model.PubbliciUfficialiPaCoinvolti</p>
         <p><strong>Modalità Conoscenza Fatto:</strong> @Model.ModalitaConoscenzaFatto</p>
-        <p><strong>Descrizione Fatto:</strong> @Model.DescrizioneFatto</p>
+
+        <!-- Campo cliccabile per aprire il modale -->
+        <p>
+            <strong>Descrizione Fatto:</strong>
+            <a href="javascript:void(0);" class="description-link" onclick="openModal()">
+                Clicca qui per visualizzare
+            </a>
+        </p>
+
         <p><strong>Motivazione Fatto Illecito:</strong> @Model.MotivazioneFattoIllecito</p>
         <p><strong>Status:</strong> @Model.status</p>
-        <p><strong>Note:</strong> @Model.Note</p>
+        <!-- Campo Note non modificabile -->
+        <p><strong>Note:</strong></p>
+<textarea class="form-control" readonly rows="4" style="width: 100%; resize: none;">
+            @Model.Note
+</textarea>
     </div>
 </div>
 
-<a href="@Url.Action("Index", "SegnalazioniRegular")" class="btn btn-secondary">Torna indietro</a>
+<!-- Pulsante per tornare indietro -->
+<div class="text-center mt-4">
+    <a href="@Url.Action("Index", "SegnalazioniRegular")" class="btn btn-back">
+        <i class="bi bi-arrow-left-circle"></i> Torna indietro
+    </a>
+</div>
+
+<!-- Modale per visualizzare la descrizione del fatto -->
+<div id="descriptionModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h4>Descrizione del Fatto</h4>
+        <p>@Model.DescrizioneFatto</p>
+    </div>
+</div>
+
+<!-- CSS Integrato -->
+<style>
+    /* Stile generale */
+    body {
+        background-color: #f4f7fa;
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        background-color: #ffffff;
+        border: 1px solid #e3e6f0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        max-width: 800px;
+        margin: 20px auto;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .description-link {
+        color: #007bff;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    /* Modale */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 60%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+        .modal-content h4 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #007bff;
+    }
+
+    /* Pulsante Torna Indietro */
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-back:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+</style>
+
+<!-- Script per il modale -->
+<script>
+    function openModal() {
+        document.getElementById("descriptionModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("descriptionModal").style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        const modal = document.getElementById("descriptionModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
