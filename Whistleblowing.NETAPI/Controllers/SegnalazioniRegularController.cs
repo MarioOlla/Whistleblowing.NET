@@ -15,8 +15,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Whistleblowing.NETAPI.Service;
 namespace Whistleblowing.NETAPI.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
 	public class SegnalazioniRegularController : ControllerBase
 	{
 		//aggiungo il Db_Context
@@ -126,11 +126,11 @@ namespace Whistleblowing.NETAPI.Controllers
         /// </summary>
         /// <param name="segnalazioneRegularId"></param>
         /// <returns></returns>
-        [HttpGet("getSegnalazioneRegularById")]
-		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById( int segnalazioneRegularId)
+        [HttpGet("getSegnalazioneRegularById/{Id}")]
+		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById(int Id)
 		{
-            //e cerco la segnalazione con il suo id e quello dell' utente specificato
-            var segnalazione = await _context.SegnalazioneRegularViews.SingleOrDefaultAsync(s => s.Id == segnalazioneRegularId);
+            // cerco la segnalazione con il suo id
+            var segnalazione = await _context.SegnalazioneRegularViews.SingleOrDefaultAsync(s => s.Id == Id);
 
             //se invece non trovo la segnalazione restituisco un NotFound
             if (segnalazione == null)

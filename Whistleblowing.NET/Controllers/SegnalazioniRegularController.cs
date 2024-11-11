@@ -24,7 +24,7 @@ namespace Whistleblowing.NET.Controllers
 			//creo una varibiale di sessione e la forzo a valore di id 1 per riuscire ad ottenere i dati
 			_contextAccessor = _contextAccs;
 		}
-
+        [HttpGet]
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
             var model = new PaginatedSegnalazioniRegularViewModel();
@@ -155,12 +155,12 @@ namespace Whistleblowing.NET.Controllers
         /// <param name="segnalazioneRegularId">L'ID della segnalazione regolare</param>
         /// <returns>Ritorna la vista con i dettagli della segnalazione</returns>
         [HttpGet]
-        public async Task<IActionResult> GetSegnalazioneRegularById(int segnalazioneRegularId)
+        public async Task<IActionResult> GetSegnalazioneRegularById(int Id)
         {
             try
             {
                 // Chiamata all'API backend per ottenere la segnalazione tramite il suo ID
-                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/getSegnalazioneRegularById?segnalazione_regular_id={segnalazioneRegularId}");
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/getSegnalazioneRegularById/{Id}");
 
                 if (response.IsSuccessStatusCode)
                 {
