@@ -28,6 +28,8 @@ namespace Whistleblowing.NETAPI.Data
 
 		public DbSet<SegnalazioneAnonimaView> SegnalazioneAnonimaViews { get; set; } = default!;
 
+		public DbSet<PaginatedSegnalazioniRegularViewModel> paginatedSegnalazioniRegularViewModels { get; set; } = default!;
+
 		public DbSet<CryptoKey> CryptoKey { get; set; } = default!;
 
 
@@ -42,9 +44,10 @@ namespace Whistleblowing.NETAPI.Data
 		{
 			modelBuilder.Entity<SegnalazioneRegularView>().HasNoKey().ToView("SegnalazioneRegularView");
 			modelBuilder.Entity<SegnalazioneAnonimaView>().HasNoKey().ToView("SegnalazioneAnonimaView");
+            modelBuilder.Entity<PaginatedSegnalazioniRegularViewModel>().HasNoKey().ToView("PaginatedSegnalazioniRegularViewModel");
 
 
-		}
+        }
 
-	}
+    }
 }

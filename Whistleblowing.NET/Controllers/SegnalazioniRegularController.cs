@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using Whistleblowing.NET.Models;
 
 namespace Whistleblowing.NET.Controllers
@@ -23,19 +24,57 @@ namespace Whistleblowing.NET.Controllers
 			//creo una varibiale di sessione e la forzo a valore di id 1 per riuscire ad ottenere i dati
 			_contextAccessor = _contextAccs;
 		}
-
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
+        [HttpGet]
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
-            var viewModel = new PaginatedSegnalazioniRegularViewModel
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalItems = 0, // Inizializza con il numero totale di elementi (da una query, ad esempio)
-                SeganalazioniRegulars = new List<SegnalazioneRegular>() // Popola con la lista di segnalazioni
-            };
+            var model = new PaginatedSegnalazioniRegularViewModel();
 
-            return View(viewModel);
+            try
+            {
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Leggi il contenuto JSON come stringa e stampa nei log
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Risposta JSON ricevuta:");
+                    Console.WriteLine(jsonResponse);
+
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+                    };
+
+                    // Deserializza la risposta usando la classe wrapper
+                    var wrapper = System.Text.Json.JsonSerializer.Deserialize<Wrapper>(jsonResponse);
+
+                    if (wrapper != null && wrapper.Values != null)
+                    {
+                        model.SegnalazioniRegulars = wrapper.Values;
+                    }
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Errore nel recupero delle segnalazioni.";
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine("Errore nella deserializzazione della risposta JSON:");
+                Console.WriteLine(ex.Message);
+                ViewBag.ErrorMessage = "Errore nella deserializzazione dei dati.";
+            }
+
+            return View(model); // Passa il modello alla vista
         }
+
+
+
 
         /// <summary>
         /// Invia una segnalazione regolare
@@ -73,8 +112,83 @@ namespace Whistleblowing.NET.Controllers
 				return StatusCode(500, $"Errore nella comunicazione con l'API: {ex.Message}");
 			}
 		}
-	}
+
+        /// <summary>
+        /// Ottiene tutte le segnalazioni indipendentemente dall'utente.
+        /// </summary>
+        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
+        /// <param name="pageSize">Numero di elementi per pagina</param>
+        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
+        [HttpGet("GetAllSegnalazioniRegularTotali")]
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+
+            {
+
+                // Chiamata all'endpoint del backend
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Leggi i dati della risposta
+                    var data = await response.Content.ReadFromJsonAsync<dynamic>(); // Usa dynamic per il debug
+                    if (data != null)
+                    {
+                        return Ok(data); // Ritorna i dati ricevuti
+                    }
+                }
+
+                // Se la risposta non è andata a buon fine
+                return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni.");
+            }
+            catch (HttpRequestException ex)
+            {
+                // Gestisci le eccezioni di rete
+                return StatusCode(500, $"Errore di rete: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Ottieni una segnalazione regolare basata sul suo ID.
+        /// </summary>
+        /// <param name="segnalazioneRegularId">L'ID della segnalazione regolare</param>
+        /// <returns>Ritorna la vista con i dettagli della segnalazione</returns>
+        [HttpGet]
+        public async Task<IActionResult> GetSegnalazioneRegularById(int Id)
+        {
+            try
+            {
+                // Chiamata all'API backend per ottenere la segnalazione tramite il suo ID
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/getSegnalazioneRegularById/{Id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserializza la risposta JSON in un oggetto SegnalazioneRegularView
+                    var segnalazione = await response.Content.ReadFromJsonAsync<SegnalazioneRegularView>();
+
+                    if (segnalazione != null)
+                    {
+                        // Ritorna la vista con i dettagli della segnalazione
+                        return View("DettaglioSegnalazioneRegular", segnalazione);
+                    }
+                }
+
+                // Gestione dei casi in cui la segnalazione non è stata trovata
+                ViewBag.ErrorMessage = "Segnalazione non trovata.";
+                return View("Errore");
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+                return View("Errore");
+            }
+        }
+    }
 }
+
+
+
 
 
 

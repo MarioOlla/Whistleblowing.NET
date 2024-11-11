@@ -13,11 +13,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Whistleblowing.NETAPI.Service;
-
 namespace Whistleblowing.NETAPI.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
 	public class SegnalazioniRegularController : ControllerBase
 	{
 		//aggiungo il Db_Context
@@ -79,21 +78,62 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 
+        /// <summary>
+        /// Endpoint che serve per ottenere tutte le segnalazioni indipendentemente dall'utente
+        /// </summary>
+        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
+        /// <param name="pageSize">Numero di elementi per pagina</param>
+        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
+        [HttpGet("GetAllSegnalazioniRegularTotali")]
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(/*[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10*/ int userId)
+         {
+   //         var user = await _context.User.FindAsync(userId);
+   //         var isOperatore = user.Ruolo?.codice == 2;
 
-		/// <summary>
-		/// Metodo che utilizzo per ottenere una segnalazione Regolare in base al suo id e l' id utente
-		/// </summary>
-		/// <param name="segnalazioneRegularId"></param>
-		/// <returns></returns>
-		[HttpGet("getSegnalazioneRegularById")]
-		[Authorize]
-		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById( int segnalazioneRegularId)
+			//if(!isOperatore){
+			//	return Forbid("Accesso negato: Solo gli operatori possono visualizzare i dati");
+			//}
+
+            // Recupero tutte le segnalazioni senza filtro su UserId
+            IQueryable<PaginatedSegnalazioniRegularViewModel> segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels;
+
+            // Applico la paginazione
+            //segnalazioniQuery = segnalazioniQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            // Converto la query in lista per eseguire la richiesta
+            List<PaginatedSegnalazioniRegularViewModel> segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
+
+            // Calcolo il numero totale di record per la paginazione
+            //var totalRecords = await _context.SegnalazioneRegularViews.CountAsync();
+
+            // Organizzo il risultato in un oggetto con dati e paginazione
+            //var paginatedResult = new
+            //{
+            //    TotalRecords = totalRecords,
+            //    PageNumber = pageNumber,
+            //    PageSize = pageSize,
+            //    Data = segnalazioniRegolari
+            //};
+
+            // Ritorno il risultato paginato
+            return Ok(segnalazioniRegolari);
+        }
+
+
+
+        /// <summary>
+        /// Metodo che utilizzo per ottenere una segnalazione Regolare in base al suo id e l' id utente
+        /// </summary>
+        /// <param name="segnalazioneRegularId"></param>
+        /// <returns></returns>
+        [HttpGet("getSegnalazioneRegularById/{Id}")]
+		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById(int Id)
 		{
-			//e cerco la segnalazione con il suo id e quello dell' utente specificato
-			var segnalazione = await _context.SegnalazioneRegularViews.FirstOrDefaultAsync(s =>  s.Id == segnalazioneRegularId);
+            // cerco la segnalazione con il suo id
+            var segnalazione = await _context.SegnalazioneRegularViews.SingleOrDefaultAsync(s => s.Id == Id);
 
-			//se invece non trovo la segnalazione restituisco un NotFound
-			if(segnalazione == null)
+            //se invece non trovo la segnalazione restituisco un NotFound
+            if (segnalazione == null)
 			{
 				return NotFound(new { message = "segnalazione non trovata!" });
 			}

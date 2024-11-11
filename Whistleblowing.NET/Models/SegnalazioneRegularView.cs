@@ -4,13 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NET.Models
 {
-    public enum Status
+    public class SegnalazioneRegularView
     {
-        APERTO, LAVORAZIONE, CHIUSO
-    }
-    public class SegnalazioneRegular
-    {
-
         public int Id { get; set; }
 
         public string? FattoRiferitoA { get; set; }
@@ -48,36 +43,7 @@ namespace Whistleblowing.NET.Models
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Status? status { get; set; }
 
-        public Boolean? IsDeleted { get; set; }
-
 
         public int UserId { get; set; }
-
-
-
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

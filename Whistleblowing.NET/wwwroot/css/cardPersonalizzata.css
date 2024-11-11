@@ -1,0 +1,16 @@
+﻿/* card.css */
+.cardArea {
+    /*margin-top: 13rem;*/
+    width:15rem;
+    position: relative;
+    height: 15rem;
+    overflow: hidden;
+    border-radius: 10px;
+    transition: transform 0.3s ease; /*movimento della card al mouse e la rende piu fluida*/
+    box-shadow: 0 4px 8px rgba(0, 0, 1, 1);
+}
+
+    .cardArea:hover {
+        transform: translateY(-5px); /*movimento della card al mouse*/
+    }
+
