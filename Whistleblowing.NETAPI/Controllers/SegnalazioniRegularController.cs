@@ -127,14 +127,13 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="segnalazioneRegularId"></param>
         /// <returns></returns>
         [HttpGet("getSegnalazioneRegularById")]
-		[Authorize]
 		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById( int segnalazioneRegularId)
 		{
-			//e cerco la segnalazione con il suo id e quello dell' utente specificato
-			var segnalazione = await _context.SegnalazioneRegularViews.FirstOrDefaultAsync(s =>  s.Id == segnalazioneRegularId);
+            //e cerco la segnalazione con il suo id e quello dell' utente specificato
+            var segnalazione = await _context.SegnalazioneRegularViews.SingleOrDefaultAsync(s => s.Id == segnalazioneRegularId);
 
-			//se invece non trovo la segnalazione restituisco un NotFound
-			if(segnalazione == null)
+            //se invece non trovo la segnalazione restituisco un NotFound
+            if (segnalazione == null)
 			{
 				return NotFound(new { message = "segnalazione non trovata!" });
 			}

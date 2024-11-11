@@ -148,6 +148,42 @@ namespace Whistleblowing.NET.Controllers
                 return StatusCode(500, $"Errore di rete: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// Ottieni una segnalazione regolare basata sul suo ID.
+        /// </summary>
+        /// <param name="segnalazioneRegularId">L'ID della segnalazione regolare</param>
+        /// <returns>Ritorna la vista con i dettagli della segnalazione</returns>
+        [HttpGet]
+        public async Task<IActionResult> GetSegnalazioneRegularById(int segnalazioneRegularId)
+        {
+            try
+            {
+                // Chiamata all'API backend per ottenere la segnalazione tramite il suo ID
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/getSegnalazioneRegularById?segnalazione_regular_id={segnalazioneRegularId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserializza la risposta JSON in un oggetto SegnalazioneRegularView
+                    var segnalazione = await response.Content.ReadFromJsonAsync<SegnalazioneRegularView>();
+
+                    if (segnalazione != null)
+                    {
+                        // Ritorna la vista con i dettagli della segnalazione
+                        return View("DettaglioSegnalazioneRegular", segnalazione);
+                    }
+                }
+
+                // Gestione dei casi in cui la segnalazione non è stata trovata
+                ViewBag.ErrorMessage = "Segnalazione non trovata.";
+                return View("Errore");
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+                return View("Errore");
+            }
+        }
     }
 }
 
