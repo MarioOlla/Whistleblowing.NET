@@ -36,12 +36,13 @@ namespace Whistleblowing.NET.Models.DTO
         public string Posizione { get; set; }
 
         [Phone(ErrorMessage = "Il numero di telefono non è valido.")]
+        [OnlyDigits(ErrorMessage = "Il numero di telefono può contenere solo cifre.")]
         [StringLength(15, ErrorMessage = "Il numero di telefono non può superare i 15 caratteri.")]
         public string Telefono { get; set; }
 
         [Required(ErrorMessage = "La data di nascita è obbligatoria.")]
         [DataType(DataType.Date)]
-        [Range(typeof(DateTime), "1900-01-01", "2100-12-31", ErrorMessage = "La data di nascita deve essere valida.")]
+        [MinimumAge(18, ErrorMessage = "L'utente deve essere maggiorenne.")]
         public DateTime DataNascita { get; set; }
 
 
