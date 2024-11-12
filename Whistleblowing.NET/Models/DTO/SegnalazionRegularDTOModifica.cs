@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NET.Models.DTO
 {
-    [Table("SegnalazioneRegulars")]
-
-    public class SegnalazioneRegularDTOInserimento
+    public class SegnalazionRegularDTOModifica
     {
-
+   
         public int Id { get; set; }
 
         public string? FattoRiferitoA { get; set; }
@@ -39,6 +37,7 @@ namespace Whistleblowing.NET.Models.DTO
 
         public string? Note { get; set; }
 
-
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Status? status { get; set; }
     }
 }
