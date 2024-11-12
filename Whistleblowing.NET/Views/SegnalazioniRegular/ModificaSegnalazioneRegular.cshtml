@@ -7,7 +7,7 @@
 <h2>Modifica Segnalazione</h2>
 
 <!-- Form per la modifica dei dettagli -->
-<form method="post" asp-action="PutSegnalazioneRegular" asp-controller="SegnalazioniRegular">
+<form method="post" asp-action="ModificaSegnalazioneRegular" asp-controller="SegnalazioniRegular">
     <div class="card">
         <div class="card-body">
             <h5>ID Segnalazione: @Model.Id</h5>
@@ -15,27 +15,27 @@
 
             <div class="form-group">
                 <label><strong>Fatto Riferito A:</strong></label>
-                <input type="text" class="form-control" name="FattoRiferitoA" value="@Model.FattoRiferitoA" />
+                <input type="text" class="form-control" name="FattoRiferitoA" value="@Model.FattoRiferitoA" required />
             </div>
 
             <div class="form-group">
                 <label><strong>Data Evento:</strong></label>
-                <input type="date" class="form-control" name="DataEvento" value="@Model.DataEvento?.ToString("yyyy-MM-dd")" />
+                <input type="date" class="form-control" name="DataEvento" value="@Model.DataEvento?.ToString("yyyy-MM-dd")" required />
             </div>
 
             <div class="form-group">
                 <label><strong>Luogo Evento:</strong></label>
-                <input type="text" class="form-control" name="LuogoEvento" value="@Model.LuogoEvento" />
+                <input type="text" class="form-control" name="LuogoEvento" value="@Model.LuogoEvento" required />
             </div>
 
             <div class="form-group">
                 <label><strong>Soggetto Colpevole:</strong></label>
-                <input type="text" class="form-control" name="SoggettoColpevole" value="@Model.SoggettoColpevole" />
+                <input type="text" class="form-control" name="SoggettoColpevole" value="@Model.SoggettoColpevole" required />
             </div>
 
             <div class="form-group">
                 <label><strong>Area Aziendale:</strong></label>
-                <input type="text" class="form-control" name="AreaAziendale" value="@Model.AreaAziendale" />
+                <input type="text" class="form-control" name="AreaAziendale" value="@Model.AreaAziendale" required />
             </div>
 
             <div class="form-group">
@@ -70,7 +70,7 @@
 
             <div class="form-group">
                 <label><strong>Status:</strong></label>
-                <input type="text" class="form-control" name="status" value="@Model.status" />
+                <input type="text" class="form-control" name="status" value="@Model.status" required />
             </div>
 
             <div class="form-group">
