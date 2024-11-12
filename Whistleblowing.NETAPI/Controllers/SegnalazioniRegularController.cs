@@ -79,6 +79,41 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
         /// <summary>
+        /// Endpoint per ottenere tutte le segnalazioni regular dell'utente loggato utilizzando il token JWT
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetMySegnalazioniRegular")]
+		[Authorize]
+        public async Task<IActionResult> GetMySegnalazioniRegular()
+        {
+            // Ottengo l'ID utente dal token JWT
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+
+            if (!int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized("Non autorizzato. ID utente non trovato.");
+            }
+
+            // Verifico che l'utente esista e non sia eliminato
+            var userExists = await _context.User.AnyAsync(u => u.Id == userId && !u.IsDeleted);
+            if (!userExists)
+            {
+                return NotFound("Utente non trovato o eliminato.");
+            }
+
+            // Filtro le segnalazioni per userId
+            List<SegnalazioneRegularView> segnalazioniRegolari = await _context.SegnalazioneRegularViews
+                .Where(s => s.UserId == userId)
+                .ToListAsync();
+
+            // Ritorna i dati
+            return Ok(segnalazioniRegolari);
+        }
+
+
+
+
+        /// <summary>
         /// Endpoint che serve per ottenere tutte le segnalazioni indipendentemente dall'utente
         /// </summary>
         /// <param name="pageNumber">Numero della pagina da visualizzare</param>
