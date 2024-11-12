@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Whistleblowing.NET.Models;
+using Whistleblowing.NET.Models.DTO;
 
 namespace Whistleblowing.NET.Controllers
 {
@@ -184,8 +185,113 @@ namespace Whistleblowing.NET.Controllers
                 return View("Errore");
             }
         }
+
+        /// <summary>
+        /// Ottieni una segnalazione regolare basata sul suo ID.
+        /// </summary>
+        /// <param name="segnalazioneRegularId">L'ID della segnalazione regolare</param>
+        /// <returns>Ritorna la vista con i dettagli della segnalazione</returns>
+        [HttpGet]
+        public async Task<IActionResult> EditSegnalazioneRegularById(int Id)
+        {
+            try
+            {
+                // Chiamata all'API backend per ottenere la segnalazione tramite il suo ID
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/getSegnalazioneRegularById/{Id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserializza la risposta JSON in un oggetto SegnalazioneRegularView
+                    var segnalazione = await response.Content.ReadFromJsonAsync<SegnalazioneRegularView>();
+
+                    if (segnalazione != null)
+                    {
+                        // Ritorna la vista con i dettagli della segnalazione
+                        return View("ModificaSegnalazioneRegular", segnalazione);
+                    }
+                }
+
+                // Gestione dei casi in cui la segnalazione non è stata trovata
+                ViewBag.ErrorMessage = "Segnalazione non trovata.";
+                return View("Errore");
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+                return View("Errore");
+            }
+        }
+
+        /// <summary>
+        /// Metodo per modificare una segnalazione Regular tramite chiamata API
+        /// </summary>
+        /// <param name="segnalazione">Oggetto SegnalazioneRegularDTOInserimento con i nuovi dati</param>
+        /// <returns>ActionResult</returns>
+        [HttpPut]
+        public async Task<IActionResult> PutSegnalazioneRegular(SegnalazioneRegularDTOInserimento segnalazione)
+        {
+            // Recupera l'ID utente dalla sessione
+            int? userid = _contextAccessor.HttpContext?.Session.GetInt32("UserId");
+
+            // Se l'utente non è presente nella sessione, forziamo l'ID a 1 per testing
+            if (userid == null)
+            {
+                userid = 1; // Forza l'ID per testing
+                _contextAccessor.HttpContext?.Session.SetInt32("UserId", (int)userid);
+            }
+
+            // Se la segnalazione è nulla, restituisci un errore
+            if (segnalazione == null)
+            {
+                return BadRequest("La segnalazione non può essere nulla");
+            }
+
+            // Definisci l'URL dell'endpoint dell'API
+            string url = $"/Segnalazione/PutSegnalazioneRegular?userid={userid}";
+
+            try
+            {
+                // Effettua la chiamata PUT all'API
+                var response = await _client.PutAsJsonAsync(url, segnalazione);
+
+                // Verifica la risposta del server
+                if (response.IsSuccessStatusCode)
+                {
+                    // Se la modifica è andata a buon fine, reindirizza alla pagina Index
+                    return RedirectToAction("Index", "SegnalazioniRegular");
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    // Se l'accesso è negato, restituisci un errore 403
+                    return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // Se l'utente non è stato trovato, restituisci un errore 404
+                    return NotFound("Utente non trovato");
+                }
+                else
+                {
+                    // Gestione di altri tipi di errore
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    return StatusCode((int)response.StatusCode, errorMessage);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Gestione degli errori di rete
+                return StatusCode(500, $"Errore durante la chiamata all'API: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Gestione di altri errori generali
+                return StatusCode(500, $"Errore imprevisto: {ex.Message}");
+            }
+        }
+
     }
 }
+    
 
 
 
