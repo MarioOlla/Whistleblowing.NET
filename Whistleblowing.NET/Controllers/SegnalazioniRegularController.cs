@@ -224,7 +224,7 @@ namespace Whistleblowing.NET.Controllers
 
         // Aggiungi il metodo di modifica
         [HttpPost]
-        public async Task<IActionResult> ModificaSegnalazioneRegular([FromBody] SegnalazioneRegularDTOInserimento segnalazione)
+        public async Task<IActionResult> ModificaSegnalazioneRegular([FromBody] SegnalazionRegularDTOModifica segnalazione)
         {
             // Verifica che i dati siano validi
             if (segnalazione == null)

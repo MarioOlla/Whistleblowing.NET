@@ -296,7 +296,7 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="segnalazione"></param>
         /// <returns></returns>
         [HttpPost("PutSegnalazioneRegular")]  // Modificato da HttpPut a HttpPost
-        public async Task<ActionResult> PutSegnalazioneRegular([FromQuery] int userid, SegnalazioneRegularDTOInserimento segnalazione)
+        public async Task<ActionResult> PutSegnalazioneRegular([FromQuery] int userid, SegnalazioneRegularDTOModifica segnalazione)
         {
             //trovo l' utente corrente e ne controllo il ruolo
             var user = _context.User.Include(u => u.Ruolo).FirstOrDefault(u => u.Id == userid);
