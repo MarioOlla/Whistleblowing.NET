@@ -1,0 +1,161 @@
+﻿@model Whistleblowing.NET.Models.SegnalazioneRegularView
+
+@{
+    ViewData["Title"] = "Modifica Segnalazione";
+}
+
+<h2>Modifica Segnalazione</h2>
+
+<!-- Form per la modifica dei dettagli -->
+<form method="post" asp-action="PutSegnalazioneRegular" asp-controller="SegnalazioniRegular">
+    <div class="card">
+        <div class="card-body">
+            <h5>ID Segnalazione: @Model.Id</h5>
+            <input type="hidden" name="Id" value="@Model.Id" />
+
+            <div class="form-group">
+                <label><strong>Fatto Riferito A:</strong></label>
+                <input type="text" class="form-control" name="FattoRiferitoA" value="@Model.FattoRiferitoA" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Data Evento:</strong></label>
+                <input type="date" class="form-control" name="DataEvento" value="@Model.DataEvento?.ToString("yyyy-MM-dd")" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Luogo Evento:</strong></label>
+                <input type="text" class="form-control" name="LuogoEvento" value="@Model.LuogoEvento" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Soggetto Colpevole:</strong></label>
+                <input type="text" class="form-control" name="SoggettoColpevole" value="@Model.SoggettoColpevole" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Area Aziendale:</strong></label>
+                <input type="text" class="form-control" name="AreaAziendale" value="@Model.AreaAziendale" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Soggetti Privati Coinvolti:</strong></label>
+                <input type="text" class="form-control" name="SoggettiPrivatiCoinvolti" value="@Model.SoggettiPrivatiCoinvolti" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Imprese Coinvolte:</strong></label>
+                <input type="text" class="form-control" name="ImpreseCoinvolte" value="@Model.ImpreseCoinvolte" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Pubblici Ufficiali Coinvolti:</strong></label>
+                <input type="text" class="form-control" name="PubbliciUfficialiPaCoinvolti" value="@Model.PubbliciUfficialiPaCoinvolti" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Modalità Conoscenza Fatto:</strong></label>
+                <input type="text" class="form-control" name="ModalitaConoscenzaFatto" value="@Model.ModalitaConoscenzaFatto" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Descrizione Fatto:</strong></label>
+                <textarea class="form-control" name="DescrizioneFatto" rows="4">@Model.DescrizioneFatto</textarea>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Motivazione Fatto Illecito:</strong></label>
+                <input type="text" class="form-control" name="MotivazioneFattoIllecito" value="@Model.MotivazioneFattoIllecito" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Status:</strong></label>
+                <input type="text" class="form-control" name="status" value="@Model.status" />
+            </div>
+
+            <div class="form-group">
+                <label><strong>Note:</strong></label>
+                <textarea class="form-control" name="Note" rows="4">@Model.Note</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pulsanti Torna Indietro e Modifica -->
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "SegnalazioniRegular")" class="btn btn-back">
+            <i class="bi bi-arrow-left-circle"></i> Torna indietro
+        </a>
+        <button type="submit" class="btn btn-primary btn-edit">
+            <i class="bi bi-pencil-square"></i> Modifica
+        </button>
+    </div>
+</form>
+
+<!-- CSS Integrato -->
+<style>
+    body {
+        background-color: #f4f7fa;
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        background-color: #ffffff;
+        border: 1px solid #e3e6f0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        max-width: 800px;
+        margin: 20px auto;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-control {
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        margin-right: 10px;
+    }
+
+        .btn-back:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+    .btn-edit {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #28a745;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-edit:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+</style>
