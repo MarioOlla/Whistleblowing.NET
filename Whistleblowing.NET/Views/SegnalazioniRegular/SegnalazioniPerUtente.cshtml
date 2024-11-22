@@ -1,0 +1,84 @@
+﻿@model Whistleblowing.NET.Models.PaginatedSegnalazioniRegularViewUtente
+
+<div class="row">
+    <div class="col-md-10">
+        <h3>Gestione Segnalazioni</h3>
+        <p class="title-text mt-2">
+            In questa sezione puoi visualizzare tutte le segnalazioni.
+        </p>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-3 mt-1">
+        <div class="card" style="border-radius: 7px; margin-bottom: 24px;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="card-subtitle mb-1 text-muted">Segnalazioni Totali:</h6>
+                        <p class="font-weight-bold" style="font-size:28px;">
+                            @Model.SegnalazioniRegulars?.Count
+                        </p>
+                    </div>
+                    <i class="bi bi-exclamation-circle" style="color: black; font-size:28px;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="border-grey bg-white tab-content">
+    <div class="tab-pane active">
+        <div class="table-responsive">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Data Evento</th>
+                        <th class="text-center">Soggetto Colpevole</th>
+                        <th class="text-center">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.SegnalazioniRegulars != null && Model.SegnalazioniRegulars.Any())
+                    {
+                        foreach (var segnalazione in Model.SegnalazioniRegulars)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <a asp-controller="SegnalazioniRegular" asp-action="GetMySegnalazioneRegular" asp-route-id="@segnalazione.segnalazione_regular_id">
+                                        @segnalazione.segnalazione_regular_id
+                                    </a>
+                                </td>
+                                <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
+                                <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+                                <td class="text-center">
+                                    <a class="btn btn-info btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_regular_id">
+                                        <i class="bi bi-eye"></i> Visualizza
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                Nessuna segnalazione trovata.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="success-alert" class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}

@@ -4,7 +4,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Whistleblowing.NETAPI.Models
 {
-	public class User : IdentityUser
+
+    public enum Ruolo
+    {
+        UTENTE, OPERATORE, ADMIN
+    }
+    public class User : IdentityUser
 	{
 
 		[Key]

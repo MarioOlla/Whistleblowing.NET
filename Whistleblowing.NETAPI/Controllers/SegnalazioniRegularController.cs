@@ -50,7 +50,7 @@ namespace Whistleblowing.NETAPI.Controllers
 				return NotFound("Utente non trovato");
 			}
 
-			var isOperatore = user.Ruolo?.codice == 2;
+			var isOperatore = user.Ruolo.ToString().Equals("OPERATORE");
 
 			// se l'utente che trovo è un operatore restituisco tutte le segnalazioni, altrimenti filtro per userId
 			IQueryable<SegnalazioneRegularView> segnalazioniQuery = isOperatore
@@ -83,7 +83,7 @@ namespace Whistleblowing.NETAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetMySegnalazioniRegular")]
-		[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetMySegnalazioniRegular()
         {
             // Ottengo l'ID utente dal token JWT
@@ -102,14 +102,13 @@ namespace Whistleblowing.NETAPI.Controllers
             }
 
             // Filtro le segnalazioni per userId
-            List<SegnalazioneRegularView> segnalazioniRegolari = await _context.SegnalazioneRegularViews
-                .Where(s => s.UserId == userId)
+            List<PaginatedSegnalazioniRegularViewUtente> segnalazioniRegolari = await _context.paginatedSegnalazioniRegularViewUtentes
+                .Where(s => s.UserId == userId) // Applica il filtro per userId
                 .ToListAsync();
 
             // Ritorna i dati
             return Ok(segnalazioniRegolari);
         }
-
 
 
 
@@ -307,8 +306,8 @@ namespace Whistleblowing.NETAPI.Controllers
                 return NotFound("Utente non trovato");
             }
 
-            // Verifico se l'utente è un operatore (codice 2)
-            var isOperatore = user.Ruolo?.codice == 2;
+			// Verifico se l'utente è un operatore (codice 2)
+			var isOperatore = user.Ruolo.ToString().Equals("OPERATORE");
 
             //se l' utente non è un OPERATORE, ritorno un errore di accesso negato
             if (!isOperatore)
@@ -368,10 +367,10 @@ namespace Whistleblowing.NETAPI.Controllers
 			}
 
 			// Verifico se l'utente è un operatore (codice 2)
-			var isOperatore = user.Ruolo?.codice == 2;
+			var isOperatore = user.Ruolo.ToString().Equals("OPERATORE");
 
-			//se l' utente non è un OPERATORE, ritorno un errore di accesso negato
-			if (!isOperatore)
+            //se l' utente non è un OPERATORE, ritorno un errore di accesso negato
+            if (!isOperatore)
 			{
 				return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
 			}
@@ -404,7 +403,11 @@ namespace Whistleblowing.NETAPI.Controllers
 			return Ok();
 
 
+
+
 		}
+
+
 
 
 

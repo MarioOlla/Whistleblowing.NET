@@ -222,6 +222,47 @@ namespace Whistleblowing.NET.Controllers
             }
         }
 
+        /// <summary>
+        /// Ottiene le segnalazioni regular dell'utente loggato
+        /// </summary>
+        /// <returns>Una vista con le segnalazioni dell'utente loggato</returns>
+        [HttpGet("GetMySegnalazioniRegular")]
+        public async Task<IActionResult> GetMySegnalazioniRegular()
+        {
+            try
+            {
+                // Recupera il token JWT dal cookie
+                string token = Request.Cookies["jwtToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Unauthorized("Token non trovato, effettuare il login");
+                }
+
+                // Imposta il token nell'header Authorization
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Effettua la chiamata all'API
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetMySegnalazioniRegular");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<List<PaginatedSegnalazioniRegularViewUtente>>();
+                    return View("SegnalazioniPerUtente", new PaginatedSegnalazioniRegularViewUtente
+                    {
+                        SegnalazioniRegulars = data
+                    });
+
+                }
+
+                return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni");
+            }
+            catch (HttpRequestException ex)
+            {
+                return StatusCode(500, $"Errore di rete: {ex.Message}");
+            }
+        }
+
         // Aggiungi il metodo di modifica
         [HttpPost]
         public async Task<IActionResult> ModificaSegnalazioneRegular([FromBody] SegnalazionRegularDTOModifica segnalazione)

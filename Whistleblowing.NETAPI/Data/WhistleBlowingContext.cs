@@ -16,7 +16,6 @@ namespace Whistleblowing.NETAPI.Data
 		{
 		}
 
-		public DbSet<Ruolo> Ruolo { get; set; } = default!;
 
 		public DbSet<User> User { get; set; } = default!;
 
@@ -32,9 +31,10 @@ namespace Whistleblowing.NETAPI.Data
 
 		public DbSet<CryptoKey> CryptoKey { get; set; } = default!;
 
+        public DbSet<PaginatedSegnalazioniRegularViewUtente> paginatedSegnalazioniRegularViewUtentes { get; set; } = default!;
 
-		
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseLazyLoadingProxies(false); // Disabilita i proxy dinamici
 		}
@@ -45,6 +45,8 @@ namespace Whistleblowing.NETAPI.Data
 			modelBuilder.Entity<SegnalazioneRegularView>().HasNoKey().ToView("SegnalazioneRegularView");
 			modelBuilder.Entity<SegnalazioneAnonimaView>().HasNoKey().ToView("SegnalazioneAnonimaView");
             modelBuilder.Entity<PaginatedSegnalazioniRegularViewModel>().HasNoKey().ToView("PaginatedSegnalazioniRegularViewModel");
+            modelBuilder.Entity<PaginatedSegnalazioniRegularViewUtente>().HasNoKey().ToView("PaginatedSegnalazioniRegularViewUtente");
+
 
 
         }

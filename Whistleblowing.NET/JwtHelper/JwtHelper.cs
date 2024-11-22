@@ -57,10 +57,8 @@ namespace Whistleblowing.NET
                     Nome = claims["Nome"],
                     Cognome = claims["Cognome"],
                     Email = claims["sub"],
-                    Ruolo = new Ruolo
-                    {
-                        Id = int.Parse(claims["RuoloId"])
-                    }
+                    Ruolo = Enum.Parse<Ruolo>(claims["Ruolo"])
+
                 };
 
                 return utente;

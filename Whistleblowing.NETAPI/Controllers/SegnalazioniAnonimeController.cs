@@ -55,10 +55,10 @@ namespace Whistleblowing.NETAPI.Controllers
 			}
 
 			// Verifico se l'utente è un operatore (codice ruolo == 2)
-			var isOperatore = user.Ruolo?.codice == 2;
+			var isOperatore = user.Ruolo.ToString().Equals("UTENTE");
 
-			// Se l'utente non è operatore, ritorno un errore di autorizzazione
-			if (!isOperatore)
+            // Se l'utente non è operatore, ritorno un errore di autorizzazione
+            if (!isOperatore)
 			{
 				return Forbid("Accesso negato. Solo gli operatori possono visualizzare le segnalazioni anonime.");
 			}

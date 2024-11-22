@@ -77,8 +77,8 @@ namespace Whistleblowing.NETAPI.Controllers
 					CodiceFiscale = utenteRegister.CodiceFiscale,
 					HasChangedPassword = utenteRegister.HasChangedPassword = false,
 
-					Ruolo = await _context.Ruolo.FirstOrDefaultAsync(r => r.descrizione == "Utente") // Imposta ruolo utente
-				};
+                    Ruolo = Ruolo.UTENTE,
+                };
 
 				// Aggiungi il nuovo utente al contesto
 				_context.User.Add(newUser);
@@ -103,7 +103,7 @@ namespace Whistleblowing.NETAPI.Controllers
 			if (ModelState.IsValid)
 			{
 				var existingUser = await _context.User
-				.Include(u => u.Ruolo) // Forza Entity Framework a caricare il ruolo
+			
 				.FirstOrDefaultAsync(u => u.Email == utenteLogin.Email);
 
 				if (existingUser == null)
@@ -129,8 +129,8 @@ namespace Whistleblowing.NETAPI.Controllers
 				new Claim("Nome", existingUser.Nome),
 				new Claim("Cognome", existingUser.Cognome),
 				new Claim("UserId", existingUser.Id.ToString()),
-				new Claim("Ruolo", existingUser.Ruolo.codice.ToString()),
-				new Claim("HasChangedPassword", existingUser.HasChangedPassword.ToString())
+                new Claim("Ruolo", existingUser.Ruolo.ToString()),
+                new Claim("HasChangedPassword", existingUser.HasChangedPassword.ToString())
 				};
 
 

@@ -4,6 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Whistleblowing.NET.Models
 {
 
+    public enum Ruolo
+    {
+        UTENTE, OPERATORE, ADMIN
+    }
+
+
     public class User
     {
 
