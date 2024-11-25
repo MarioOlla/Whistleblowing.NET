@@ -48,17 +48,15 @@ namespace Whistleblowing.NET.Controllers
                     };
 
                     // Deserializza la risposta usando la classe wrapper
-                    var wrapper = System.Text.Json.JsonSerializer.Deserialize<Wrapper>(jsonResponse);
-
-                    if (wrapper != null && wrapper.Values != null)
+                    var data = await response.Content.ReadFromJsonAsync<List<PaginatedSegnalazioniRegularViewModel>>();
+                    return View("Index", new PaginatedSegnalazioniRegularViewModel
                     {
-                        model.SegnalazioniRegulars = wrapper.Values;
-                    }
+                        SegnalazioniRegulars = data
+                    });
                 }
-                else
-                {
-                    ViewBag.ErrorMessage = "Errore nel recupero delle segnalazioni.";
-                }
+
+                return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni");
+
             }
             catch (HttpRequestException ex)
             {
@@ -114,41 +112,41 @@ namespace Whistleblowing.NET.Controllers
 			}
 		}
 
-        /// <summary>
-        /// Ottiene tutte le segnalazioni indipendentemente dall'utente.
-        /// </summary>
-        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
-        /// <param name="pageSize">Numero di elementi per pagina</param>
-        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
-        [HttpGet("GetAllSegnalazioniRegularTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int pageNumber = 1, int pageSize = 10)
-        {
-            try
+        ///// <summary>
+        ///// Ottiene tutte le segnalazioni indipendentemente dall'utente.
+        ///// </summary>
+        ///// <param name="pageNumber">Numero della pagina da visualizzare</param>
+        ///// <param name="pageSize">Numero di elementi per pagina</param>
+        ///// <returns>Risultato paginato con tutte le segnalazioni</returns>
+        //[HttpGet("GetAllSegnalazioniRegularTotali")]
+        //public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int pageNumber = 1, int pageSize = 10)
+        //{
+        //    try
 
-            {
+        //    {
 
-                // Chiamata all'endpoint del backend
-                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
+        //        // Chiamata all'endpoint del backend
+        //        var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    // Leggi i dati della risposta
-                    var data = await response.Content.ReadFromJsonAsync<dynamic>(); // Usa dynamic per il debug
-                    if (data != null)
-                    {
-                        return Ok(data); // Ritorna i dati ricevuti
-                    }
-                }
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            // Leggi i dati della risposta
+        //            var data = await response.Content.ReadFromJsonAsync<dynamic>(); // Usa dynamic per il debug
+        //            if (data != null)
+        //            {
+        //                return Ok(data); // Ritorna i dati ricevuti
+        //            }
+        //        }
 
-                // Se la risposta non è andata a buon fine
-                return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni.");
-            }
-            catch (HttpRequestException ex)
-            {
-                // Gestisci le eccezioni di rete
-                return StatusCode(500, $"Errore di rete: {ex.Message}");
-            }
-        }
+        //        // Se la risposta non è andata a buon fine
+        //        return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni.");
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        // Gestisci le eccezioni di rete
+        //        return StatusCode(500, $"Errore di rete: {ex.Message}");
+        //    }
+        //}
 
         /// <summary>
         /// Ottieni una segnalazione regolare basata sul suo ID.

@@ -98,10 +98,19 @@ builder.Services.AddScoped<JwtUtils>();
 //
 // Add services to the container.
 builder.Services.AddControllers()
-	.AddJsonOptions(options =>
+    .AddJsonOptions(options =>
 	{
+
 		options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-	});
+
+		//Per Ottenere un Json più pulito utilizzo questi due metodi:
+
+		// Ignora cicli di riferimento
+		options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+
+        // Configura nomi case-insensitive (opzionale)
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
 
 
 
