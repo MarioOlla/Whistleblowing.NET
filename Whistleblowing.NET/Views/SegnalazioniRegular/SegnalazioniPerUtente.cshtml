@@ -1,6 +1,4 @@
-﻿@model Whistleblowing.NET.Models.PaginatedSegnalazioniRegularViewUtente
-
-<div class="row">
+﻿<div class="row">
     <div class="col-md-10">
         <h3>Gestione Segnalazioni</h3>
         <p class="title-text mt-2">
@@ -19,7 +17,7 @@
                     <div>
                         <h6 class="card-subtitle mb-1 text-muted">Segnalazioni Totali:</h6>
                         <p class="font-weight-bold" style="font-size:28px;">
-                            @Model.SegnalazioniRegulars?.Count
+                            @Model.TotalItems
                         </p>
                     </div>
                     <i class="bi bi-exclamation-circle" style="color: black; font-size:28px;"></i>
@@ -29,20 +27,49 @@
     </div>
 </div>
 
+<div class="row mb-3">
+    <div class="col-md-3">
+        <label for="pageSize">Elementi per pagina:</label>
+        <select id="pageSize" class="form-select" onchange="changePageSize(this.value)">
+            <option value="5" selected="@(Model.PageSize == 5)">5</option>
+            <option value="10" selected="@(Model.PageSize == 10)">10</option>
+            <option value="15" selected="@(Model.PageSize == 15)">15</option>
+        </select>
+    </div>
+</div>
+
 <div class="border-grey bg-white tab-content">
     <div class="tab-pane active">
         <div class="table-responsive">
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Data Evento</th>
+                        <th class="text-center">
+                            <a asp-action="GetMySegnalazioniRegular"
+                               asp-route-page="1"
+                               asp-route-pageSize="@Model.PageSize"
+                               asp-route-sortBy="segnalazione_regular_id"
+                               asp-route-sortDesc="@(Model.SortBy == "segnalazione_regular_id" && !Model.SortDesc)">
+                                ID
+                                @(Model.SortBy == "segnalazione_regular_id" ? (Model.SortDesc ? "▼" : "▲") : "")
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a asp-action="GetMySegnalazioniRegular"
+                               asp-route-page="1"
+                               asp-route-pageSize="@Model.PageSize"
+                               asp-route-sortBy="dataEvento"
+                               asp-route-sortDesc="@(Model.SortBy == "dataEvento" && !Model.SortDesc)">
+                                Data Evento
+                                @(Model.SortBy == "dataEvento" ? (Model.SortDesc ? "▼" : "▲") : "")
+                            </a>
+                        </th>
                         <th class="text-center">Soggetto Colpevole</th>
                         <th class="text-center">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.SegnalazioniRegulars != null && Model.SegnalazioniRegulars.Any())
+                    @if (Model.SegnalazioniRegulars != null && Model.SegnalazioniRegulars.Count > 0)
                     {
                         foreach (var segnalazione in Model.SegnalazioniRegulars)
                         {
@@ -52,8 +79,8 @@
                                         @segnalazione.segnalazione_regular_id
                                     </a>
                                 </td>
-                                <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
-                                <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+                                <td class="text-center">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
+                                <td class="text-center">@segnalazione.SoggettoColpevole</td>
                                 <td class="text-center">
                                     <a class="btn btn-info btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_regular_id">
                                         <i class="bi bi-eye"></i> Visualizza
@@ -76,9 +103,57 @@
     </div>
 </div>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div id="success-alert" class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
+<nav>
+    @{
+        // Calcolo delle pagine totali
+        int totalPages = (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize);
+    }
+    <ul class="pagination justify-content-center">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="GetMySegnalazioniRegular"
+                   asp-route-page="@(Model.PageNumber - 1)"
+                   asp-route-pageSize="@Model.PageSize"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-sortDesc="@Model.SortDesc">
+                    Precedente
+                </a>
+            </li>
+        }
+
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a class="page-link" asp-action="GetMySegnalazioniRegular"
+                   asp-route-page="@i"
+                   asp-route-pageSize="@Model.PageSize"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-sortDesc="@Model.SortDesc">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (Model.PageNumber < totalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="GetMySegnalazioniRegular"
+                   asp-route-page="@(Model.PageNumber + 1)"
+                   asp-route-pageSize="@Model.PageSize"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-sortDesc="@Model.SortDesc">
+                    Successivo
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+
+<script>
+    function changePageSize(pageSize) {
+        const url = `@Url.Action("GetMySegnalazioniRegular", new { page = 1, pageSize = "__PAGE_SIZE__", sortBy = Model.SortBy, sortDesc = Model.SortDesc })`
+            .replace("__PAGE_SIZE__", pageSize);
+        window.location.href = url;
+    }
+</script>

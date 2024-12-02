@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Whistleblowing.NETAPI.Models.view;
 
 namespace Whistleblowing.NETAPI.Models
@@ -17,15 +18,27 @@ namespace Whistleblowing.NETAPI.Models
         // Aggiungi questa proprietà
         public List<PaginatedSegnalazioniRegularViewModel>? SegnalazioniRegulars { get; set; }
 
-        //paginazione
-        //public List<int> number { get; set; } = new List<int> { 5, 10, 15 };
-        //public int numberSelected { get; set; } = 5;
-        //public int PageNumber { get; set; } = 1;
-        //public int PageSize { get; set; } = 10;
-        //public int TotalItems { get; set; }
-        //public string SortBy { get; set; } = "Id_segnalazione";
-        //public bool SortDesc { get; set; } = true;
-        //fine paginazione
+
+        [NotMapped]
+        public List<int> number { get; set; } = new List<int> { 5, 10, 15 };
+
+        [NotMapped]
+        public int numberselected { get; set; } = 5;
+
+        [NotMapped]
+        public int PageNumber { get; set; } = 1;
+
+        [NotMapped]
+        public int PageSize { get; set; } = 10;
+
+        [NotMapped]
+        public int TotalItems { get; set; }
+
+        [NotMapped]
+        public string sortby { get; set; } = "id_segnalazioneRegular";
+
+        [NotMapped]
+        public bool sortdesc { get; set; } = true;
 
     }
 }

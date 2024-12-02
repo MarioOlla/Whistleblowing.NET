@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -15,63 +16,65 @@ namespace Whistleblowing.NET.Controllers
 
 		private readonly IHttpContextAccessor _contextAccessor;
 
-		public SegnalazioniRegularController(IHttpContextAccessor _contextAccs)
-		{
-			// *** Definisco il mio client *** //
-			_client = new HttpClient();
-			_client.BaseAddress = baseAddress;
-			_client.DefaultRequestHeaders.Accept.Add(
-				new MediaTypeWithQualityHeaderValue("application/json"));
-			//creo una varibiale di sessione e la forzo a valore di id 1 per riuscire ad ottenere i dati
-			_contextAccessor = _contextAccs;
-		}
+        public SegnalazioniRegularController(IHttpContextAccessor _contextAccs)
+        {
+            // *** Definisco il mio client *** //
+            _client = new HttpClient();
+            _client.BaseAddress = baseAddress;
+            _client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            //creo una varibiale di sessione e la forzo a valore di id 1 per riuscire ad ottenere i dati
+            _contextAccessor = _contextAccs;
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
-            var model = new PaginatedSegnalazioniRegularViewModel();
-
             try
             {
                 var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Leggi il contenuto JSON come stringa e stampa nei log
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("Risposta JSON ricevuta:");
-                    Console.WriteLine(jsonResponse);
-
                     var options = new JsonSerializerOptions
                     {
-                        PropertyNameCaseInsensitive = true,
-                        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+                        PropertyNameCaseInsensitive = true
                     };
 
-                    // Deserializza la risposta usando la classe wrapper
-                    var data = await response.Content.ReadFromJsonAsync<List<PaginatedSegnalazioniRegularViewModel>>();
-                    return View("Index", new PaginatedSegnalazioniRegularViewModel
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+
+                    // Deserializza l'oggetto che contiene i dati e i metadati di paginazione
+                    var result = JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewModel>>(jsonResponse, options);
+
+                    var viewModel = new PaginatedSegnalazioniRegularViewModel
                     {
-                        SegnalazioniRegulars = data
-                    });
+                        SegnalazioniRegulars = result.Data,
+                        PageNumber = result.PageNumber,
+                        PageSize = result.PageSize,
+                        TotalItems = result.TotalItems
+                    };
+
+                    return View("Index", viewModel);
                 }
 
                 return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni");
-
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+                ViewBag.ErrorMessage = $"Errore: {ex.Message}";
+                return View(new PaginatedSegnalazioniRegularViewModel());
             }
-            catch (JsonException ex)
-            {
-                Console.WriteLine("Errore nella deserializzazione della risposta JSON:");
-                Console.WriteLine(ex.Message);
-                ViewBag.ErrorMessage = "Errore nella deserializzazione dei dati.";
-            }
-
-            return View(model); // Passa il modello alla vista
         }
 
+        // Classe helper per gestire la risposta paginata
+        public class PaginatedResponse<T>
+        {
+            public int PageNumber { get; set; }
+            public int PageSize { get; set; }
+            public int TotalItems { get; set; }
+            public List<T> Data { get; set; }
+        }
 
 
 
@@ -225,41 +228,40 @@ namespace Whistleblowing.NET.Controllers
         /// </summary>
         /// <returns>Una vista con le segnalazioni dell'utente loggato</returns>
         [HttpGet("GetMySegnalazioniRegular")]
-        public async Task<IActionResult> GetMySegnalazioniRegular()
+        public async Task<IActionResult> GetMySegnalazioniRegular(int page = 1, int pageSize = 10)
         {
             try
             {
-                // Recupera il token JWT dal cookie
                 string token = Request.Cookies["jwtToken"];
-
                 if (string.IsNullOrEmpty(token))
                 {
-                    return Unauthorized("Token non trovato, effettuare il login");
+                    return RedirectToAction("Login", "Account"); // Reindirizza alla pagina di login
                 }
 
-                // Imposta il token nell'header Authorization
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                // Effettua la chiamata all'API
-                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetMySegnalazioniRegular");
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetMySegnalazioniRegular?page={page}&pageSize={pageSize}");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var data = await response.Content.ReadFromJsonAsync<List<PaginatedSegnalazioniRegularViewUtente>>();
-                    return View("SegnalazioniPerUtente", new PaginatedSegnalazioniRegularViewUtente
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        SegnalazioniRegulars = data
-                    });
+                        return Unauthorized("Non autorizzato. Effettua di nuovo il login.");
+                    }
 
+                    return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni");
                 }
 
-                return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni");
+                var data = await response.Content.ReadFromJsonAsync<PaginatedSegnalazioniRegularViewUtente>();
+                return View("SegnalazioniPerUtente", data);
             }
             catch (HttpRequestException ex)
             {
+                
                 return StatusCode(500, $"Errore di rete: {ex.Message}");
             }
         }
+
 
         // Aggiungi il metodo di modifica
         [HttpPost]

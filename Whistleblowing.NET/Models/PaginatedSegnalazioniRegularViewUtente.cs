@@ -26,6 +26,25 @@ namespace Whistleblowing.NET.Models
         // Aggiungi questa proprietà
         public List<PaginatedSegnalazioniRegularViewUtente>? SegnalazioniRegulars { get; set; }
 
+        // Proprietà per la paginazione
+        public List<int> Number { get; set; } = new List<int> { 5, 10, 15 };
 
+        [JsonPropertyName("numberSelected")]
+        public int NumberSelected { get; set; } = 5;
+
+        [JsonPropertyName("pageNumber")]
+        public int PageNumber { get; set; } = 1;
+
+        [JsonPropertyName("pageSize")]
+        public int PageSize { get; set; } = 10;
+
+        [JsonPropertyName("totalItems")]
+        public int TotalItems { get; set; }
+
+        [JsonPropertyName("sortBy")]
+        public string SortBy { get; set; } = "segnalazione_regular_id";
+
+        [JsonPropertyName("sortDesc")]
+        public bool SortDesc { get; set; } = true;
     }
 }

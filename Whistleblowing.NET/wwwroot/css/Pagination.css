@@ -1,9 +1,16 @@
 ﻿.pagination-custom {
-    justify-content: center;
-    display: flex;
-    padding-left: 0;
-    list-style: none;
+    justify-content: center; /* Centra la paginazione */
+    display: flex; /* Disposizione flessibile degli elementi */
+    padding-left: 0; /* Rimuove eventuale padding a sinistra */
+    list-style: none; /* Rimuove i puntini degli <li> */
+    margin: 0; /* Rimuove margini esterni */
+    border: none; /* Assicura che non ci siano bordi */
+    background: none; /* Rimuove eventuali sfondi */
 }
+
+
+
+
 .align-content {
     display: flex;
     align-content: center;

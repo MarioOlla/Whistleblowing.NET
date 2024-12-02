@@ -84,7 +84,7 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <returns></returns>
         [HttpGet("GetMySegnalazioniRegular")]
         [Authorize]
-        public async Task<IActionResult> GetMySegnalazioniRegular()
+        public async Task<IActionResult> GetMySegnalazioniRegular(int page = 1, int pageSize = 10)
         {
             // Ottengo l'ID utente dal token JWT
             var userIdClaim = User.FindFirst("UserId")?.Value;
@@ -101,14 +101,48 @@ namespace Whistleblowing.NETAPI.Controllers
                 return NotFound("Utente non trovato o eliminato.");
             }
 
-            // Filtro le segnalazioni per userId
-            List<PaginatedSegnalazioniRegularViewUtente> segnalazioniRegolari = await _context.paginatedSegnalazioniRegularViewUtentes
-                .Where(s => s.UserId == userId) // Applica il filtro per userId
+            // Ottieni il totale degli elementi per la paginazione
+            var totalItems = await _context.paginatedSegnalazioniRegularViewUtentes
+                .Where(s => s.UserId == userId)
+                .CountAsync();
+
+            // Recupera i dati paginati
+            var segnalazioniRegolari = await _context.paginatedSegnalazioniRegularViewUtentes
+                .Where(s => s.UserId == userId)
+                .OrderByDescending(s => s.DataEvento) // Ordina per data
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            // Ritorna i dati
-            return Ok(segnalazioniRegolari);
+            // Crea un oggetto con le proprietà di paginazione, includendo quelle richieste
+            var result = new PaginatedSegnalazioniRegularViewUtente
+            {
+                SegnalazioniRegulars = segnalazioniRegolari,
+                TotalItems = totalItems,
+                PageNumber = page, // Numero di pagina corrente
+                PageSize = pageSize, // Numero di elementi per pagina
+                NumberSelected = pageSize, // Numero selezionato per la pagina
+                SortBy = "segnalazione_regular_id", // Colonna di ordinamento predefinita
+                SortDesc = true, // Ordinamento decrescente
+            };
+
+            // Rimuovo i valori nulli prima della serializzazione per un JSON più pulito
+            var cleanedResult = new
+            {
+                segnalazioniRegulars = result.SegnalazioniRegulars,
+                totalItems = result.TotalItems,
+                pageNumber = result.PageNumber,
+                pageSize = result.PageSize,
+                numberSelected = result.NumberSelected,
+                sortBy = result.SortBy,
+                sortDesc = result.SortDesc,
+            };
+
+            return Ok(cleanedResult);
         }
+
+
+
 
 
 
@@ -119,39 +153,32 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="pageSize">Numero di elementi per pagina</param>
         /// <returns>Risultato paginato con tutte le segnalazioni</returns>
         [HttpGet("GetAllSegnalazioniRegularTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(/*[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10*/ int userId)
-         {
-   //         var user = await _context.User.FindAsync(userId);
-   //         var isOperatore = user.Ruolo?.codice == 2;
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            var user = await _context.User.FindAsync(userId);
 
-			//if(!isOperatore){
-			//	return Forbid("Accesso negato: Solo gli operatori possono visualizzare i dati");
-			//}
+            // Recupera il numero totale di segnalazioni
+            var totalRecords = await _context.paginatedSegnalazioniRegularViewModels.CountAsync();
 
-            // Recupero tutte le segnalazioni senza filtro su UserId
-            IQueryable<PaginatedSegnalazioniRegularViewModel> segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels;
+            // Applica la paginazione
+            var segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
 
-            // Applico la paginazione
-            //segnalazioniQuery = segnalazioniQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
 
-            // Converto la query in lista per eseguire la richiesta
-            List<PaginatedSegnalazioniRegularViewModel> segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
+            // Crea il risultato paginato con i metadati
+            var paginatedResult = new
+            {
+                TotalItems = totalRecords,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Data = segnalazioniRegolari
+            };
 
-            // Calcolo il numero totale di record per la paginazione
-            //var totalRecords = await _context.SegnalazioneRegularViews.CountAsync();
-
-            // Organizzo il risultato in un oggetto con dati e paginazione
-            //var paginatedResult = new
-            //{
-            //    TotalRecords = totalRecords,
-            //    PageNumber = pageNumber,
-            //    PageSize = pageSize,
-            //    Data = segnalazioniRegolari
-            //};
-
-            // Ritorno il risultato paginato
-            return Ok(segnalazioniRegolari);
+            return Ok(paginatedResult);
         }
+
 
 
 

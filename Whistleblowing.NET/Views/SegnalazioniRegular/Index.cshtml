@@ -22,20 +22,22 @@
         width: 20%;
     }
 
-
     .btn-danger {
         background-color: #dc3545 !important; /* Forza il colore rosso */
         border-color: #dc3545 !important;
-    }
+    } 
 
     th {
-        font-size: 1.1rem; /* Dimensione del testo (opzionale) */
+        font-size: 1.1rem; 
         vertical-align: middle;
     }
 
+    
+   
+
+   
+
 </style>
-
-
 
 <div class="row">
     <div class="col-md-10">
@@ -57,7 +59,7 @@
                 <div class="d-flex align-items-center" style="justify-content: space-between;">
                     <div>
                         <h6 class="card-subtitle mb-1 text-muted">Segnalazioni Totali:</h6>
-                        <p class="font-weight-bold" style="font-size:28px;">@Model.SegnalazioniRegulars.Count()</p> <!-- Visualizza il numero totale -->
+                        <p class="font-weight-bold" style="font-size:28px;">@Model.TotalItems</p>
                     </div>
                     <i class="bi bi-exclamation-circle" style="color: black; font-size:28px;"></i>
                 </div>
@@ -76,8 +78,8 @@
                             <a style="color: white; text-decoration: none;" asp-action="DettaglioSegnalazioneRegular">ID</a>
                         </th>
                         <th> Data Evento</th>
-                        <th class="text-center  class="text-center font-weight-bold">Soggetto Colpevole</th>
-                        <th class="text-center  class="text-center font-weight-bold">Azioni</th>
+                        <th class="text-center font-weight-bold">Soggetto Colpevole</th>
+                        <th class="text-center font-weight-bold">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,9 +94,8 @@
                                         @segnalazione.Id_segnalazioneRegular
                                     </a>
                                 </td>
-                                <td class="text-center"  style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
+                                <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
-
 
                                 <!-- Colonna Azioni centrata -->
                                 <td class="text-center" style="vertical-align: middle;">
@@ -125,53 +126,63 @@
             </table>
         </div>
 
-        @* <div class="align-content">
+        <div class="align-content">
             @if (Model.TotalItems != 0)
             {
                 <p style="margin-bottom: 0px;">
                     Segnalazioni:
-                    @((Model.PageNumber - 1) * Model.PageSize + 1) - @(Model.PageNumber * Model.PageSize) di @Model.TotalItems
+                    @((Model.PageNumber - 1) * Model.PageSize + 1) - @(Model.PageNumber * Model.PageSize > Model.TotalItems ? Model.TotalItems : Model.PageNumber * Model.PageSize)
+                    di @Model.TotalItems
                 </p>
             }
-            <nav>
+            
                 <ul class="pagination-custom">
+                    <!-- Prima Pagina -->
                     <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
                         <a class="page-link" asp-action="Index" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">Prima pagina</a>
                     </li>
+
+                    <!-- Precedente -->
                     <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
                         <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Precedente</a>
                     </li>
-                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalItems / Model.PageSize); i++)
+
+                    <!-- Numeri delle pagine -->
+                    @{
+                        var totalPages = (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize);
+                    }
+                    @for (int i = 1; i <= totalPages; i++)
                     {
                         <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                             <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
                         </li>
                     }
-                    <li class="page-item @(Model.PageNumber == Math.Ceiling((double)Model.TotalItems / Model.PageSize) ? "disabled" : "")">
+
+                    <!-- Successivo -->
+                    <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
                         <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Successivo</a>
                     </li>
-                    <li class="page-item @(Model.PageNumber == Math.Ceiling((double)Model.TotalItems / Model.PageSize) ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Math.Ceiling((double)Model.TotalItems / Model.PageSize))" asp-route-pageSize="@Model.PageSize">Ultima pagina</a>
+
+                    <!-- Ultima Pagina -->
+                    <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@totalPages" asp-route-pageSize="@Model.PageSize">Ultima pagina</a>
                     </li>
                 </ul>
-            </nav>
-        </div> *@
-    </div>
-</div>
+            
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div id="success-alert" class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
+        </div>
+
+
+
 
 <script>
-    $(document).ready(() => {
-        // Nasconde l'alert di successo dopo 5 secondi
-        setTimeout(() => {
-            $("#success-alert").fadeOut();
-        }, 5000);
-    });
+            $(document).ready(() => {
+                // Protezione contro valori di paginazione non validi
+                const currentPage = parseInt('@Model.PageNumber');
+                const totalPages = parseInt('@Math.Ceiling((double)Model.TotalItems / Model.PageSize)');
+                if (currentPage > totalPages || currentPage < 1) {
+                    alert("Pagina non valida! Reindirizzamento alla prima pagina.");
+                    window.location.href = '?pageNumber=1&pageSize=@Model.PageSize';
+                }
+            });
 </script>
-
