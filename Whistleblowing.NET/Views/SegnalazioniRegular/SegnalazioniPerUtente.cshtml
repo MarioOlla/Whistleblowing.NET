@@ -1,8 +1,78 @@
-﻿<div class="row">
+﻿@model Whistleblowing.NET.Models.PaginatedSegnalazioniRegularViewUtente
+
+<link rel="stylesheet" href="~/css/table.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Pagination.css" asp-append-version="true" />
+
+<style>
+    #success-alert {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+    }
+
+    .title-text {
+        font-size: 1.2rem;
+    }
+
+    .mini-card {
+        background-color: #d4edda;
+        border-radius: 7px;
+        padding: 10px;
+        width: 20%;
+    }
+
+    .btn-danger {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+
+    th {
+        font-size: 1.1rem;
+        vertical-align: middle;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .pagination-custom {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination .page-item .page-link {
+        color: #007bff;
+        border: 1px solid #dee2e6;
+        padding: 0.375rem 0.75rem;
+        margin: 0 0.2rem;
+        border-radius: 0.25rem;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="row">
     <div class="col-md-10">
-        <h3>Gestione Segnalazioni</h3>
+        <div>
+            <h3>Gestione Segnalazioni</h3>
+        </div>
         <p class="title-text mt-2">
-            In questa sezione puoi visualizzare tutte le segnalazioni.
+            In questa sezione del programma puoi visualizzare tutte le tue segnalazioni.
         </p>
     </div>
 </div>
@@ -13,28 +83,15 @@
     <div class="col-md-3 mt-1">
         <div class="card" style="border-radius: 7px; margin-bottom: 24px;">
             <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center" style="justify-content: space-between;">
                     <div>
                         <h6 class="card-subtitle mb-1 text-muted">Segnalazioni Totali:</h6>
-                        <p class="font-weight-bold" style="font-size:28px;">
-                            @Model.TotalItems
-                        </p>
+                        <p class="font-weight-bold" style="font-size:28px;">@Model.TotalItems</p>
                     </div>
                     <i class="bi bi-exclamation-circle" style="color: black; font-size:28px;"></i>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="row mb-3">
-    <div class="col-md-3">
-        <label for="pageSize">Elementi per pagina:</label>
-        <select id="pageSize" class="form-select" onchange="changePageSize(this.value)">
-            <option value="5" selected="@(Model.PageSize == 5)">5</option>
-            <option value="10" selected="@(Model.PageSize == 10)">10</option>
-            <option value="15" selected="@(Model.PageSize == 15)">15</option>
-        </select>
     </div>
 </div>
 
@@ -44,28 +101,10 @@
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th class="text-center">
-                            <a asp-action="GetMySegnalazioniRegular"
-                               asp-route-page="1"
-                               asp-route-pageSize="@Model.PageSize"
-                               asp-route-sortBy="segnalazione_regular_id"
-                               asp-route-sortDesc="@(Model.SortBy == "segnalazione_regular_id" && !Model.SortDesc)">
-                                ID
-                                @(Model.SortBy == "segnalazione_regular_id" ? (Model.SortDesc ? "▼" : "▲") : "")
-                            </a>
-                        </th>
-                        <th class="text-center">
-                            <a asp-action="GetMySegnalazioniRegular"
-                               asp-route-page="1"
-                               asp-route-pageSize="@Model.PageSize"
-                               asp-route-sortBy="dataEvento"
-                               asp-route-sortDesc="@(Model.SortBy == "dataEvento" && !Model.SortDesc)">
-                                Data Evento
-                                @(Model.SortBy == "dataEvento" ? (Model.SortDesc ? "▼" : "▲") : "")
-                            </a>
-                        </th>
-                        <th class="text-center">Soggetto Colpevole</th>
-                        <th class="text-center">Azioni</th>
+                        <th class="text-center font-weight-bold">ID</th>
+                        <th class="text-center font-weight-bold">Data Evento</th>
+                        <th class="text-center font-weight-bold">Soggetto Colpevole</th>
+                        <th class="text-center font-weight-bold">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,14 +113,14 @@
                         foreach (var segnalazione in Model.SegnalazioniRegulars)
                         {
                             <tr>
-                                <td class="text-center">
-                                    <a asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_regular_id">
+                                <td style="vertical-align: middle;">
+                                    <a asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_regular_id" style="color: inherit; text-decoration: none;">
                                         @segnalazione.segnalazione_regular_id
                                     </a>
                                 </td>
-                                <td class="text-center">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
-                                <td class="text-center">@segnalazione.SoggettoColpevole</td>
-                                <td class="text-center">
+                                <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
+                                <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+                                <td class="text-center" style="vertical-align: middle;">
                                     <a class="btn btn-info btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_regular_id">
                                         <i class="bi bi-eye"></i> Visualizza
                                     </a>
@@ -103,57 +142,61 @@
     </div>
 </div>
 
-<nav>
-    @{
-        // Calcolo delle pagine totali
-        int totalPages = (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize);
+<div class="align-content">
+    @if (Model.TotalItems != 0)
+    {
+        <p style="margin-bottom: 0px;">
+            Segnalazioni:
+            @((Model.PageNumber - 1) * Model.PageSize + 1) - @(Model.PageNumber * Model.PageSize > Model.TotalItems ? Model.TotalItems : Model.PageNumber * Model.PageSize)
+            di @Model.TotalItems
+        </p>
     }
-    <ul class="pagination justify-content-center">
-        @if (Model.PageNumber > 1)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-action="GetMySegnalazioniRegular"
-                   asp-route-page="@(Model.PageNumber - 1)"
-                   asp-route-pageSize="@Model.PageSize"
-                   asp-route-sortBy="@Model.SortBy"
-                   asp-route-sortDesc="@Model.SortDesc">
-                    Precedente
-                </a>
-            </li>
-        }
 
+    <ul class="pagination-custom">
+        <!-- Prima Pagina -->
+        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="GetMySegnalazioniRegular" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">Prima pagina</a>
+        </li>
+
+        <!-- Precedente -->
+        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="GetMySegnalazioniRegular" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Precedente</a>
+        </li>
+
+        <!-- Numeri delle pagine -->
+        @{
+            var totalPages = (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize);
+        }
         @for (int i = 1; i <= totalPages; i++)
         {
-            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                <a class="page-link" asp-action="GetMySegnalazioniRegular"
-                   asp-route-page="@i"
-                   asp-route-pageSize="@Model.PageSize"
-                   asp-route-sortBy="@Model.SortBy"
-                   asp-route-sortDesc="@Model.SortDesc">
-                    @i
-                </a>
+            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                <a class="page-link" asp-action="GetMySegnalazioniRegular" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
             </li>
         }
 
-        @if (Model.PageNumber < totalPages)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-action="GetMySegnalazioniRegular"
-                   asp-route-page="@(Model.PageNumber + 1)"
-                   asp-route-pageSize="@Model.PageSize"
-                   asp-route-sortBy="@Model.SortBy"
-                   asp-route-sortDesc="@Model.SortDesc">
-                    Successivo
-                </a>
-            </li>
-        }
+        <!-- Successivo -->
+        <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="GetMySegnalazioniRegular" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Successivo</a>
+        </li>
+
+        <!-- Ultima Pagina -->
+        <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="GetMySegnalazioniRegular" asp-route-pageNumber="@totalPages" asp-route-pageSize="@Model.PageSize">Ultima pagina</a>
+        </li>
     </ul>
-</nav>
+
+
+</div>
+
 
 <script>
-    function changePageSize(pageSize) {
-        const url = `@Url.Action("GetMySegnalazioniRegular", new { page = 1, pageSize = "__PAGE_SIZE__", sortBy = Model.SortBy, sortDesc = Model.SortDesc })`
-            .replace("__PAGE_SIZE__", pageSize);
-        window.location.href = url;
-    }
+    $(document).ready(() => {
+        // Protezione contro valori di paginazione non validi
+        const currentPage = parseInt('@Model.PageNumber');
+        const totalPages = parseInt('@Math.Ceiling((double)Model.TotalItems / Model.PageSize)');
+        if (currentPage > totalPages || currentPage < 1) {
+            alert("Pagina non valida! Reindirizzamento alla prima pagina.");
+            window.location.href = '?pageNumber=1&pageSize=@Model.PageSize';
+        }
+    });
 </script>

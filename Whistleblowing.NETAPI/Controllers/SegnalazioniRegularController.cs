@@ -84,9 +84,9 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <returns></returns>
         [HttpGet("GetMySegnalazioniRegular")]
         [Authorize]
-        public async Task<IActionResult> GetMySegnalazioniRegular(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetMySegnalazioniRegular([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            // Ottengo l'ID utente dal token JWT
+            // Ottieni l'ID utente dal token JWT
             var userIdClaim = User.FindFirst("UserId")?.Value;
 
             if (!int.TryParse(userIdClaim, out int userId))
@@ -94,52 +94,43 @@ namespace Whistleblowing.NETAPI.Controllers
                 return Unauthorized("Non autorizzato. ID utente non trovato.");
             }
 
-            // Verifico che l'utente esista e non sia eliminato
-            var userExists = await _context.User.AnyAsync(u => u.Id == userId && !u.IsDeleted);
+            // Verifica che l'utente esista e non sia eliminato
+            var userExists = await _context.User
+                .AnyAsync(u => u.Id == userId && !u.IsDeleted);
             if (!userExists)
             {
                 return NotFound("Utente non trovato o eliminato.");
             }
 
-            // Ottieni il totale degli elementi per la paginazione
-            var totalItems = await _context.paginatedSegnalazioniRegularViewUtentes
-                .Where(s => s.UserId == userId)
-                .CountAsync();
+            // Filtra le segnalazioni per l'utente
+            IQueryable<PaginatedSegnalazioniRegularViewUtente> segnalazioniQuery = _context.paginatedSegnalazioniRegularViewUtentes
+                .Where(s => s.UserId == userId);
 
-            // Recupera i dati paginati
-            var segnalazioniRegolari = await _context.paginatedSegnalazioniRegularViewUtentes
-                .Where(s => s.UserId == userId)
-                .OrderByDescending(s => s.DataEvento) // Ordina per data
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            // Ottieni il numero totale di record
+            var totalRecords = await segnalazioniQuery.CountAsync();
 
-            // Crea un oggetto con le proprietà di paginazione, includendo quelle richieste
-            var result = new PaginatedSegnalazioniRegularViewUtente
+            // Applica l'ordinamento e la paginazione
+            segnalazioniQuery = segnalazioniQuery
+                .OrderByDescending(s => s.DataEvento) // Ordina per DataEvento
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+
+            // Esegui la query per ottenere i dati paginati
+            List<PaginatedSegnalazioniRegularViewUtente> segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
+
+            // Crea un oggetto per la risposta con paginazione
+            var paginatedResult = new
             {
-                SegnalazioniRegulars = segnalazioniRegolari,
-                TotalItems = totalItems,
-                PageNumber = page, // Numero di pagina corrente
-                PageSize = pageSize, // Numero di elementi per pagina
-                NumberSelected = pageSize, // Numero selezionato per la pagina
-                SortBy = "segnalazione_regular_id", // Colonna di ordinamento predefinita
-                SortDesc = true, // Ordinamento decrescente
+                TotalItems = totalRecords,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Data = segnalazioniRegolari
             };
 
-            // Rimuovo i valori nulli prima della serializzazione per un JSON più pulito
-            var cleanedResult = new
-            {
-                segnalazioniRegulars = result.SegnalazioniRegulars,
-                totalItems = result.TotalItems,
-                pageNumber = result.PageNumber,
-                pageSize = result.PageSize,
-                numberSelected = result.NumberSelected,
-                sortBy = result.SortBy,
-                sortDesc = result.SortDesc,
-            };
-
-            return Ok(cleanedResult);
+            return Ok(paginatedResult);
         }
+
+
 
 
 

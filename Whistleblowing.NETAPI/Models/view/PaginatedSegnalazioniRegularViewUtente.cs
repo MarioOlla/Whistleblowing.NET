@@ -23,9 +23,11 @@ namespace Whistleblowing.NETAPI.Models.view
         public List<PaginatedSegnalazioniRegularViewUtente>? SegnalazioniRegulars { get; set; }
 
 
-        //proprietà per la paginazione
         [NotMapped]
-        public int NumberSelected { get; set; } = 5;
+        public List<int> number { get; set; } = new List<int> { 5, 10, 15 };
+
+        [NotMapped]
+        public int numberselected { get; set; } = 5;
 
         [NotMapped]
         public int PageNumber { get; set; } = 1;
@@ -37,9 +39,10 @@ namespace Whistleblowing.NETAPI.Models.view
         public int TotalItems { get; set; }
 
         [NotMapped]
-        public string SortBy { get; set; } = "segnalazione_regular_id";
+        public string sortby { get; set; } = "segnalazione_regular_id";
 
         [NotMapped]
-        public bool SortDesc { get; set; } = true;
+        public bool sortdesc { get; set; } = true;
+
     }
 }

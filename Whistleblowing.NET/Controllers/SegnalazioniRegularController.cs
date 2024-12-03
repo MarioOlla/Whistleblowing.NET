@@ -228,11 +228,12 @@ namespace Whistleblowing.NET.Controllers
         /// </summary>
         /// <returns>Una vista con le segnalazioni dell'utente loggato</returns>
         [HttpGet("GetMySegnalazioniRegular")]
-        public async Task<IActionResult> GetMySegnalazioniRegular(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetMySegnalazioniRegular(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
                 string token = Request.Cookies["jwtToken"];
+
                 if (string.IsNullOrEmpty(token))
                 {
                     return RedirectToAction("Login", "Account"); // Reindirizza alla pagina di login
@@ -240,24 +241,43 @@ namespace Whistleblowing.NET.Controllers
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetMySegnalazioniRegular?page={page}&pageSize={pageSize}");
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetMySegnalazioniRegular?pageNumber={pageNumber}&pageSize={pageSize}");
 
-                if (!response.IsSuccessStatusCode)
+                Console.WriteLine(response.IsSuccessStatusCode);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    var options = new JsonSerializerOptions
                     {
-                        return Unauthorized("Non autorizzato. Effettua di nuovo il login.");
-                    }
+                        PropertyNameCaseInsensitive = true
+                    };
 
-                    return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni");
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+
+                    // Deserializza l'oggetto che contiene i dati e i metadati di paginazione
+                    var result = JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewUtente>>(jsonResponse, options);
+
+                    Console.WriteLine(result.ToString());
+
+                    var viewModel = new PaginatedSegnalazioniRegularViewUtente
+                    {
+                        SegnalazioniRegulars = result.Data,
+                        PageNumber = result.PageNumber,
+                        PageSize = result.PageSize,
+                        TotalItems = result.TotalItems
+                    };
+
+                    Console.WriteLine(viewModel.ToString());
+
+                    return View("SegnalazioniPerUtente", viewModel);
+
                 }
 
-                var data = await response.Content.ReadFromJsonAsync<PaginatedSegnalazioniRegularViewUtente>();
-                return View("SegnalazioniPerUtente", data);
+                return StatusCode((int)response.StatusCode, "Errore nel recupero delle segnalazioni");
             }
             catch (HttpRequestException ex)
             {
-                
+
                 return StatusCode(500, $"Errore di rete: {ex.Message}");
             }
         }
