@@ -68,7 +68,17 @@
                         }
                     }
 
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Whistleblowing</a>
+                @* Mostra "Whistleblowing" su tutte le pagine tranne Index, e mostra il pulsante Logout su Index *@
+                @if (ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index")
+                {
+                    <form method="post" action="@Url.Action("Logout", "Auth")" class="d-inline">
+                        <a class="navbar-brand" href="#" onclick="this.closest('form').submit(); return false;">Logout</a>
+                    </form>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">Whistleblowing</a>
+                }
             
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">

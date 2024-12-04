@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Whistleblowing.NET.Models;
@@ -113,6 +114,56 @@ namespace Whistleblowing.NET.Controllers
             }
             return View(user);
         }
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                // Recupera il token JWT dal cookie
+                var token = Request.Cookies["jwtToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    // Se il token non esiste, l'utente è già disconnesso
+                    return RedirectToAction("Login", "Auth");
+                }
+
+                // Imposta il token come header Authorization per la chiamata al backend
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Effettua la richiesta di logout al backend
+                var response = await _client.PostAsync($"{baseAddress}/Auth/Logout", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Rimuove il token dal cookie
+                    Response.Cookies.Delete("jwtToken");
+
+                    // Reindirizza alla pagina di login
+                    return RedirectToAction("Login", "Auth");
+                }
+                else
+                {
+                    // Gestione di errori dalla risposta del server
+                    ViewBag.Error = "Errore durante il logout. Riprova.";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Gestione errori generici
+                ViewBag.Error = $"Errore imprevisto: {ex.Message}";
+                return View("Error");
+            }
+        }
+
+
+
 
 
     }

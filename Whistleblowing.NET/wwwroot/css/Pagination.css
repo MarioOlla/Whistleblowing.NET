@@ -8,7 +8,20 @@
     background: none; /* Rimuove eventuali sfondi */
 }
 
+    .pagination-custom .page-link {
+        color: #26A69A; /* Cambia il colore del testo */
+    }
 
+        .pagination-custom .page-link:hover {
+            color: #1e8576; /* Colore leggermente più scuro per l'effetto hover */
+            text-decoration: none; /* Rimuove la sottolineatura */
+        }
+
+    .pagination-custom .page-item.active .page-link {
+        background-color: #26A69A; /* Sfondo verde per la pagina attiva */
+        border-color: #26A69A; /* Bordo verde per la pagina attiva */
+        color: #fff; /* Colore del testo bianco per contrasto */
+    }
 
 
 .align-content {

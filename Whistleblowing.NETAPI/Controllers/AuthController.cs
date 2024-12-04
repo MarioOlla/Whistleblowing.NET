@@ -103,7 +103,7 @@ namespace Whistleblowing.NETAPI.Controllers
 			if (ModelState.IsValid)
 			{
 				var existingUser = await _context.User
-			
+
 				.FirstOrDefaultAsync(u => u.Email == utenteLogin.Email);
 
 				if (existingUser == null)
@@ -129,8 +129,8 @@ namespace Whistleblowing.NETAPI.Controllers
 				new Claim("Nome", existingUser.Nome),
 				new Claim("Cognome", existingUser.Cognome),
 				new Claim("UserId", existingUser.Id.ToString()),
-                new Claim("Ruolo", existingUser.Ruolo.ToString()),
-                new Claim("HasChangedPassword", existingUser.HasChangedPassword.ToString())
+				new Claim("Ruolo", existingUser.Ruolo.ToString()),
+				new Claim("HasChangedPassword", existingUser.HasChangedPassword.ToString())
 				};
 
 
@@ -153,30 +153,33 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 
-		/// <summary>
-		/// metodo che permette di effettuare il Logout dell' utente
-		/// </summary>
-		/// <returns></returns>
-		[HttpPost]
-		public async Task<IActionResult> Logout()
-		{
+        [HttpPost]
+        [Authorize] 
+        public IActionResult Logout()
+        {
+            try
+            {
+                // Non c'è bisogno di invalidare il token lato server
+                // Si presuppone che il client eliminerà il token JWT dal proprio storage
+
+                // Restituisco una risposta di successo
+                return Ok(new { message = "Logout effettuato con successo." });
+            }
+            catch (Exception ex)
+            {
+                // Gestione degli errori
+                ModelState.AddModelError("LogoutError", $"Errore durante il logout: {ex.Message}");
+                return StatusCode(500, ModelState);
+            }
+        }
 
 
-			//Eseguo il logout dell' utente
-			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-
-			//Reindirizzo l' utente alla pagina di login
-			return Ok(new { message = "Logged out succesfully" });
-
-		}
-
-
-		/// <summary>
-		/// metodo che genera una password casuale in caso di password dimenticata
-		/// </summary>
-		/// <returns></returns>
-		private string GenerateRandomPassword()
+        /// <summary>
+        /// metodo che genera una password casuale in caso di password dimenticata
+        /// </summary>
+        /// <returns></returns>
+        private string GenerateRandomPassword()
 		{
 			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 			var random = new Random();
