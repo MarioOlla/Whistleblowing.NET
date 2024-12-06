@@ -335,10 +335,10 @@
         <h5>Nuova Segnalazione</h5>
         <br />
         <!-- Form di segnalazione -->
-        <form id="segnalazione-form" asp-controller="SegnalazioniRegular" asp-action="InviaSegnalazioneRegular" method="POST">
+        <form id="segnalazione-form" asp-controller="SegnalazioniRegular" asp-action="PostSegnalazioneRegular" method="POST">
+            <!-- Tipologia del fatto -->
             <div class="input-field col s10 mt-2">
-                <select id="tipologia" name="tipologia" multiple required>
-
+                <select id="fattoRiferitoA" name="FattoRiferitoA" multiple required>
                     <option value="reclutamento del personale">Reclutamento del Personale</option>
                     <option value="contatti">Contatti</option>
                     <option value="concessione vantaggi economici">Concessione di vantaggi economici</option>
@@ -351,119 +351,133 @@
                 </select>
                 <label style="font-size: 15px; margin-top: 10px">Seleziona una o più tipologie</label>
             </div>
-            <!-- Textarea nascosta inizialmente, verrà mostrata solo quando si seleziona "Altro" -->
+
+            <!-- Campo per specificare "Altro" -->
             <div id="specifica-altro-container" class="input-field col s10 mt-2" style="display: none;">
-                <textarea id="altro-specifica" name="altro-specifica" class="materialize-textarea"></textarea>
-                <label for="altro-specifica">Specifica "Altro"</label>
+                <textarea id="note" name="Note" class="materialize-textarea"></textarea>
+                <label for="note">Specifica "Altro"</label>
             </div>
 
-
+            <!-- Campo Data Evento -->
             <div class="row">
-
                 <div class="input-field col s12">
-                    <input id="dataevento" name="dataevento" type="date" class="validate" required>
-                    <label for="dataevento">Data evento</label>
-                </div>
-
-                
-                <div class="input-field col s12">
-                    <input id="luogoevento" name="luogoevento" type="text" class="validate" required>
-                    <label for="luogoevento">Luogo evento </label>
-                </div>
-
-                <div class="input-field col s12">
-                    <input id="soggetti" name="soggetti" type="text" class="validate" required>
-                    <label for="soggetti">Soggetti che hanno commesso il fatto </label>
-                </div>
-
-             </div>
-             <div class="row">
-                <div class="input-field col s12">
-                    <textarea id="areafunzioneaziendale" name="areafunzioneaziendale" class="materialize-textarea" required></textarea>
-                    <label for="areafunzioneaziendale">Area / Funzione Aziendale</label>
-                </div>
-                <div class="input-field col s12">
-                    <textarea id="soggettiprivati" name="soggettiprivati" class="materialize-textarea" ></textarea>
-                    <label for="soggettiprivati">Eventuali soggetti privati coinvolti</label>
-                </div>
-                <div class="input-field col s12">
-                    <textarea id="impresecoinvolte" name="impresecoinvolte" class="materialize-textarea" ></textarea>
-                    <label for="impresecoinvolte">Eventuali imprese coinvolte</label>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <textarea id="pubbliciufficialipa" name="pubbliciufficialipa" class="materialize-textarea"></textarea>
-                        <label for="pubbliciufficialipa">Eventuali pubblici ufficiali / P.A. coinvolti</label>
-                    </div>
-                    <div class="input-field col s12">
-                        <textarea id="modalita" name="modalita" class="materialize-textarea"></textarea>
-                        <label for="modalita">Modalità con cui è venuto a conoscenza del fatto</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <textarea id="soggettireferenti" name="soggettireferenti" class="materialize-textarea"></textarea>
-                        <label for="soggettireferenti">Eventuali altri soggetti che possono riferire sul fatto</label>
-                    </div>
-                    <div class="input-field col s12">
-                        <textarea id="ammontarepagamentooutilita" name="ammontarepagamentooutilita" class="materialize-textarea"></textarea>
-                        <label for="ammontarepagamentooutilita">Ammontare del pagamento o altra utilità / beneficio</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <textarea id="circostanze" name="circostanze" class="materialize-textarea"></textarea>
-                        <label for="circostanze">Circostanze oggettive di violenza o minaccia</label>
-                    </div>
-               
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <textarea id="descrizione" name="descrizione" class="materialize-textarea" rows="6"></textarea>
-                        <label for="descrizione">Descrizione</label>
-                    </div>
+                    <input id="dataEvento" name="DataEvento" type="date" class="validate" required>
+                    <label for="dataEvento">Data evento</label>
                 </div>
             </div>
-            <div class="input-field col s10 mt-2">
-                <select id="perche" name="perche" multiple required>
 
-                    <option value="penalmente rilevante">È penalmente rilevante</option>
-                    <option value="viola la Politica aziendale, il Codice Etico o altre disposizioni sanzionabili in via disciplinare">Viola la Politica aziendale, il Codice Etico o altre disposizioni sanzionabili in via disciplinare</option>
-                    <option value="arreca un danno patrimoniale all’Organizzazionei">Arreca un danno patrimoniale all’Organizzazione</option>
-                    <option value="arreca un danno di immagine all’Organizzazione">Arreca un danno di immagine all’Organizzazione</option>
-                    <option value="viola le norme ambientali e di sicurezza sul lavoro">Viola le norme ambientali e di sicurezza sul lavoro</option>
-                    <option value="Costituisce un caso di mala-gestione delle risorse">Costituisce un caso di mala-gestione delle risorse</option>
-                    <option value="comporta una discriminazione nei confronti del segnalante">Comporta una discriminazione nei confronti del segnalante</option>
-                    <option value="altro">Altro, specificare:</option>
-                </select>
-                <label style="font-size: 15px">Seleziona una o più tipologie</label>
+            <!-- Campo Luogo Evento -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="luogoEvento" name="LuogoEvento" type="text" class="validate" required>
+                    <label for="luogoEvento">Luogo evento</label>
+                </div>
             </div>
-            <!-- Textarea nascosta inizialmente, viene mostrata solo se viene selezionata l'opzione "Altro" -->
-            <div id="specifica-altro-container-perche" class="input-field col s10 mt-2" style="display: none;">
-                <textarea id="altro-specifica-perche" name="altro-specifica-perche" class="materialize-textarea"></textarea>
-                <label for="altro-specifica-perche">Specifica "Altro"</label>
+
+            <!-- Campo Soggetto Colpevole -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="soggettoColpevole" name="SoggettoColpevole" type="text" class="validate" required>
+                    <label for="soggettoColpevole">Soggetto colpevole</label>
+                </div>
             </div>
+
+            <!-- Area Aziendale -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="areaAziendale" name="AreaAziendale" class="materialize-textarea" required></textarea>
+                    <label for="areaAziendale">Area / Funzione Aziendale</label>
+                </div>
+            </div>
+
+            <!-- Soggetti Privati Coinvolti -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="soggettiPrivatiCoinvolti" name="SoggettiPrivatiCoinvolti" class="materialize-textarea"></textarea>
+                    <label for="soggettiPrivatiCoinvolti">Eventuali soggetti privati coinvolti</label>
+                </div>
+            </div>
+
+            <!-- Imprese Coinvolte -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="impreseCoinvolte" name="ImpreseCoinvolte" class="materialize-textarea"></textarea>
+                    <label for="impreseCoinvolte">Eventuali imprese coinvolte</label>
+                </div>
+            </div>
+
+            <!-- Pubblici Ufficiali/PA Coinvolti -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="pubbliciUfficialiPaCoinvolti" name="PubbliciUfficialiPaCoinvolti" class="materialize-textarea"></textarea>
+                    <label for="pubbliciUfficialiPaCoinvolti">Eventuali pubblici ufficiali / PA coinvolti</label>
+                </div>
+            </div>
+
+            <!-- Modalità Conoscenza Fatto -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="modalitaConoscenzaFatto" name="ModalitaConoscenzaFatto" class="materialize-textarea"></textarea>
+                    <label for="modalitaConoscenzaFatto">Modalità con cui è venuto a conoscenza del fatto</label>
+                </div>
+            </div>
+
+            <!-- Soggetti Referenti Fatto -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="soggettiReferentiFatto" name="SoggettiReferentiFatto" class="materialize-textarea"></textarea>
+                    <label for="soggettiReferentiFatto">Eventuali altri soggetti che possono riferire sul fatto</label>
+                </div>
+            </div>
+
+            <!-- Ammontare Pagamento o Altra Utilità -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="ammontarePagamentoOAltraUtilita" name="AmmontarePagamentoOAltraUtilita" class="materialize-textarea"></textarea>
+                    <label for="ammontarePagamentoOAltraUtilita">Ammontare del pagamento o altra utilità</label>
+                </div>
+            </div>
+
+            <!-- Circostanze Violenza Minaccia -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="circostanzeViolenzaMinaccia" name="CircostanzeViolenzaMinaccia" class="materialize-textarea"></textarea>
+                    <label for="circostanzeViolenzaMinaccia">Circostanze oggettive di violenza o minaccia</label>
+                </div>
+            </div>
+
+            <!-- Descrizione del Fatto -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="descrizioneFatto" name="DescrizioneFatto" class="materialize-textarea" rows="6" required></textarea>
+                    <label for="descrizioneFatto">Descrizione del fatto</label>
+                </div>
+            </div>
+
+            <!-- Motivazione del Fatto Illecito -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="motivazioneFattoIllecito" name="MotivazioneFattoIllecito" class="materialize-textarea"></textarea>
+                    <label for="motivazioneFattoIllecito">Motivazione del fatto illecito</label>
+                </div>
+            </div>
+
+            <!-- Checkbox per l'anonimato -->
             <div class="row align-items-center">
-                <!-- Checkbox per anonimato -->
                 <div class="col s6">
-                    <label style="margin-top: 10px;">
-                        <!-- Aggiungi margine superiore per spostare la checkbox -->
-                        <input type="checkbox" id="anonimo" name="anonimo" />
+                    <label>
+                        <input type="checkbox" id="anonimo" name="Anonimo" />
                         <span>Invia la segnalazione in forma anonima</span>
                     </label>
                 </div>
 
                 <!-- Bottone di invio -->
                 <div class="col s6 right-align">
-                    <button class="btn waves-effect waves-light" type="submit" name="action">
+                    <button class="btn waves-effect waves-light" type="submit" onclick="history.back()" name="action">
                         Invia Segnalazione
                     </button>
                 </div>
             </div>
-
-
-
-
         </form>
     </div>
 

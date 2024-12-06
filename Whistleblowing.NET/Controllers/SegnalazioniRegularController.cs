@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using Whistleblowing.NET.Models;
 using Whistleblowing.NET.Models.DTO;
@@ -45,7 +50,7 @@ namespace Whistleblowing.NET.Controllers
                     var jsonResponse = await response.Content.ReadAsStringAsync();
 
                     // Deserializza l'oggetto che contiene i dati e i metadati di paginazione
-                    var result = JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewModel>>(jsonResponse, options);
+                    var result = System.Text.Json.JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewModel>>(jsonResponse, options);
 
                     var viewModel = new PaginatedSegnalazioniRegularViewModel
                     {
@@ -78,42 +83,106 @@ namespace Whistleblowing.NET.Controllers
 
 
 
-        /// <summary>
-        /// Invia una segnalazione regolare
-        /// </summary>
-        /// <param name="segnalazioneRegular">Oggetto contenente i dati della segnalazione.</param>
-        /// <returns>Risultato dell'operazione di invio.</returns>
+        [HttpGet]
+        public IActionResult PostSegnalazioneRegular()
+        {
+            return View();
+        }
+
+
         [HttpPost]
-		public async Task<IActionResult> InviaSegnalazioneRegular([FromBody] SegnalazioneRegular segnalazioneRegular)
-		{
-			// Controlla se l'oggetto è valido
-			if (segnalazioneRegular == null)
-			{
-				return BadRequest("Dati non validi.");
-			}
+        public async Task<IActionResult> PostSegnalazioneRegular(SegnalazioneRegularDTOInserimento segnalazione)
+        {
+            // Verifica la validità del modello
+            if (!ModelState.IsValid)
+            {
+                return View(segnalazione); 
+            }
 
-			try
-			{
-				//invio la segnalazione all'API
-				var response = await _client.PostAsJsonAsync("SegnalazioniRegular/PostSegnalazioneRegular", segnalazioneRegular);
+            try
+            {
+                // Recupera il token JWT dall'header
+                string jwt = Request.Cookies["jwtToken"];
 
-				// controllo la risposta dell'API
-				if (response.IsSuccessStatusCode)
-				{
-					var result = await response.Content.ReadFromJsonAsync<SegnalazioneRegular>();
-					return Ok(result);
-				}
-				else
-				{
-					var errorMessage = await response.Content.ReadAsStringAsync();
-					return StatusCode((int)response.StatusCode, errorMessage);
-				}
-			}
-			catch (HttpRequestException ex)
-			{
-				return StatusCode(500, $"Errore nella comunicazione con l'API: {ex.Message}");
-			}
-		}
+                if (string.IsNullOrEmpty(jwt))
+                {
+                    ModelState.AddModelError(string.Empty, "Token non trovato. Accedi nuovamente.");
+                    return View(segnalazione);
+                }
+
+                // Configura un oggetto JSON per la richiesta
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false
+                };
+                var requestContent = new StringContent(JsonConvert.SerializeObject(segnalazione), Encoding.UTF8, "application/json");
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+                var response = await _client.PostAsync($"{baseAddress}/SegnalazioniRegular/PostSegnalazioneRegular", requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string ruoloClaim = null;
+
+                    // Provo a recuperare la claim "Ruolo" dal contesto User
+                    ruoloClaim = User.Claims.FirstOrDefault(c => c.Type == "Ruolo")?.Value;
+
+                    // Se non trovato, decodifico manualmente il token JWT
+                    if (string.IsNullOrEmpty(ruoloClaim))
+                    {
+                        var handler = new JwtSecurityTokenHandler();
+                        var token = handler.ReadJwtToken(jwt);
+                        ruoloClaim = token.Claims.FirstOrDefault(c => c.Type == "Ruolo")?.Value;
+                        Console.WriteLine($"RuoloClaim decodificato: {ruoloClaim}");
+                    }
+
+                    // Processo il ruolo trovato
+                    if (!string.IsNullOrEmpty(ruoloClaim) && Enum.TryParse<Ruolo>(ruoloClaim, out var userRole))
+                    {
+                        if (userRole == Ruolo.UTENTE)
+                        {
+                            TempData["SuccessMessage"] = "Segnalazione inviata con successo!";
+                            return RedirectToAction("GetMySegnalazioniRegular");
+                        }
+                        else if (userRole == Ruolo.OPERATORE)
+                        {
+                            TempData["SuccessMessage"] = "Segnalazione inviata con successo!";
+                            return RedirectToAction("Index");
+                        }
+                    }
+
+                    // Ruolo sconosciuto o non trovato
+                    Console.WriteLine("RuoloClaim è null o il valore non è valido.");
+                    TempData["SuccessMessage"] = "Segnalazione inviata con successo!";
+                    return RedirectToAction("Login");
+                }
+
+                // Gestione di errori restituiti dall'API
+                var errorDetails = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, $"Errore API: {errorDetails}");
+                return View(segnalazione);
+            }
+            catch (Exception ex)
+            {
+                // Log dell'eccezione (può essere sostituito da un logger se disponibile)
+                Console.WriteLine($"Errore durante la richiesta: {ex.Message}");
+
+                // Mostra un errore generico nella vista
+                ModelState.AddModelError(string.Empty, "Si è verificato un errore durante l'invio della segnalazione.");
+                return View(segnalazione);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
 
         ///// <summary>
         ///// Ottiene tutte le segnalazioni indipendentemente dall'utente.
@@ -255,7 +324,7 @@ namespace Whistleblowing.NET.Controllers
                     var jsonResponse = await response.Content.ReadAsStringAsync();
 
                     // Deserializza l'oggetto che contiene i dati e i metadati di paginazione
-                    var result = JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewUtente>>(jsonResponse, options);
+                    var result = System.Text.Json.JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewUtente>>(jsonResponse, options);
 
                     Console.WriteLine(result.ToString());
 

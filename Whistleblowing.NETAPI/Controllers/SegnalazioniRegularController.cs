@@ -194,7 +194,7 @@ namespace Whistleblowing.NETAPI.Controllers
 			return Ok(segnalazione);
 
 
-		}
+        }
 
         [HttpGet("SegnalazioneRegularPdfById")]
         [Authorize]
@@ -223,13 +223,15 @@ namespace Whistleblowing.NETAPI.Controllers
             // Restituisce il PDF come File
             return File(pdfBytes, "application/pdf", $"segnalazione_{segnalazioneRegularId}.pdf");
         }
+
+
         /// <summary>
         /// API per inserimento di una segnalazione Regular
         /// </summary>
         /// <param name="segnalazioneRegularDTOInserimento">segnalazione da inserire</param>
         /// <returns></returns>
-        [HttpPost]
-		[Authorize] // Richiede che l'utente sia autenticato tramite JWT
+        [HttpPost("PostSegnalazioneRegular")]
+        [Authorize] 
 		public async Task<IActionResult> PostSegnalazioneRegular(SegnalazioneRegularDTOInserimento segnalazioneRegularDTOInserimento)
 		{
 			//se la segnalazione è null torno errore
