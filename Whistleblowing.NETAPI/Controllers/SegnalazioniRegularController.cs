@@ -132,6 +132,40 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 
+        [HttpGet("segnalazioneModifica/{id}")]
+        public async Task<IActionResult> GetSegnalazioneModifica(int id)
+        {
+            var segnalazione = await _context.segnalazioneRegulars.FirstOrDefaultAsync(s => s.Id == id);
+
+            if (segnalazione == null)
+            {
+                return NotFound();
+            }
+
+            // Mappatura dei campi dal modello dell'entità al DTO
+            var dto = new SegnalazioneRegularDTOModifica
+            {
+                Id = segnalazione.Id,
+                FattoRiferitoA = segnalazione.FattoRiferitoA ?? string.Empty, // Evita valori null
+                DataEvento = segnalazione.DataEvento, // Assumendo che DataEvento sia già nullable in entrambi i modelli
+                LuogoEvento = segnalazione.LuogoEvento ?? string.Empty,
+                SoggettoColpevole = segnalazione.SoggettoColpevole ?? string.Empty,
+                AreaAziendale = segnalazione.AreaAziendale ?? string.Empty,
+                SoggettiPrivatiCoinvolti = segnalazione.SoggettiPrivatiCoinvolti ?? string.Empty,
+                ImpreseCoinvolte = segnalazione.ImpreseCoinvolte ?? string.Empty,
+                PubbliciUfficialiPaCoinvolti = segnalazione.PubbliciUfficialiPaCoinvolti ?? string.Empty,
+                ModalitaConoscenzaFatto = segnalazione.ModalitaConoscenzaFatto ?? string.Empty,
+                SoggettiReferentiFatto = segnalazione.SoggettiReferentiFatto ?? string.Empty,
+                AmmontarePagamentoOAltraUtilita = segnalazione.AmmontarePagamentoOAltraUtilita ?? string.Empty,
+                CircostanzeViolenzaMinaccia = segnalazione.CircostanzeViolenzaMinaccia ?? string.Empty,
+                DescrizioneFatto = segnalazione.DescrizioneFatto ?? string.Empty,
+                MotivazioneFattoIllecito = segnalazione.MotivazioneFattoIllecito ?? string.Empty,
+                Note = segnalazione.Note ?? string.Empty,
+                status = segnalazione.status
+            };
+
+            return Ok(dto);
+        }
 
 
 
@@ -314,11 +348,22 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="userid"></param>
         /// <param name="segnalazione"></param>
         /// <returns></returns>
-        [HttpPost("PutSegnalazioneRegular")]  // Modificato da HttpPut a HttpPost
+        [HttpPut("PutSegnalazioneRegular")]
+        [Authorize]
         public async Task<ActionResult> PutSegnalazioneRegular([FromQuery] int userid, SegnalazioneRegularDTOModifica segnalazione)
         {
-            //trovo l' utente corrente e ne controllo il ruolo
-            var user = _context.User.Include(u => u.Ruolo).FirstOrDefault(u => u.Id == userid);
+            // Recupera l'ID utente dal JWT
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+            // Verifica che il claim esista e sia valido
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Problem("Token JWT invalido o mancante.");
+            }
+
+            // Trova l'utente nel database
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
+
 
             //se l'utente è null, restituisco errore
             if (user == null)
@@ -326,8 +371,8 @@ namespace Whistleblowing.NETAPI.Controllers
                 return NotFound("Utente non trovato");
             }
 
-			// Verifico se l'utente è un operatore (codice 2)
-			var isOperatore = user.Ruolo.ToString().Equals("OPERATORE");
+            // Verifico se l'utente è un operatore (codice 2)
+            var isOperatore = user.Ruolo == Ruolo.OPERATORE;
 
             //se l' utente non è un OPERATORE, ritorno un errore di accesso negato
             if (!isOperatore)

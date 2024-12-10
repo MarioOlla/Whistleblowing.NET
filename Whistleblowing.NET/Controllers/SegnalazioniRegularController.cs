@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Whistleblowing.NET.Models;
@@ -13,7 +9,7 @@ using Whistleblowing.NET.Models.DTO;
 
 namespace Whistleblowing.NET.Controllers
 {
-	public class SegnalazioniRegularController : Controller
+    public class SegnalazioniRegularController : Controller
 	{
 		private readonly HttpClient _client;
 
@@ -352,68 +348,108 @@ namespace Whistleblowing.NET.Controllers
         }
 
 
-        // Aggiungi il metodo di modifica
-        [HttpPost]
-        public async Task<IActionResult> ModificaSegnalazioneRegular([FromBody] SegnalazionRegularDTOModifica segnalazione)
+        [HttpGet]
+        public async Task<IActionResult> ModificaSegnalazioneRegular(int id)
         {
-            // Verifica che i dati siano validi
-            if (segnalazione == null)
+            // Prepara l'URL per chiamare l'API
+            string url = $"{baseAddress}/SegnalazioniRegular/segnalazioneModifica/{id}"; // Sostituisci baseAddress con l'URL del backend
+
+            // Esegui la richiesta GET
+            var response = await _client.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
             {
-                return BadRequest("I dati della segnalazione non sono validi.");
+                return NotFound(); // Se l'API non restituisce un successo, mostra NotFound
+            }
+
+            // Deserializza la risposta JSON in un oggetto DTO usando Newtonsoft.Json
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var segnalazione = JsonConvert.DeserializeObject<SegnalazionRegularDTOModifica>(jsonString);
+
+            return View(segnalazione);
+        }
+
+
+
+
+        [HttpPut]
+        public async Task<IActionResult> ModificaSegnalazioneRegular(SegnalazionRegularDTOModifica segnalazione)
+        {
+
+            Console.WriteLine("sono qui");
+            // Verifica che i dati siano validi
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Dati della segnalazione non validi.");
+                return View(segnalazione);
             }
 
             try
             {
-                // Recupera l'ID utente dalla sessione
-                int? userid = _contextAccessor.HttpContext?.Session.GetInt32("UserId");
-
-                // Se l'utente non è presente nella sessione, forziamo l'ID a 1 per testing
-                if (userid == null)
+                // Recupera il token JWT dai cookie
+                string jwt = Request.Cookies["jwtToken"];
+                if (string.IsNullOrEmpty(jwt))
                 {
-                    userid = 1; // Forza l'ID per testing
-                    _contextAccessor.HttpContext?.Session.SetInt32("UserId", (int)userid);
+                    ModelState.AddModelError(string.Empty, "Token non trovato. Accedi nuovamente.");
+                    return View(segnalazione);
+                }
+
+                // Recupera l'ID utente dalla claim del token JWT
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+                {
+                    ModelState.AddModelError(string.Empty, "ID utente non valido nel token. Accedi nuovamente.");
+                    return View(segnalazione);
                 }
 
                 // Imposta l'URL dell'API per la modifica
-                string url = $"SegnalazioniRegular/PutSegnalazioneRegular?userid={userid}";
+                string url = $"{baseAddress}/SegnalazioniRegular/PutSegnalazioneRegular?userid={userId}";
 
-                // Invia la richiesta POST all'API per modificare la segnalazione
-                var response = await _client.PostAsJsonAsync(url, segnalazione);
+                // Configura il contenuto della richiesta
+                var requestContent = new StringContent(JsonConvert.SerializeObject(segnalazione), Encoding.UTF8, "application/json");
+
+                // Aggiunge l'header di autorizzazione
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+
+                // Invia la richiesta PUT all'API
+                var response = await _client.PostAsync(url, requestContent);
 
                 // Controlla la risposta dell'API
                 if (response.IsSuccessStatusCode)
                 {
-                    // Se la modifica è avvenuta con successo, redirigi alla pagina Index
+                    TempData["SuccessMessage"] = "Modifica della segnalazione completata con successo!";
                     return RedirectToAction("Index");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {
-                    // Se l'accesso è negato, restituisci un errore 403
-                    return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
+                    ModelState.AddModelError(string.Empty, "Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    // Se l'utente non è stato trovato, restituisci un errore 404
-                    return NotFound("Utente non trovato");
+                    ModelState.AddModelError(string.Empty, "Utente o segnalazione non trovati.");
                 }
                 else
                 {
-                    // Gestisci altri tipi di errore
                     var errorMessage = await response.Content.ReadAsStringAsync();
-                    return StatusCode((int)response.StatusCode, errorMessage);
+                    ModelState.AddModelError(string.Empty, $"Errore durante la modifica della segnalazione: {errorMessage}");
                 }
+
+                return View(segnalazione);
             }
             catch (HttpRequestException ex)
             {
-                // Gestisci eventuali errori di rete
-                return StatusCode(500, $"Errore durante la chiamata all'API: {ex.Message}");
+                ModelState.AddModelError(string.Empty, $"Errore durante la chiamata all'API: {ex.Message}");
+                return View(segnalazione);
             }
             catch (Exception ex)
             {
-                // Gestisci errori generali
-                return StatusCode(500, $"Errore imprevisto: {ex.Message}");
+                ModelState.AddModelError(string.Empty, $"Errore imprevisto: {ex.Message}");
+                return View(segnalazione);
             }
         }
+
 
     }
 }
