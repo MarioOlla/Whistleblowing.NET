@@ -371,8 +371,8 @@ namespace Whistleblowing.NET.Controllers
 
 
 
-        [HttpPut]
-        public async Task<IActionResult> ModificaSegnalazioneRegular(SegnalazionRegularDTOModifica segnalazione)
+        [HttpPost]
+        public async Task<IActionResult> ModificaSegnalazioneReg(SegnalazionRegularDTOModifica segnalazione)
         {
 
             Console.WriteLine("sono qui");

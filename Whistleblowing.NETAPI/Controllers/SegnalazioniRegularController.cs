@@ -348,7 +348,7 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="userid"></param>
         /// <param name="segnalazione"></param>
         /// <returns></returns>
-        [HttpPut("PutSegnalazioneRegular")]
+        [HttpPost("PutSegnalazioneRegular")]
         [Authorize]
         public async Task<ActionResult> PutSegnalazioneRegular([FromQuery] int userid, SegnalazioneRegularDTOModifica segnalazione)
         {
@@ -404,6 +404,7 @@ namespace Whistleblowing.NETAPI.Controllers
             if (!segnalazione.CircostanzeViolenzaMinaccia.IsNullOrEmpty()) segnalazioneEdit.CircostanzeViolenzaMinaccia = segnalazione.CircostanzeViolenzaMinaccia;
             if (!segnalazione.DescrizioneFatto.IsNullOrEmpty()) segnalazioneEdit.DescrizioneFatto = segnalazione.DescrizioneFatto;
             if (!segnalazione.MotivazioneFattoIllecito.IsNullOrEmpty()) segnalazioneEdit.MotivazioneFattoIllecito = segnalazione.MotivazioneFattoIllecito;
+            if (segnalazione.status.HasValue) segnalazioneEdit.status = segnalazione.status.Value;
             if (!segnalazione.Note.IsNullOrEmpty()) segnalazioneEdit.Note = segnalazione.Note;
 
             //eseguo la modifica dei dati

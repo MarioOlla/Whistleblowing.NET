@@ -6,25 +6,9 @@
 <h2>Modifica Segnalazione</h2>
 
 <!-- Tipologia del fatto -->
-<div class="input-field col s10 mt-2">
-    <select id="fattoRiferitoA" name="FattoRiferitoA" multiple required asp-for="FattoRiferitoA">
-        <option value="reclutamento del personale" selected="@(Model?.FattoRiferitoA?.Contains("reclutamento del personale") == true)">Reclutamento del Personale</option>
-        <option value="contatti" selected="@(Model?.FattoRiferitoA?.Contains("contatti") == true)">Contatti</option>
-        <option value="concessione vantaggi economici" selected="@(Model?.FattoRiferitoA?.Contains("concessione vantaggi economici") == true)">Concessione di vantaggi economici</option>
-        <option value="concessione altri vantaggi" selected="@(Model?.FattoRiferitoA?.Contains("concessione altri vantaggi") == true)">Concessione di altri tipi di vantaggi</option>
-        <option value="nomine" selected="@(Model?.FattoRiferitoA?.Contains("nomine") == true)">Nomine</option>
-        <option value="autorizzazioni" selected="@(Model?.FattoRiferitoA?.Contains("autorizzazioni") == true)">Autorizzazioni</option>
-        <option value="ispezioni" selected="@(Model?.FattoRiferitoA?.Contains("ispezioni") == true)">Ispezioni</option>
-        <option value="rapporti con la P.A." selected="@(Model?.FattoRiferitoA?.Contains("rapporti con la P.A.") == true)">Rapporti con la P.A.</option>
-        <option value="altro" selected="@(Model?.FattoRiferitoA?.Contains("altro") == true)">Altro, specificare:</option>
-    </select>
-
-    <label style="font-size: 15px; margin-top: 10px">Seleziona una o più tipologie</label>
-</div>
 
 <!-- Form per la modifica dei dettagli -->
-<form asp-controller="SegnalazioniRegular" asp-action="ModificaSegnalazioneRegular" method="POST">
-    <input type="hidden" name="_method" value="PUT" />
+<form asp-controller="SegnalazioniRegular" asp-action="ModificaSegnalazioneReg" method="POST">
     <div class="card">
         <div class="card-body">
             <h5>ID Segnalazione: @Model.Id</h5>
@@ -33,6 +17,7 @@
             <div class="form-group">
                 <label><strong>Fatto Riferito A:</strong></label>
                 <input type="text" class="form-control" name="FattoRiferitoA" value="@Model.FattoRiferitoA" required />
+
             </div>
 
             <div class="form-group">

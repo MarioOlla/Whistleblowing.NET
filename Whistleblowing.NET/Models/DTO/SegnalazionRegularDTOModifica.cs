@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NET.Models.DTO
 {
@@ -37,6 +38,8 @@ namespace Whistleblowing.NET.Models.DTO
 
         public string? Note { get; set; }
 
+        [Required]
+        [EnumDataType(typeof(Status), ErrorMessage = "Lo status deve essere APERTO, LAVORAZIONE o CHIUSO.")]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Status? status { get; set; }
     }
