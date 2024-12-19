@@ -39,6 +39,7 @@ namespace Whistleblowing.NET.Models.DTO
 
         public string? Note { get; set; }
 
+        public bool? IsDeleted { get; set; }
 
     }
 }

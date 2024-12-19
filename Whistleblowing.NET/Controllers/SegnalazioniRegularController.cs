@@ -253,6 +253,38 @@ namespace Whistleblowing.NET.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetDeletedSegnalazioneRegularById(int Id)
+        {
+            try
+            {
+                // Chiamata all'API backend per ottenere la segnalazione tramite il suo ID
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/getDeletedSegnalazioneRegularById/{Id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Deserializza la risposta JSON in un oggetto SegnalazioneRegularView
+                    var segnalazione = await response.Content.ReadFromJsonAsync<SegnalazioneRegularView>();
+
+                    if (segnalazione != null)
+                    {
+                        // Ritorna la vista con i dettagli della segnalazione
+                        return View("DeletedSegnalazione", segnalazione);
+                    }
+                }
+
+                // Gestione dei casi in cui la segnalazione non è stata trovata
+                ViewBag.ErrorMessage = "Segnalazione non trovata.";
+                return View("Errore");
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+                return View("Errore");
+            }
+        }
+
         /// <summary>
         /// Ottieni una segnalazione regolare basata sul suo ID.
         /// </summary>
@@ -492,18 +524,25 @@ namespace Whistleblowing.NET.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
+
                     return Json(new { success = true, message = "Segnalazione eliminata con successo." });
+
                 }
+
                 else
+
+
                 {
                     var error = await response.Content.ReadAsStringAsync();
                     return Json(new { success = false, message = $"Errore API: {error}" });
                 }
+
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Errore: {ex.Message}" });
             }
+
         }
 
 

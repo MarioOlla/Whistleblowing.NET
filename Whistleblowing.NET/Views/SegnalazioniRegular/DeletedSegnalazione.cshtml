@@ -1,8 +1,7 @@
-﻿
-@model Whistleblowing.NET.Models.SegnalazioneRegularView
+﻿@model Whistleblowing.NET.Models.SegnalazioneRegularView
 
 @{
-    ViewData["Title"] = "Modifica Segnalazione";
+    ViewData["Title"] = "Elimina Segnalazione";
 }
 
 <h2>Dettagli della Segnalazione</h2>
@@ -41,12 +40,14 @@
 </div>
 
 <!-- Pulsante per tornare indietro -->
-<div class="text-center mt-4">
+<div class="text-center mt-4 d-flex justify-content-center gap-3">
     <button type="button" class="btn btn-secondary" onclick="history.back()" style="margin-bottom: 10px;">Torna alla lista</button>
 
-
-
+    <button type="button" class="btn btn-danger btn-edit" onclick="deleteSegnalazione(@Model.Id)">
+        <i class="bi bi-pencil-square"></i> Elimina
+    </button>
 </div>
+
 
 <!-- Modale per visualizzare la descrizione del fatto -->
 <div id="descriptionModal" class="modal">
@@ -169,4 +170,31 @@
             modal.style.display = "none";
         }
     }
+
+
+        function deleteSegnalazione(id) {
+            if (confirm("Sei sicuro di voler eliminare questa segnalazione?")) {
+                fetch(`/SegnalazioniRegular/Delete`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(id)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            // Esegui un redirect o aggiorna la pagina
+                        window.location.href = "/SegnalazioniRegular/Index"; // Modifica l'URL di destinazione
+                        } else {
+                            alert(data.message || "Si è verificato un errore durante l'eliminazione.");
+                        }
+                    })
+                    .catch(error => {
+                        alert("Errore nella richiesta: " + error.message);
+                    });
+            }
+        }
+
 </script>

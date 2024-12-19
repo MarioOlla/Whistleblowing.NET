@@ -62,11 +62,13 @@ namespace Whistleblowing.NETAPI.DTO
 		[Column("note")]
 		public string? Note { get; set; }
 
+        [Column("is_deleted")]
+        public bool? IsDeleted { get; set; }
 
 
 
 
 
 
-	}
+    }
 }

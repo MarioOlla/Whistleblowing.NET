@@ -183,10 +183,12 @@ namespace Whistleblowing.NETAPI.Controllers
             var user = await _context.User.FindAsync(userId);
 
             // Recupera il numero totale di segnalazioni
-            var totalRecords = await _context.paginatedSegnalazioniRegularViewModels.CountAsync();
+            var totalRecords = await _context.paginatedSegnalazioniRegularViewModels.Where(s => s.IsDeleted == false).CountAsync();
+                
 
             // Applica la paginazione
             var segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels
+                .Where(s => s.IsDeleted == false)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
@@ -229,6 +231,27 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
         }
+
+
+        /// <returns></returns>
+        [HttpGet("getDeletedSegnalazioneRegularById/{Id}")]
+        public async Task<ActionResult<SegnalazioneRegularView>> getDeletedSegnalazioneRegularById(int Id)
+        {
+            // cerco la segnalazione con il suo id
+            var segnalazione = await _context.SegnalazioneRegularViews.SingleOrDefaultAsync(s => s.Id == Id);
+
+            //se invece non trovo la segnalazione restituisco un NotFound
+            if (segnalazione == null)
+            {
+                return NotFound(new { message = "segnalazione non trovata!" });
+            }
+
+            //se tutto è ok torno la segnalazione
+            return Ok(segnalazione);
+
+
+        }
+
 
         [HttpGet("SegnalazioneRegularPdfById")]
         [Authorize]
@@ -306,30 +329,31 @@ namespace Whistleblowing.NETAPI.Controllers
 			//stampa per visualizzare se i dati arrivano correttamente
 			Console.WriteLine(user.Id.ToString(), user.Nome, user.Cognome, user.Email);
 
-			// *** Creo il mio oggetto segnalazione per effettuare l' inserimento *** //
-			var _segnalazioneRegular = new SegnalazioneRegular()
-			{
-				FattoRiferitoA = segnalazioneRegularDTOInserimento.FattoRiferitoA,
-				DataEvento = segnalazioneRegularDTOInserimento.DataEvento,
-				LuogoEvento = segnalazioneRegularDTOInserimento.LuogoEvento,
-				SoggettoColpevole = segnalazioneRegularDTOInserimento.SoggettoColpevole,
-				AreaAziendale = segnalazioneRegularDTOInserimento.AreaAziendale,
-				SoggettiPrivatiCoinvolti = segnalazioneRegularDTOInserimento.SoggettiPrivatiCoinvolti,
-				ImpreseCoinvolte = segnalazioneRegularDTOInserimento.ImpreseCoinvolte,
-				PubbliciUfficialiPaCoinvolti = segnalazioneRegularDTOInserimento.PubbliciUfficialiPaCoinvolti,
-				ModalitaConoscenzaFatto = segnalazioneRegularDTOInserimento.ModalitaConoscenzaFatto,
-				SoggettiReferentiFatto = segnalazioneRegularDTOInserimento.SoggettiReferentiFatto,
-				AmmontarePagamentoOAltraUtilita = segnalazioneRegularDTOInserimento.AmmontarePagamentoOAltraUtilita,
-				CircostanzeViolenzaMinaccia = segnalazioneRegularDTOInserimento.CircostanzeViolenzaMinaccia,
-				DescrizioneFatto = segnalazioneRegularDTOInserimento.DescrizioneFatto,
-				MotivazioneFattoIllecito = segnalazioneRegularDTOInserimento.MotivazioneFattoIllecito,
-				Note = segnalazioneRegularDTOInserimento.Note,
-				UserId = userId,
-				// Imposto lo status su "APERTO" all'inserimento
-				status = Status.APERTO,
+            // *** Creo il mio oggetto segnalazione per effettuare l' inserimento *** //
+            var _segnalazioneRegular = new SegnalazioneRegular()
+            {
+                FattoRiferitoA = segnalazioneRegularDTOInserimento.FattoRiferitoA,
+                DataEvento = segnalazioneRegularDTOInserimento.DataEvento,
+                LuogoEvento = segnalazioneRegularDTOInserimento.LuogoEvento,
+                SoggettoColpevole = segnalazioneRegularDTOInserimento.SoggettoColpevole,
+                AreaAziendale = segnalazioneRegularDTOInserimento.AreaAziendale,
+                SoggettiPrivatiCoinvolti = segnalazioneRegularDTOInserimento.SoggettiPrivatiCoinvolti,
+                ImpreseCoinvolte = segnalazioneRegularDTOInserimento.ImpreseCoinvolte,
+                PubbliciUfficialiPaCoinvolti = segnalazioneRegularDTOInserimento.PubbliciUfficialiPaCoinvolti,
+                ModalitaConoscenzaFatto = segnalazioneRegularDTOInserimento.ModalitaConoscenzaFatto,
+                SoggettiReferentiFatto = segnalazioneRegularDTOInserimento.SoggettiReferentiFatto,
+                AmmontarePagamentoOAltraUtilita = segnalazioneRegularDTOInserimento.AmmontarePagamentoOAltraUtilita,
+                CircostanzeViolenzaMinaccia = segnalazioneRegularDTOInserimento.CircostanzeViolenzaMinaccia,
+                DescrizioneFatto = segnalazioneRegularDTOInserimento.DescrizioneFatto,
+                MotivazioneFattoIllecito = segnalazioneRegularDTOInserimento.MotivazioneFattoIllecito,
+                Note = segnalazioneRegularDTOInserimento.Note,
+                UserId = userId,
+                IsDeleted = segnalazioneRegularDTOInserimento.IsDeleted == true,
+                // Imposto lo status su "APERTO" all'inserimento
+                status = Status.APERTO,
 
 
-			};
+            };
 
 			//effettuo l' inserimento della segnalazione
 			_context.segnalazioneRegulars.Add(_segnalazioneRegular);
@@ -442,6 +466,7 @@ namespace Whistleblowing.NETAPI.Controllers
             }
 
             segnalazione.IsDeleted = true;
+            segnalazione.status = Status.CHIUSO;
             await _context.SaveChangesAsync();
 
             return Ok();

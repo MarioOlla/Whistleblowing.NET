@@ -113,12 +113,10 @@
                                     <a class="btn btn-info btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.Id_segnalazioneRegular">
                                         <i class="bi bi-eye"></i> Visualizza
                                     </a>
-                                    <button class="btn btn-danger btn-sm"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal"
-                                            data-id="@segnalazione.Id_segnalazioneRegular">
-                                        <i class="bi bi-trash"></i> Elimina
-                                    </button>
+                                    <a class="btn btn-danger btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetDeletedSegnalazioneRegularById" asp-route-id="@segnalazione.Id_segnalazioneRegular">
+                                        <i class="bi bi-eye"></i> Elimina
+                                    </a>
+
                                 </td>
                             </tr>
                         }
