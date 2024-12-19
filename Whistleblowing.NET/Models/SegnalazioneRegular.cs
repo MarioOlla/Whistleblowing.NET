@@ -48,8 +48,7 @@ namespace Whistleblowing.NET.Models
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Status? status { get; set; }
 
-        public Boolean? IsDeleted { get; set; }
-
+        public bool? IsDeleted { get; set; }
 
         public int UserId { get; set; }
 

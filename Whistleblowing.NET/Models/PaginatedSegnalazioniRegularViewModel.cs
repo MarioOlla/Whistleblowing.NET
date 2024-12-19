@@ -43,5 +43,8 @@ namespace Whistleblowing.NET.Models
         [JsonPropertyName("sortDesc")]
         public bool sortdesc { get; set; } = true;
 
+        [JsonPropertyName("is_deleted")]
+        public bool? IsDeleted { get; set; }
+
     }
 }

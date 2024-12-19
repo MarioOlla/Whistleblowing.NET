@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -10,12 +11,12 @@ using Whistleblowing.NET.Models.DTO;
 namespace Whistleblowing.NET.Controllers
 {
     public class SegnalazioniRegularController : Controller
-	{
-		private readonly HttpClient _client;
+    {
+        private readonly HttpClient _client;
 
-		private Uri baseAddress = new Uri("https://localhost:44300/api");
+        private Uri baseAddress = new Uri("https://localhost:44300/api");
 
-		private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IHttpContextAccessor _contextAccessor;
 
         public SegnalazioniRegularController(IHttpContextAccessor _contextAccs)
         {
@@ -92,7 +93,7 @@ namespace Whistleblowing.NET.Controllers
             // Verifica la validità del modello
             if (!ModelState.IsValid)
             {
-                return View(segnalazione); 
+                return View(segnalazione);
             }
 
             try
@@ -451,14 +452,74 @@ namespace Whistleblowing.NET.Controllers
         }
 
 
+
+
+
+        [HttpPut]
+        public async Task<IActionResult> Delete([FromBody]int id)
+        {
+            try
+            {
+
+                if(id == 0)
+                {
+                    Console.WriteLine("Errore");
+                }
+
+                string jwt = Request.Cookies["jwtToken"];
+                if (string.IsNullOrEmpty(jwt))
+                {
+                    ModelState.AddModelError(string.Empty, "Token non trovato. Accedi nuovamente.");
+                    return View();
+                }
+
+                // Recupera l'ID utente dalla claim del token JWT
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+                {
+                    ModelState.AddModelError(string.Empty, "ID utente non valido nel token. Accedi nuovamente.");
+                    return View();
+                }
+
+                // Aggiunge l'header di autorizzazione: IMPORTANTISSIMA DA AGGIUNGERE ALTRIMENTI E' SEMPRE 401
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+
+         
+                var response = await _client.PutAsync($"{baseAddress}/SegnalazioniRegular/{id}", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Segnalazione eliminata con successo." });
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return Json(new { success = false, message = $"Errore API: {error}" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Errore: {ex.Message}" });
+            }
+        }
+
+
+
+
+
+
+
     }
 }
-    
 
 
 
 
 
 
-	
+
+
 

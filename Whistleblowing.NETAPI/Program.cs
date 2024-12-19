@@ -50,18 +50,25 @@ builder.Services.AddDbContext<WhistleBlowingContext>(options =>
 // quindi, abilitando CORS, consento ad altri domini di chiamare l'API
 builder.Services.AddCors(options =>
 	options.AddDefaultPolicy(policy =>
-		policy.WithOrigins("http://localhost:44300")
+		policy.WithOrigins("https://localhost:44300")
 		.AllowAnyOrigin()
 		.AllowAnyMethod()
 		.AllowAnyHeader()
 		));
 builder.Services.AddCors(options =>
 	options.AddDefaultPolicy(policy =>
-		policy.WithOrigins("http://localhost:44316")
+		policy.WithOrigins("https://localhost:44316")
 		.AllowAnyOrigin()
 		.AllowAnyMethod()
 		.AllowAnyHeader()
 		));
+//builder.Services.AddCors(options =>
+//    options.AddPolicy("AllowSpecificOrigins", policy =>
+//        policy.WithOrigins("https://localhost:44300", "https://localhost:44316")
+//              .AllowAnyMethod()
+//              .AllowAnyHeader()
+//              .AllowCredentials() // Se usi cookie o autenticazione
+//    ));
 
 
 
@@ -213,6 +220,9 @@ app.UseMiddleware<JwtMiddleware>();
 
 
 app.UseHttpsRedirection();
+
+//app.UseCors("AllowSpecificOrigins");
+app.UseCors();
 
 
 app.UseAuthentication();

@@ -19,8 +19,29 @@ builder.Services.AddSession(options =>
 });
 
 
+    
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins("https://localhost:44300")
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        ));
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins("https://localhost:44316")
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        ));
 
-
+//builder.Services.AddCors(options =>
+//    options.AddPolicy("AllowSpecificOrigins", policy =>
+//        policy.WithOrigins("https://localhost:44300", "https://localhost:44316")
+//              .AllowAnyMethod()
+//              .AllowAnyHeader()
+//              .AllowCredentials() // Se usi cookie o autenticazione
+//    ));
 
 // Configura l'autenticazione basata su cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -63,6 +84,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//app.UseCors("AllowSpecificOrigins");
+app.UseCors();
 
 // Attiva l'autenticazione e autorizzazione
 app.UseAuthentication(); // Deve venire prima di UseAuthorization

@@ -8,12 +8,15 @@ namespace Whistleblowing.NETAPI.Models
     {
         [Column("Id_segnalazioneRegular")]
         public int? Id_segnalazioneRegular { get; set; }
-     
+
         [Column("DataEvento")]
         public DateTime? DataEvento { get; set; }
 
         [Column("SoggettoColpevole")]
         public string? SoggettoColpevole { get; set; }
+
+        [Column("is_deleted")]
+        public bool? IsDeleted { get; set; }
 
         // Aggiungi questa proprietà
         public List<PaginatedSegnalazioniRegularViewModel>? SegnalazioniRegulars { get; set; }
@@ -39,6 +42,8 @@ namespace Whistleblowing.NETAPI.Models
 
         [NotMapped]
         public bool sortdesc { get; set; } = true;
+
+      
 
     }
 }

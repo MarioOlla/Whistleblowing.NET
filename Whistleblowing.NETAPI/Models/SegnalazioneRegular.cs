@@ -78,7 +78,7 @@ namespace Whistleblowing.NETAPI.Models
 
 
         [Column("is_deleted")]
-        public Boolean? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
 
         [Column("user_id")]
         public int UserId { get; set; }

@@ -358,6 +358,7 @@ namespace Whistleblowing.NETAPI.Controllers
             // Verifica che il claim esista e sia valido
             if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
             {
+                Console.WriteLine("ciao jwt " + userIdClaim);
                 return Problem("Token JWT invalido o mancante.");
             }
 
@@ -419,59 +420,32 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
         [HttpPut("{id}")]
-		public async Task<ActionResult<SegnalazioneRegular>> DeleteSegnalazioneRegular( int id, [FromQuery] int userid)
-		{
+        [Authorize]
+        public async Task<ActionResult> DeleteSegnalazioneRegular(int id)
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Problem("Token JWT invalido o mancante.");
+            }
 
-			//trovo l' utente corrente e ne controllo il ruolo
-			var user = _context.User.Include(u => u.Ruolo).FirstOrDefault(u => u.Id == userid);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null || user.Ruolo != Ruolo.OPERATORE)
+            {
+                return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
+            }
 
+            var segnalazione = await _context.segnalazioneRegulars.FindAsync(id);
+            if (segnalazione == null)
+            {
+                return NotFound("Segnalazione non trovata.");
+            }
 
-			//se l'utente è null, restituisco errore
-			if (user == null)
-			{
-				return NotFound("Utente non trovato");
-			}
+            segnalazione.IsDeleted = true;
+            await _context.SaveChangesAsync();
 
-			// Verifico se l'utente è un operatore (codice 2)
-			var isOperatore = user.Ruolo.ToString().Equals("OPERATORE");
-
-            //se l' utente non è un OPERATORE, ritorno un errore di accesso negato
-            if (!isOperatore)
-			{
-				return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
-			}
-
-
-			//se l' id segnalazione risulta null, oppure dal context risulta null o il suo id è inferiore a zero torno NotFound
-			if (_context.segnalazioneRegulars == null || id == null || id < 0)
-			{
-				return NotFound();
-			}
-
-			//il context cerca a database la segnalazione da eliminare
-			SegnalazioneRegular segnalazione = await _context.segnalazioneRegulars.FindAsync(id);
-
-			//se la segnlazione è null torno errore
-			if (segnalazione == null)
-			{
-				return NotFound();
-			}
-
-			//se tutto va bene imposto il booleano a true
-			segnalazione.IsDeleted = true;
-
-			//salvo le modifiche 
-			await _context.SaveChangesAsync();
-
-			//modifico la segnalazione
-			_context.segnalazioneRegulars.Update(segnalazione);
-
-			return Ok();
-
-
-
-
-		}
+            return Ok();
+        }
 
 
 
@@ -486,5 +460,6 @@ namespace Whistleblowing.NETAPI.Controllers
 
 
 
-	}
+
+    }
 }
