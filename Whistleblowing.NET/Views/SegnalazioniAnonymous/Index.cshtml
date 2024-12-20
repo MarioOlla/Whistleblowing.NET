@@ -1,4 +1,5 @@
-﻿@model Whistleblowing.NET.Models.PaginatedSegnalazioniRegularViewModel
+﻿@model Whistleblowing.NET.Models.PaginatedSegnalazioniAnonimeViewUtente
+
 
 <link rel="stylesheet" href="~/css/table.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/Pagination.css" asp-append-version="true" />
@@ -25,17 +26,17 @@
     .btn-danger {
         background-color: #dc3545 !important; /* Forza il colore rosso */
         border-color: #dc3545 !important;
-    } 
+    }
 
     th {
-        font-size: 1.1rem; 
+        font-size: 1.1rem;
         vertical-align: middle;
     }
 
-    
-   
 
-   
+
+
+
 
 </style>
 
@@ -91,15 +92,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.SegnalazioniRegulars != null && Model.SegnalazioniRegulars.Count > 0)
+                    @if (Model.SegnalazioniAnonymous != null && Model.SegnalazioniAnonymous.Count > 0)
                     {
-                        foreach (var segnalazione in Model.SegnalazioniRegulars)
+                        foreach (var segnalazione in Model.SegnalazioniAnonymous)
                         {
-                            <tr id="row-@segnalazione.Id_segnalazioneRegular">
+                            <tr id="row-@segnalazione.segnalazione_anonima_id">
                                 <!-- Campo ID cliccabile -->
                                 <td style="vertical-align: middle;">
-                                    <a asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.Id_segnalazioneRegular" style="color: inherit; text-decoration: none;">
-                                        @segnalazione.Id_segnalazioneRegular
+                                    <a asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_anonima_id" style="color: inherit; text-decoration: none;">
+                                        @segnalazione.segnalazione_anonima_id
                                     </a>
                                 </td>
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
@@ -107,13 +108,13 @@
 
                                 <!-- Colonna Azioni centrata -->
                                 <td class="text-center" style="vertical-align: middle;">
-                                    <a class="btn btn-primary btn-sm" asp-controller="SegnalazioniRegular" asp-action="ModificaSegnalazioneRegular" asp-route-id="@segnalazione.Id_segnalazioneRegular">
+                                    <a class="btn btn-primary btn-sm" asp-controller="SegnalazioniRegular" asp-action="ModificaSegnalazioneRegular" asp-route-id="@segnalazione.segnalazione_anonima_id">
                                         <i class="bi bi-pencil-square"></i> Modifica
                                     </a>
-                                    <a class="btn btn-info btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.Id_segnalazioneRegular">
+                                    <a class="btn btn-info btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_anonima_id">
                                         <i class="bi bi-eye"></i> Visualizza
                                     </a>
-                                    <a class="btn btn-danger btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetDeletedSegnalazioneRegularById" asp-route-id="@segnalazione.Id_segnalazioneRegular">
+                                    <a class="btn btn-danger btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetDeletedSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_anonima_id">
                                         <i class="bi bi-eye"></i> Elimina
                                     </a>
 
@@ -144,40 +145,40 @@
                     di @Model.TotalItems
                 </p>
             }
-            
-                <ul class="pagination-custom">
-                    <!-- Prima Pagina -->
-                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">Prima pagina</a>
-                    </li>
 
-                    <!-- Precedente -->
-                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Precedente</a>
-                    </li>
+            <ul class="pagination-custom">
+                <!-- Prima Pagina -->
+                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">Prima pagina</a>
+                </li>
 
-                    <!-- Numeri delle pagine -->
-                    @{
-                        var totalPages = (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize);
-                    }
-                    @for (int i = 1; i <= totalPages; i++)
-                    {
-                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
-                        </li>
-                    }
+                <!-- Precedente -->
+                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Precedente</a>
+                </li>
 
-                    <!-- Successivo -->
-                    <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Successivo</a>
+                <!-- Numeri delle pagine -->
+                @{
+                    var totalPages = (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize);
+                }
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
                     </li>
+                }
 
-                    <!-- Ultima Pagina -->
-                    <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@totalPages" asp-route-pageSize="@Model.PageSize">Ultima pagina</a>
-                    </li>
-                </ul>
-            
+                <!-- Successivo -->
+                <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Successivo</a>
+                </li>
+
+                <!-- Ultima Pagina -->
+                <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@totalPages" asp-route-pageSize="@Model.PageSize">Ultima pagina</a>
+                </li>
+            </ul>
+
 
         </div>
 
@@ -186,7 +187,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
+        <script>
             $('#deleteModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Pulsante che ha aperto il modale
                 var id = button.data('idSegnalazioneRegular'); // ID della segnalazione
@@ -241,4 +242,4 @@
                     }
                 }, 5000); // Timeout di 5 secondi
             });
-</script>
+        </script>
