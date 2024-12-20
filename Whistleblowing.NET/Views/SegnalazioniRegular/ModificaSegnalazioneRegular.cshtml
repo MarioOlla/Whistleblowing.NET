@@ -11,9 +11,9 @@
 <form asp-controller="SegnalazioniRegular" asp-action="ModificaSegnalazioneReg" method="POST">
     <div class="card">
         <div class="card-body">
-            <h5>ID Segnalazione: @Model.Id</h5>
+           @*  <h5>ID Segnalazione: @Model.Id</h5>
             <input type="hidden" name="Id" value="@Model.Id" />
-
+ *@
             <div class="form-group">
                 <label><strong>Fatto Riferito A:</strong></label>
                 <input type="text" class="form-control" name="FattoRiferitoA" value="@Model.FattoRiferitoA" required />
