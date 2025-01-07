@@ -38,7 +38,7 @@ namespace Whistleblowing.NETAPI.Models
         public int TotalItems { get; set; }
 
         [NotMapped]
-        public string sortby { get; set; } = "id_segnalazioneRegular";
+        public string sortby { get; set; } = "Id_segnalazioneAnonima";
 
         [NotMapped]
         public bool sortdesc { get; set; } = true;

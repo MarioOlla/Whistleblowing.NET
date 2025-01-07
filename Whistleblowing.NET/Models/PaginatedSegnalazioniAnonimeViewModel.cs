@@ -2,7 +2,7 @@
 
 namespace Whistleblowing.NET.Models
 {
-    public class PaginatedSegnalazioniAnonimeViewUtente
+    public class PaginatedSegnalazioniAnonimeViewModel
     {
 
         [Column("segnalazione_anonima_id")]
@@ -19,7 +19,7 @@ namespace Whistleblowing.NET.Models
         public int UserId { get; set; }
 
         // Aggiungi questa proprietà
-        public List<PaginatedSegnalazioniAnonimeViewUtente>? SegnalazioniAnonymous { get; set; }
+        public List<PaginatedSegnalazioniAnonimeViewModel>? SegnalazioniAnonymous { get; set; }
 
 
         [NotMapped]

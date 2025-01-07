@@ -89,13 +89,49 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 
+        /// <summary>
+        /// Endpoint che serve per ottenere tutte le segnalazioni indipendentemente dall'utente
+        /// </summary>
+        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
+        /// <param name="pageSize">Numero di elementi per pagina</param>
+        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
+        [HttpGet("GetAllSegnalazioniAnonimeTotali")]
+        public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali(int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            var user = await _context.User.FindAsync(userId);
 
-		/// <summary>
-		/// API per inserimento di una segnalazione Anonima
-		/// </summary>
-		/// <param name="segnalazioneAnonimaDTO">segnalazione da inserire</param>
-		/// <returns></returns>
-		[Authorize] // Richiede che l'utente sia autenticato tramite JWT
+            // Recupera il numero totale di segnalazioni
+            var totalRecords = await _context.paginatedSegnalazioniAnonimeViewModels.CountAsync();
+
+
+            // Applica la paginazione
+            var segnalazioniQuery = _context.paginatedSegnalazioniAnonimeViewModels
+                .Where(s => s.IsDeleted == false)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+
+            var segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
+
+            // Crea il risultato paginato con i metadati
+            var paginatedResult = new
+            {
+                TotalItems = totalRecords,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Data = segnalazioniRegolari
+            };
+
+            return Ok(paginatedResult);
+        }
+
+
+
+        /// <summary>
+        /// API per inserimento di una segnalazione Anonima
+        /// </summary>
+        /// <param name="segnalazioneAnonimaDTO">segnalazione da inserire</param>
+        /// <returns></returns>
+        [Authorize] // Richiede che l'utente sia autenticato tramite JWT
 		[HttpPost]
 		public async Task<IActionResult> PostSegnalazioneAnonima(SegnalazioneAnonimaDTO segnalazioneAnonimaDTO)
 		{

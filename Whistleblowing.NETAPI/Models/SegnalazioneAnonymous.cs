@@ -61,8 +61,11 @@ namespace Whistleblowing.NETAPI.Models
 		[Column("status")]
 		public Status? status { get; set; }
 
+        [Column("is_deleted")]
+        public bool? IsDeleted { get; set; }
 
-		[Column("user_hashed")]
+
+        [Column("user_hashed")]
 		public string? UserHashed { get; set; }
 	}
 }

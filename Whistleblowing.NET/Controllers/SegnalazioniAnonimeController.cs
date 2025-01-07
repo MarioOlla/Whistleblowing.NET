@@ -42,11 +42,11 @@ namespace Whistleblowing.NET.Controllers
                     var jsonResponse = await response.Content.ReadAsStringAsync();
 
                     // Deserializza l'oggetto che contiene i dati e i metadati di paginazione
-                    var result = System.Text.Json.JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewModel>>(jsonResponse, options);
+                    var result = System.Text.Json.JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniAnonimeViewModel>>(jsonResponse, options);
 
-                    var viewModel = new PaginatedSegnalazioniRegularViewModel
+                    var viewModel = new PaginatedSegnalazioniAnonimeViewModel
                     {
-                        SegnalazioniRegulars = result.Data,
+                        SegnalazioniAnonymous = result.Data,
                         PageNumber = result.PageNumber,
                         PageSize = result.PageSize,
                         TotalItems = result.TotalItems
