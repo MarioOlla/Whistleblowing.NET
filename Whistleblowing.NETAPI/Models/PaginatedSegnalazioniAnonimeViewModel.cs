@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Whistleblowing.NETAPI.Models
 {
-    public class PaginatedSegnalazioniAnonimeViewModel {
+    public class PaginatedSegnalazioniAnonimeViewModel
+    {
 
 
         [Column("Id_segnalazioneAnonima")]
@@ -42,6 +43,8 @@ namespace Whistleblowing.NETAPI.Models
 
         [NotMapped]
         public bool sortdesc { get; set; } = true;
+
+
 
 
     }

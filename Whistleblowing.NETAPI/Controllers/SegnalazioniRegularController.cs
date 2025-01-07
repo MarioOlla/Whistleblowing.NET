@@ -218,7 +218,7 @@ namespace Whistleblowing.NETAPI.Controllers
 		public async Task<ActionResult<SegnalazioneRegularView>> getSegnalazioneRegularById(int Id)
 		{
             // cerco la segnalazione con il suo id
-            var segnalazione = await _context.SegnalazioneRegularViews.SingleOrDefaultAsync(s => s.Id == Id);
+            var segnalazione = await _context.SegnalazioneRegularViews.Where(s => s.Id == Id).Include(u => u.user).SingleOrDefaultAsync();
 
             //se invece non trovo la segnalazione restituisco un NotFound
             if (segnalazione == null)

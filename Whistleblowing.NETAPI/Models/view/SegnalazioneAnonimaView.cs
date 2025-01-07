@@ -59,8 +59,9 @@ namespace Whistleblowing.NETAPI.Models.view
 		[Column("status")]
 		public Status status { get; set; }
 
-
 		[Column("user_hashed")]
 		public string? UserHashed { get; set; }
+
+		public User? user { get; set; }
 	}
 }

@@ -43,6 +43,7 @@ namespace Whistleblowing.NET.Models
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Status? status { get; set; }
 
+        public User? user { get; set; }
 
         public int UserId { get; set; }
     }

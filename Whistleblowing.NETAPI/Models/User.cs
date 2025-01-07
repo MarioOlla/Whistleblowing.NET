@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NETAPI.Models
 {
-
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Ruolo
     {
         UTENTE, OPERATORE, ADMIN
