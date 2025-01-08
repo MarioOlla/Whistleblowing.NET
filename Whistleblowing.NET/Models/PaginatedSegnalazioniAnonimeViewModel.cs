@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NET.Models
 {
     public class PaginatedSegnalazioniAnonimeViewModel
     {
+        [JsonPropertyName("segnalazione_anonima_id")]
 
         [Column("segnalazione_anonima_id")]
         public int? segnalazione_anonima_id { get; set; }
@@ -14,9 +16,6 @@ namespace Whistleblowing.NET.Models
         [Column("soggetto_colpevole")]
         public string? SoggettoColpevole { get; set; }
 
-
-        [Column("user_id")]
-        public int UserId { get; set; }
 
         // Aggiungi questa proprietà
         public List<PaginatedSegnalazioniAnonimeViewModel>? SegnalazioniAnonymous { get; set; }

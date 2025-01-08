@@ -83,10 +83,9 @@
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th class="text-center font-weight-bold">
-                            <a style="color: white; text-decoration: none;" asp-action="DettaglioSegnalazioneRegular">Codice#</a>
-                        </th>
-                        <th> Data Evento</th>
+                        <th class="text-center font-weight-bold">Codice</th>
+
+                        <th class="text-center font-weight-bold">Data Evento</th>
                         <th class="text-center font-weight-bold">Soggetto Colpevole</th>
                         <th class="text-center font-weight-bold">Azioni</th>
                     </tr>
@@ -97,26 +96,22 @@
                         foreach (var segnalazione in Model.SegnalazioniAnonymous)
                         {
                             <tr id="row-@segnalazione.segnalazione_anonima_id">
-                                <!-- Campo ID cliccabile -->
-                                <td style="vertical-align: middle;">
-                                    <a asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_anonima_id" style="color: inherit; text-decoration: none;">
-                                        @segnalazione.segnalazione_anonima_id
-                                    </a>
-                                </td>
+                                <td class="text-center" style="vertical-align: middle;">@segnalazione.segnalazione_anonima_id</td>
+
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
 
                                 <!-- Colonna Azioni centrata -->
                                 <td class="text-center" style="vertical-align: middle;">
-                                    <a class="btn btn-primary btn-sm" asp-controller="SegnalazioniRegular" asp-action="ModificaSegnalazioneRegular" asp-route-id="@segnalazione.segnalazione_anonima_id">
+                                    <a class="btn btn-primary btn-sm" asp-controller="SegnalazioniAnonime" asp-action="ModificaSegnalazioneAnonima" asp-route-id="@segnalazione.segnalazione_anonima_id">
                                         <i class="bi bi-pencil-square"></i> Modifica
                                     </a>
-                                    <a class="btn btn-info btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_anonima_id">
+                                    <a class="btn btn-info btn-sm" asp-controller="SegnalazioniAnonime" asp-action="getSegnalazioneAnonimaById" asp-route-id="@segnalazione.segnalazione_anonima_id">
                                         <i class="bi bi-eye"></i> Visualizza
                                     </a>
-                                    <a class="btn btn-danger btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetDeletedSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_anonima_id">
+                                  @*   <a class="btn btn-danger btn-sm" asp-controller="SegnalazioniRegular" asp-action="GetDeletedSegnalazioneRegularById" asp-route-id="@segnalazione.segnalazione_anonima_id">
                                         <i class="bi bi-eye"></i> Elimina
-                                    </a>
+                                    </a> *@
 
                                 </td>
                             </tr>
@@ -181,7 +176,7 @@
 
 
         </div>
-
+@* 
         @await Html.PartialAsync("_DeleteConfirmationPartial")
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -242,4 +237,4 @@
                     }
                 }, 5000); // Timeout di 5 secondi
             });
-        </script>
+        </script> *@

@@ -96,9 +96,8 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="pageSize">Numero di elementi per pagina</param>
         /// <returns>Risultato paginato con tutte le segnalazioni</returns>
         [HttpGet("GetAllSegnalazioniAnonimeTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali(int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var user = await _context.User.FindAsync(userId);
 
             // Recupera il numero totale di segnalazioni
             var totalRecords = await _context.paginatedSegnalazioniAnonimeViewModels.CountAsync();
@@ -110,7 +109,7 @@ namespace Whistleblowing.NETAPI.Controllers
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
-            var segnalazioniRegolari = await segnalazioniQuery.ToListAsync();
+            var segnalazioniAnonime = await segnalazioniQuery.ToListAsync();
 
             // Crea il risultato paginato con i metadati
             var paginatedResult = new
@@ -118,7 +117,7 @@ namespace Whistleblowing.NETAPI.Controllers
                 TotalItems = totalRecords,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                Data = segnalazioniRegolari
+                Data = segnalazioniAnonime
             };
 
             return Ok(paginatedResult);
@@ -224,7 +223,7 @@ namespace Whistleblowing.NETAPI.Controllers
 		/// <param name="segnalazioneAnonimaId"></param>
 		/// <returns></returns>
 		[HttpGet("getSegnalazioneAnonimaById")]
-		[Authorize]
+		//[Authorize]
 		public async Task<ActionResult<SegnalazioneAnonimaView>> getSegnalazioneAnonimaById(int segnalazioneAnonimaId)
 		{
 			//e cerco la segnalazione con il suo id
