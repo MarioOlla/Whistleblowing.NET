@@ -100,7 +100,7 @@ namespace Whistleblowing.NETAPI.Controllers
         {
 
             // Recupera il numero totale di segnalazioni
-            var totalRecords = await _context.paginatedSegnalazioniAnonimeViewModels.CountAsync();
+            var totalRecords = await _context.paginatedSegnalazioniAnonimeViewModels.Where(s => s.IsDeleted == false).CountAsync();
 
 
             // Applica la paginazione
@@ -227,7 +227,7 @@ namespace Whistleblowing.NETAPI.Controllers
 		public async Task<ActionResult<SegnalazioneAnonimaView>> getSegnalazioneAnonimaById(int segnalazioneAnonimaId)
 		{
 			//e cerco la segnalazione con il suo id
-			var segnalazione = await _context.SegnalazioneAnonimaViews.Where(s => s.Id == segnalazioneAnonimaId).SingleOrDefaultAsync(); ;
+			var segnalazione = await _context.SegnalazioneAnonimaViews.Where(s => s.Id == segnalazioneAnonimaId).SingleOrDefaultAsync(); 
 
 			//se invece non trovo la segnalazione restituisco un NotFound
 			if (segnalazione == null)
