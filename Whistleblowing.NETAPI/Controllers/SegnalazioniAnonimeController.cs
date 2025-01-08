@@ -222,12 +222,12 @@ namespace Whistleblowing.NETAPI.Controllers
 		/// </summary>
 		/// <param name="segnalazioneAnonimaId"></param>
 		/// <returns></returns>
-		[HttpGet("getSegnalazioneAnonimaById")]
+		[HttpGet("getSegnalazioneAnonimaById/{Id}")]
 		//[Authorize]
 		public async Task<ActionResult<SegnalazioneAnonimaView>> getSegnalazioneAnonimaById(int segnalazioneAnonimaId)
 		{
 			//e cerco la segnalazione con il suo id
-			var segnalazione = await _context.SegnalazioneAnonimaViews.FirstOrDefaultAsync(s => s.Id == segnalazioneAnonimaId);
+			var segnalazione = await _context.SegnalazioneAnonimaViews.Where(s => s.Id == segnalazioneAnonimaId).SingleOrDefaultAsync(); ;
 
 			//se invece non trovo la segnalazione restituisco un NotFound
 			if (segnalazione == null)
