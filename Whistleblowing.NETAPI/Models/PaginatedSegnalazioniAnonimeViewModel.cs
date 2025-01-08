@@ -8,7 +8,7 @@ namespace Whistleblowing.NETAPI.Models
 
 
         [Column("segnalazione_anonima_id")]
-        public int? Id_segnalazioneAnonima { get; set; }
+        public int? segnalazione_anonima_id { get; set; }
 
         [Column("data_evento")]
         public DateTime? DataEvento { get; set; }
