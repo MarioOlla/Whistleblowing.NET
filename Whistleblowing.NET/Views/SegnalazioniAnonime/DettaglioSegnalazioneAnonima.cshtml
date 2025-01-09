@@ -21,8 +21,13 @@
         <p><strong>Pubblici Ufficiali Coinvolti:</strong> @Model.PubbliciUfficialiPaCoinvolti</p>
         <p><strong>Modalità Conoscenza Fatto:</strong> @Model.ModalitaConoscenzaFatto</p>
 
-        <p><strong>UserHashed : </strong>  @Model.UserHashed </p>
-
+        <!-- Campo cliccabile per aprire il modale UserHashed -->
+        <p>
+            <strong>UserHashed:</strong>
+            <a href="javascript:void(0);" class="userhashed-link" onclick="openUserHashedModal()">
+                Clicca qui per visualizzare
+            </a>
+        </p>
 
         <!-- Campo cliccabile per aprire il modale -->
         <p>
@@ -49,6 +54,19 @@
 
 
 </div>
+
+<!-- Modale per visualizzare UserHashed -->
+<div id="userHashedModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeUserHashedModal()">&times;</span>
+        <h4>Dettagli di UserHashed</h4>
+        <p>
+            <!-- Forziamo il contenuto a rimanere all'interno del modale -->
+            <span style="word-wrap: break-word;">@Model.UserHashed</span>
+        </p>
+    </div>
+</div>
+
 
 <!-- Modale per visualizzare la descrizione del fatto -->
 <div id="descriptionModal" class="modal">
@@ -113,18 +131,17 @@
         padding: 20px;
         border-radius: 10px;
         width: 60%;
+        max-height: 70%; /* Imposta un'altezza massima per evitare che occupi tutto lo schermo */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         position: relative;
+        overflow-y: auto; /* Abilita lo scrolling interno */
     }
-
-        .modal-content h4 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
 
         .modal-content p {
             font-size: 1rem;
             color: #555;
+            word-wrap: break-word; /* Forza il wrapping del testo lungo */
+            white-space: pre-wrap; /* Mantiene gli spazi ma spezza le righe */
         }
 
     .close {
@@ -165,10 +182,24 @@
         document.getElementById("descriptionModal").style.display = "none";
     }
 
+    // Funzioni per il modale UserHashed
+    function openUserHashedModal() {
+        document.getElementById("userHashedModal").style.display = "block";
+    }
+
+    function closeUserHashedModal() {
+        document.getElementById("userHashedModal").style.display = "none";
+    }
+
     window.onclick = function (event) {
         const modal = document.getElementById("descriptionModal");
-        if (event.target == modal) {
-            modal.style.display = "none";
+
+        const userHashedModal = document.getElementById("userHashedModal");
+
+        if (event.target == descriptionModal) {
+            descriptionModal.style.display = "none";
+        } else if (event.target == userHashedModal) {
+            userHashedModal.style.display = "none";
         }
     }
 </script>
