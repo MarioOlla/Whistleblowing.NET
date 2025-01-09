@@ -64,28 +64,23 @@ namespace Whistleblowing.NET.Controllers
             }
         }
 
-        /// <summary>
-        /// Ottieni una segnalazione regolare basata sul suo ID.
-        /// </summary>
-        /// <param name="segnalazioneRegularId">L'ID della segnalazione regolare</param>
-        /// <returns>Ritorna la vista con i dettagli della segnalazione</returns>
         [HttpGet]
         public async Task<IActionResult> GetSegnalazioneAnonimaById(int Id)
         {
             try
             {
-                // Chiamata all'API backend per ottenere la segnalazione tramite il suo ID
-                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniAnonime/getSegnalazioneAnonimaById/{Id}");
+                // Costruisco l'URL con il parametro query
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniAnonime/getSegnalazioneAnonimaById?segnalazioneAnonimaId={Id}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Deserializza la risposta JSON in un oggetto SegnalazioneRegularView
+                    // Deserializzo la risposta JSON in un oggetto SegnalazioneAnonimaView
                     var segnalazione = await response.Content.ReadFromJsonAsync<SegnalazioneAnonimaView>();
 
                     if (segnalazione != null)
                     {
                         // Ritorna la vista con i dettagli della segnalazione
-                        return View("DettaglioSegnalazionAnonima", segnalazione);
+                        return View("DettaglioSegnalazioneAnonima", segnalazione);
                     }
                 }
 
@@ -99,6 +94,7 @@ namespace Whistleblowing.NET.Controllers
                 return View("Errore");
             }
         }
+
 
     }
 }

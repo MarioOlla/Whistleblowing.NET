@@ -49,7 +49,7 @@ namespace Whistleblowing.NET.Models
         public Status? status { get; set; }
 
 
-        public int UserHashed { get; set; }
+        public string UserHashed { get; set; }
 
     }
 }

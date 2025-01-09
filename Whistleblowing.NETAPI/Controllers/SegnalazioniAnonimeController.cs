@@ -222,7 +222,7 @@ namespace Whistleblowing.NETAPI.Controllers
 		/// </summary>
 		/// <param name="segnalazioneAnonimaId"></param>
 		/// <returns></returns>
-		[HttpGet("getSegnalazioneAnonimaById/{Id}")]
+		[HttpGet("getSegnalazioneAnonimaById")]
 		//[Authorize]
 		public async Task<ActionResult<SegnalazioneAnonimaView>> getSegnalazioneAnonimaById(int segnalazioneAnonimaId)
 		{
