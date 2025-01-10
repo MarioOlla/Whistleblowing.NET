@@ -61,7 +61,10 @@ namespace Whistleblowing.NETAPI.DTO
 		[Column("status")]
 		public Models.Status? status { get; set; }
 
+        [Column("is_deleted")]
+        public bool? IsDeleted { get; set; }
 
-		
-	}
+
+
+    }
 }

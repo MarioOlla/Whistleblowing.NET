@@ -3,11 +3,15 @@ using static Whistleblowing.NET.Controllers.SegnalazioniRegularController;
 using System.Text.Json;
 using Whistleblowing.NET.Models;
 using System.Net.Http.Headers;
+using Whistleblowing.NET.Models.DTO;
+using Newtonsoft.Json;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Whistleblowing.NET.Controllers
 {
-	public class SegnalazioniAnonimeController : Controller
-	{
+    public class SegnalazioniAnonimeController : Controller
+    {
         private readonly HttpClient _client;
 
         private Uri baseAddress = new Uri("https://localhost:44300/api");
@@ -94,6 +98,110 @@ namespace Whistleblowing.NET.Controllers
                 return View("Errore");
             }
         }
+
+
+
+
+
+
+        [HttpGet]
+        public IActionResult PostSegnalazioneAnonima()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostSegnalazioneAnonima(SegnalazioneAnonimaDTO segnalazioneAnonima)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(segnalazioneAnonima);
+            }
+            try
+            {
+                //Recupero il token jwt dall' header
+                string jwt = Request.Cookies["jwtToken"];
+
+
+
+                if (string.IsNullOrEmpty(jwt))
+                {
+                    ModelState.AddModelError(string.Empty, "Token non trovato. Accedi nuovamente");
+                    return View(segnalazioneAnonima);
+                }
+
+                //Configuro un oggetto json per la richiesta
+                var options = new JsonSerializerOptions()
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false
+                };
+
+                var requestContent = new StringContent(JsonConvert.SerializeObject(segnalazioneAnonima), Encoding.UTF8, "application/json");
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+                var response = await _client.PostAsync($"{baseAddress}/SegnalazioniAnonime", requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string ruoloClaim = null;
+
+                    //Provo a recuperare la claim "Ruolo dal contesto User
+                    ruoloClaim = User.Claims.FirstOrDefault(c => c.Type == "Ruolo")?.Value;
+
+                    //Se non trovato, decodifico manualmente il token JWT
+
+                    if (string.IsNullOrEmpty(ruoloClaim))
+                    {
+                        var handler = new JwtSecurityTokenHandler();
+                        var token = handler.ReadJwtToken(jwt);
+                        ruoloClaim = token.Claims.FirstOrDefault(c => c.Type == "Ruolo")?.Value;
+                        Console.WriteLine($"RuoloClaim decodificato: {ruoloClaim}");
+                    }
+
+
+                    //Processo il ruolo trovato
+                    if (!string.IsNullOrEmpty(ruoloClaim) && Enum.TryParse<Ruolo>(ruoloClaim, out var userRole))
+                    {
+                        if (userRole == Ruolo.UTENTE)
+                        {
+                            TempData["SuccessMessage"] = "Segnalazione inviata con successo!";
+                            return RedirectToAction("GetMySegnalazioniAnonima");
+                        }
+                        else if (userRole == Ruolo.OPERATORE)
+                        {
+                            TempData["SuccessMessage"] = "Segnalazione inviata con successo!";
+                            return RedirectToAction("Index");
+                        }
+                    }
+
+                    //Ruolo sconosciuto o non trovato
+                    Console.WriteLine("RuoloClaim è null oppure il valore non è valido");
+                    TempData["SuccessMessage"] = "Segnalazione inviata con successo!";
+                    return RedirectToAction("Login");
+
+
+                }
+
+                //Gestione di errori restituiti dall' API
+                var errorDetails = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, $"Errore API: {errorDetails}");
+                return View(segnalazioneAnonima);
+
+            }
+            catch (Exception ex)
+            {
+                //Log eccezione
+                Console.WriteLine($"Errore durante la richiesta: {ex.Message}");
+
+                //Mostra un errore generico nella vista
+                ModelState.AddModelError(string.Empty, "Si è verificato un errore durante l' invio della segnalazione.");
+                return View(segnalazioneAnonima);
+            }
+
+        }
+
 
 
     }

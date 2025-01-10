@@ -187,7 +187,8 @@ namespace Whistleblowing.NETAPI.Controllers
 				DescrizioneFatto = segnalazioneAnonimaDTO.DescrizioneFatto,
 				MotivazioneFattoIllecito = segnalazioneAnonimaDTO.MotivazioneFattoIllecito,
 				Note = segnalazioneAnonimaDTO.Note,
-				status = Status.APERTO, // Imposto lo status su "APERTO" all'inserimento
+				IsDeleted = segnalazioneAnonimaDTO.IsDeleted == true,
+                status = Status.APERTO, // Imposto lo status su "APERTO" all'inserimento
 			};
 
 			// Crittografia del nome e cognome dell'utente

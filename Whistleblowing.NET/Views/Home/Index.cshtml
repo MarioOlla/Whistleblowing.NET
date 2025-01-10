@@ -480,7 +480,21 @@
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const anonimoCheckbox = document.getElementById('anonimo');
+            const segnalazioneForm = document.getElementById('segnalazione-form');
 
+            anonimoCheckbox.addEventListener('change', function () {
+                if (anonimoCheckbox.checked) {
+                    segnalazioneForm.setAttribute('action', '/SegnalazioniAnonime/PostSegnalazioneAnonima');
+                } else {
+                    segnalazioneForm.setAttribute('action', '/SegnalazioniRegular/PostSegnalazioneRegular');
+                }
+            });
+        });
+
+    </script>
 
     <div id="docs-content" class="content">
         <h5>Docs & Links</h5>

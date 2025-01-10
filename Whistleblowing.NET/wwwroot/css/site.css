@@ -18,6 +18,17 @@ html {
   min-height: 100%;
 }
 
+.navbar {
+    background-color: #26A69A !important;
+    font-family:  'Segoe UI', sans-serif;
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+    text-decoration: none;
+}
+
+
 body {
   margin-bottom: 60px;
 }
