@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Whistleblowing.NETAPI.Crypto;
@@ -57,8 +58,8 @@ namespace Whistleblowing.NETAPI.Controllers
 			// Verifico se l'utente è un operatore (codice ruolo == 2)
 			var isOperatore = user.Ruolo.ToString().Equals("UTENTE");
 
-            // Se l'utente non è operatore, ritorno un errore di autorizzazione
-            if (!isOperatore)
+			// Se l'utente non è operatore, ritorno un errore di autorizzazione
+			if (!isOperatore)
 			{
 				return Forbid("Accesso negato. Solo gli operatori possono visualizzare le segnalazioni anonime.");
 			}
@@ -89,48 +90,48 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 
-        /// <summary>
-        /// Endpoint che serve per ottenere tutte le segnalazioni indipendentemente dall'utente
-        /// </summary>
-        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
-        /// <param name="pageSize">Numero di elementi per pagina</param>
-        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
-        [HttpGet("GetAllSegnalazioniAnonimeTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
-        {
+		/// <summary>
+		/// Endpoint che serve per ottenere tutte le segnalazioni indipendentemente dall'utente
+		/// </summary>
+		/// <param name="pageNumber">Numero della pagina da visualizzare</param>
+		/// <param name="pageSize">Numero di elementi per pagina</param>
+		/// <returns>Risultato paginato con tutte le segnalazioni</returns>
+		[HttpGet("GetAllSegnalazioniAnonimeTotali")]
+		public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+		{
 
-            // Recupera il numero totale di segnalazioni
-            var totalRecords = await _context.paginatedSegnalazioniAnonimeViewModels.Where(s => s.IsDeleted == false).CountAsync();
-
-
-            // Applica la paginazione
-            var segnalazioniQuery = _context.paginatedSegnalazioniAnonimeViewModels
-                .Where(s => s.IsDeleted == false)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
-
-            var segnalazioniAnonime = await segnalazioniQuery.ToListAsync();
-
-            // Crea il risultato paginato con i metadati
-            var paginatedResult = new
-            {
-                TotalItems = totalRecords,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Data = segnalazioniAnonime
-            };
-
-            return Ok(paginatedResult);
-        }
+			// Recupera il numero totale di segnalazioni
+			var totalRecords = await _context.paginatedSegnalazioniAnonimeViewModels.Where(s => s.IsDeleted == false).CountAsync();
 
 
+			// Applica la paginazione
+			var segnalazioniQuery = _context.paginatedSegnalazioniAnonimeViewModels
+				.Where(s => s.IsDeleted == false)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize);
 
-        /// <summary>
-        /// API per inserimento di una segnalazione Anonima
-        /// </summary>
-        /// <param name="segnalazioneAnonimaDTO">segnalazione da inserire</param>
-        /// <returns></returns>
-        [Authorize] // Richiede che l'utente sia autenticato tramite JWT
+			var segnalazioniAnonime = await segnalazioniQuery.ToListAsync();
+
+			// Crea il risultato paginato con i metadati
+			var paginatedResult = new
+			{
+				TotalItems = totalRecords,
+				PageNumber = pageNumber,
+				PageSize = pageSize,
+				Data = segnalazioniAnonime
+			};
+
+			return Ok(paginatedResult);
+		}
+
+
+
+		/// <summary>
+		/// API per inserimento di una segnalazione Anonima
+		/// </summary>
+		/// <param name="segnalazioneAnonimaDTO">segnalazione da inserire</param>
+		/// <returns></returns>
+		[Authorize] // Richiede che l'utente sia autenticato tramite JWT
 		[HttpPost]
 		public async Task<IActionResult> PostSegnalazioneAnonima(SegnalazioneAnonimaDTO segnalazioneAnonimaDTO)
 		{
@@ -188,7 +189,7 @@ namespace Whistleblowing.NETAPI.Controllers
 				MotivazioneFattoIllecito = segnalazioneAnonimaDTO.MotivazioneFattoIllecito,
 				Note = segnalazioneAnonimaDTO.Note,
 				IsDeleted = segnalazioneAnonimaDTO.IsDeleted == true,
-                status = Status.APERTO, // Imposto lo status su "APERTO" all'inserimento
+				status = Status.APERTO, // Imposto lo status su "APERTO" all'inserimento
 			};
 
 			// Crittografia del nome e cognome dell'utente
@@ -228,7 +229,7 @@ namespace Whistleblowing.NETAPI.Controllers
 		public async Task<ActionResult<SegnalazioneAnonimaView>> getSegnalazioneAnonimaById(int segnalazioneAnonimaId)
 		{
 			//e cerco la segnalazione con il suo id
-			var segnalazione = await _context.SegnalazioneAnonimaViews.Where(s => s.Id == segnalazioneAnonimaId).SingleOrDefaultAsync(); 
+			var segnalazione = await _context.SegnalazioneAnonimaViews.Where(s => s.Id == segnalazioneAnonimaId).SingleOrDefaultAsync();
 
 			//se invece non trovo la segnalazione restituisco un NotFound
 			if (segnalazione == null)
@@ -270,65 +271,193 @@ namespace Whistleblowing.NETAPI.Controllers
 		}
 
 
-        /// <summary>
-        /// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
-        /// </summary>
-        /// <param name="decryptedUserHashed"></param>
-        /// <returns></returns>
-        [HttpGet("DecryptUserHashed")]
-        //[Authorize]
-        public async Task<IActionResult> DecryptUserHashed([FromQuery] string userHashed, string pwd)
-        {
-            if (pwd == null)
-            {
+		/// <summary>
+		/// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
+		/// </summary>
+		/// <param name="decryptedUserHashed"></param>
+		/// <returns></returns>
+		[HttpGet("DecryptUserHashed")]
+		//[Authorize]
+		public async Task<IActionResult> DecryptUserHashed([FromQuery] string userHashed, string pwd)
+		{
+			if (pwd == null)
+			{
 				return BadRequest("Nessuna password fornita per la lettura");
-            }
-            // Recupero la chiave crittografica per la decifratura
-            var cryptoKey = _cryptoService.fetchCryptoInfo();
-            if (cryptoKey == null)
-            {
-                return BadRequest("Chiave crittografica non trovata.");
-            }
+			}
+			// Recupero la chiave crittografica per la decifratura
+			var cryptoKey = _cryptoService.fetchCryptoInfo();
+			if (cryptoKey == null)
+			{
+				return BadRequest("Chiave crittografica non trovata.");
+			}
 
-            // Carica la chiave privata per decifrare l'UserHashed
-            RSAParameters privateKey;
-            try
-            {
-                privateKey = CryptoService.LoadPrivateKey(pwd, cryptoKey.EncryptedRsaPrivateKey, cryptoKey.Salt, cryptoKey.AesIterations, cryptoKey.AesKeySize);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Errore: password non corretta. Verifica che la password sia corretta.");
-            }
+			// Carica la chiave privata per decifrare l'UserHashed
+			RSAParameters privateKey;
+			try
+			{
+				privateKey = CryptoService.LoadPrivateKey(pwd, cryptoKey.EncryptedRsaPrivateKey, cryptoKey.Salt, cryptoKey.AesIterations, cryptoKey.AesKeySize);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest($"Errore: password non corretta. Verifica che la password sia corretta.");
+			}
 
-            // Decodifica l'UserHashed dalla stringa base64 e tenta di decifrarlo
-            byte[] encryptedData = Convert.FromBase64String(userHashed);
-            string decryptedUserData;
-            try
-            {
-                decryptedUserData = CryptoService.DecryptWithRSA(privateKey, encryptedData);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Errore durante la decifratura dell'UserHashed: {ex.Message}");
-            }
+			// Decodifica l'UserHashed dalla stringa base64 e tenta di decifrarlo
+			byte[] encryptedData = Convert.FromBase64String(userHashed);
+			string decryptedUserData;
+			try
+			{
+				decryptedUserData = CryptoService.DecryptWithRSA(privateKey, encryptedData);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest($"Errore durante la decifratura dell'UserHashed: {ex.Message}");
+			}
 
-            // Ritorna nome e cognome decifrati come JSON
-            var userDetails = decryptedUserData.Split(' ');
-            if (userDetails.Length == 3)
-            {
-                var id = userDetails[0];
-                var email = userDetails[1];
+			// Ritorna nome e cognome decifrati come JSON
+			var userDetails = decryptedUserData.Split(' ');
+			if (userDetails.Length == 3)
+			{
+				var id = userDetails[0];
+				var email = userDetails[1];
 				var codiceFiscale = userDetails[2];
-                return Ok(new { Id = id, Email = email, CodiceFiscale = codiceFiscale });
-            }
-            else
+				return Ok(new { Id = id, Email = email, CodiceFiscale = codiceFiscale });
+			}
+			else
+			{
+				return BadRequest("Formato dati decifrati non valido.");
+			}
+		}
+
+
+
+
+        [HttpGet("segnalazioneAnonimaModifica/{id}")]
+        public async Task<IActionResult> GetSegnalazioneModifica(int id)
+        {
+            var segnalazione = await _context.SegnalazioneAnonymous.FirstOrDefaultAsync(s => s.Id == id);
+
+            if (segnalazione == null)
             {
-                return BadRequest("Formato dati decifrati non valido.");
+                return NotFound();
             }
+
+            // Mappatura dei campi dal modello dell'entità al DTO
+            var dto = new SegnalazioneAnonimaDTOModifica
+            {
+                Id = segnalazione.Id,
+                FattoRiferitoA = segnalazione.FattoRiferitoA ?? string.Empty, // Evita valori null
+                DataEvento = segnalazione.DataEvento, // Assumendo che DataEvento sia già nullable in entrambi i modelli
+                LuogoEvento = segnalazione.LuogoEvento ?? string.Empty,
+                SoggettoColpevole = segnalazione.SoggettoColpevole ?? string.Empty,
+                AreaAziendale = segnalazione.AreaAziendale ?? string.Empty,
+                SoggettiPrivatiCoinvolti = segnalazione.SoggettiPrivatiCoinvolti ?? string.Empty,
+                ImpreseCoinvolte = segnalazione.ImpreseCoinvolte ?? string.Empty,
+                PubbliciUfficialiPaCoinvolti = segnalazione.PubbliciUfficialiPaCoinvolti ?? string.Empty,
+                ModalitaConoscenzaFatto = segnalazione.ModalitaConoscenzaFatto ?? string.Empty,
+                SoggettiReferentiFatto = segnalazione.SoggettiReferentiFatto ?? string.Empty,
+                AmmontarePagamentoOAltraUtilita = segnalazione.AmmontarePagamentoOAltraUtilita ?? string.Empty,
+                CircostanzeViolenzaMinaccia = segnalazione.CircostanzeViolenzaMinaccia ?? string.Empty,
+                DescrizioneFatto = segnalazione.DescrizioneFatto ?? string.Empty,
+                MotivazioneFattoIllecito = segnalazione.MotivazioneFattoIllecito ?? string.Empty,
+                Note = segnalazione.Note ?? string.Empty,
+                status = segnalazione.status
+            };
+
+            return Ok(dto);
         }
 
 
 
-    }
+
+        /// <summary>
+        /// API per modificare una segnalazione Anonima, consentito solo agli utenti con ruolo OPERATORE
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="segnalazioneAnonimaDTO"></param>
+        /// <returns></returns>
+        [HttpPost("PutSegnalazioneAnonima")]
+		[Authorize]
+		public async Task<ActionResult> PutSegnalazioneAnonima([FromQuery] int userid, SegnalazioneAnonimaDTOModifica segnalazione)
+		{
+			//Recupero l' utente dal token JWT
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+			//Verifico che il claim esista e sia valido 
+			if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+			{
+
+				Console.WriteLine("ciao jwt " + userIdClaim);
+				return Problem("Token JWT invalido o mancante.");
+			}
+
+			//Trovo l' utente nel database
+			var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
+
+
+			//se l' utente è null restituisco errore
+			if (user == null)
+			{
+				return NotFound("Utente non trovato");
+			}
+
+			//Verifico se l'utente è un OPERATORE
+			var isOperatore = user.Ruolo == Ruolo.OPERATORE;
+
+			//se l' utente non è OPERATORE, ritorno errore di accesso negato
+			if (!isOperatore)
+			{
+				return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni");
+			}
+
+            //trovo la segnalazione da modificare
+            var segnalazioneEdit = await _context.SegnalazioneAnonymous
+                .FirstOrDefaultAsync(s => s.Id == segnalazione.Id);
+
+            //se la segnalazione è null restituisco errore
+            if (segnalazioneEdit == null)
+			{
+				return Problem("Non è stata trovata alcuna segnalazione con l' id fornito!");
+			}
+
+			//aggiorno i campi della segnalazione con i campi forniti dal DTO 
+			if (!segnalazione.FattoRiferitoA.IsNullOrEmpty()) segnalazioneEdit.FattoRiferitoA = segnalazione.FattoRiferitoA;
+			if (segnalazione.DataEvento.HasValue) segnalazioneEdit.DataEvento = segnalazione.DataEvento;
+			if (!segnalazione.LuogoEvento.IsNullOrEmpty()) segnalazioneEdit.LuogoEvento = segnalazione.LuogoEvento;
+			if (!segnalazione.SoggettoColpevole.IsNullOrEmpty()) segnalazioneEdit.SoggettoColpevole = segnalazione.SoggettoColpevole;
+			if (!segnalazione.AreaAziendale.IsNullOrEmpty()) segnalazioneEdit.AreaAziendale = segnalazione.AreaAziendale;
+			if (!segnalazione.SoggettiPrivatiCoinvolti.IsNullOrEmpty()) segnalazioneEdit.SoggettiPrivatiCoinvolti = segnalazione.SoggettiPrivatiCoinvolti;
+			if (!segnalazione.ImpreseCoinvolte.IsNullOrEmpty()) segnalazioneEdit.ImpreseCoinvolte = segnalazione.ImpreseCoinvolte;
+			if (!segnalazione.PubbliciUfficialiPaCoinvolti.IsNullOrEmpty()) segnalazioneEdit.PubbliciUfficialiPaCoinvolti = segnalazione.PubbliciUfficialiPaCoinvolti;
+			if (!segnalazione.ModalitaConoscenzaFatto.IsNullOrEmpty()) segnalazioneEdit.ModalitaConoscenzaFatto = segnalazione.ModalitaConoscenzaFatto;
+			if (!segnalazione.SoggettiReferentiFatto.IsNullOrEmpty()) segnalazioneEdit.SoggettiReferentiFatto = segnalazione.SoggettiReferentiFatto;
+			if (!segnalazione.AmmontarePagamentoOAltraUtilita.IsNullOrEmpty()) segnalazioneEdit.AmmontarePagamentoOAltraUtilita = segnalazione.AmmontarePagamentoOAltraUtilita;
+			if (!segnalazione.CircostanzeViolenzaMinaccia.IsNullOrEmpty()) segnalazioneEdit.CircostanzeViolenzaMinaccia = segnalazione.CircostanzeViolenzaMinaccia;
+			if (!segnalazione.DescrizioneFatto.IsNullOrEmpty()) segnalazioneEdit.DescrizioneFatto = segnalazione.DescrizioneFatto;
+			if (!segnalazione.MotivazioneFattoIllecito.IsNullOrEmpty()) segnalazioneEdit.MotivazioneFattoIllecito = segnalazione.MotivazioneFattoIllecito;
+			if (segnalazione.status.HasValue) segnalazioneEdit.status = segnalazione.status.Value;
+			if (!segnalazione.Note.IsNullOrEmpty()) segnalazioneEdit.Note = segnalazione.Note;
+
+			//eseguo la modifica dei dati
+			_context.SegnalazioneAnonymous.Update(segnalazioneEdit);
+
+			//salvo le modifiche effettuate
+			await _context.SaveChangesAsync();
+
+			return Ok(segnalazioneEdit);
+
+
+
+		}
+
+
+
+
+
+
+
+
+
+
+	}
 }

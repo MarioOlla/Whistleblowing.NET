@@ -204,5 +204,105 @@ namespace Whistleblowing.NET.Controllers
 
 
 
+        [HttpGet]
+        public async Task<IActionResult> ModificaSegnalazioneAnonima(int id)
+        {
+            // Prepara l'URL per chiamare l'API
+            string url = $"{baseAddress}/SegnalazioniAnonime/segnalazioneAnonimaModifica/{id}"; // Sostituisci baseAddress con l'URL del backend
+
+            // Esegui la richiesta GET
+            var response = await _client.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                return NotFound(); // Se l'API non restituisce un successo, mostra NotFound
+            }
+
+            // Deserializza la risposta JSON in un oggetto DTO usando Newtonsoft.Json
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var segnalazione = JsonConvert.DeserializeObject<SegnalazioneAnonimaDTOModifica>(jsonString);
+
+            return View(segnalazione);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModificaSegnalazioneAnonimaAzione(SegnalazioneAnonimaDTOModifica segnalazione)
+        {
+
+            Console.WriteLine("sono qui");
+            // Verifica che i dati siano validi
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Dati della segnalazione non validi.");
+                return View(segnalazione);
+            }
+
+            try
+            {
+                // Recupera il token JWT dai cookie
+                string jwt = Request.Cookies["jwtToken"];
+                if (string.IsNullOrEmpty(jwt))
+                {
+                    ModelState.AddModelError(string.Empty, "Token non trovato. Accedi nuovamente.");
+                    return View(segnalazione);
+                }
+
+                // Recupera l'ID utente dalla claim del token JWT
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+                {
+                    ModelState.AddModelError(string.Empty, "ID utente non valido nel token. Accedi nuovamente.");
+                    return View(segnalazione);
+                }
+
+                // Imposta l'URL dell'API per la modifica
+                string url = $"{baseAddress}/SegnalazioniAnonime/PutSegnalazioneAnonima?userid={userId}";
+
+                // Configura il contenuto della richiesta
+                var requestContent = new StringContent(JsonConvert.SerializeObject(segnalazione), Encoding.UTF8, "application/json");
+
+                // Aggiunge l'header di autorizzazione
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+
+                // Invia la richiesta PUT all'API
+                var response = await _client.PostAsync(url, requestContent);
+
+                // Controlla la risposta dell'API
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Modifica della segnalazione completata con successo!";
+                    return RedirectToAction("Index");
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    ModelState.AddModelError(string.Empty, "Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError(string.Empty, "Utente o segnalazione non trovati.");
+                }
+                else
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    ModelState.AddModelError(string.Empty, $"Errore durante la modifica della segnalazione: {errorMessage}");
+                }
+
+                return View(segnalazione);
+            }
+            catch (HttpRequestException ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Errore durante la chiamata all'API: {ex.Message}");
+                return View(segnalazione);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Errore imprevisto: {ex.Message}");
+                return View(segnalazione);
+            }
+        }
+
+
     }
 }
