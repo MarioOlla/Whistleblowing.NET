@@ -280,8 +280,8 @@ namespace Whistleblowing.NET.Controllers
             }
             catch (HttpRequestException ex)
             {
-                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
-                return View("Errore");
+                    ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+                    return View("Errore");
             }
         }
 

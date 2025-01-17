@@ -450,9 +450,54 @@ namespace Whistleblowing.NETAPI.Controllers
 
 		}
 
+        [HttpGet("getDeletedSegnalazioneAnonimaById/{Id}")]
+        public async Task<ActionResult<SegnalazioneAnonimaView>> getDeletedSegnalazioneAnonimaById(int Id)
+        {
+            // cerco la segnalazione con il suo id
+            var segnalazione = await _context.SegnalazioneAnonimaViews.SingleOrDefaultAsync(s => s.Id == Id);
+
+            //se invece non trovo la segnalazione restituisco un NotFound
+            if (segnalazione == null)
+            {
+                return NotFound(new { message = "segnalazione non trovata!" });
+            }
+
+            //se tutto è ok torno la segnalazione
+            return Ok(segnalazione);
 
 
+        }
 
+        [HttpPut("{id}")]
+		[Authorize]
+		public async Task<ActionResult> DeleteSegnalazioneAnonima(int id)
+		{
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+			if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+			{
+				return Problem("Token Jwt invalido o mancante");
+			}
+
+			var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
+			if (user == null || user.Ruolo != Ruolo.OPERATORE)
+			{
+				return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni!");
+			}
+
+			var segnalazione = await _context.SegnalazioneAnonymous.FindAsync(id);
+			if (segnalazione == null)
+			{
+				return NotFound("Segnalazione non trovata");
+			}
+
+			segnalazione.IsDeleted = true;
+			segnalazione.status = Status.CHIUSO;
+			await _context.SaveChangesAsync();
+
+			return Ok();
+
+
+		}
 
 
 

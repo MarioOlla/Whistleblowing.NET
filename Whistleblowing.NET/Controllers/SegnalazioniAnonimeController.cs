@@ -7,6 +7,7 @@ using Whistleblowing.NET.Models.DTO;
 using Newtonsoft.Json;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.WebSockets;
 
 namespace Whistleblowing.NET.Controllers
 {
@@ -300,6 +301,119 @@ namespace Whistleblowing.NET.Controllers
             {
                 ModelState.AddModelError(string.Empty, $"Errore imprevisto: {ex.Message}");
                 return View(segnalazione);
+            }
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetDeletedSegnalazioneAnonimaById(int Id)
+        {
+
+            try
+            {
+
+                //Chiamata alla API backend per ottenere la segnalazione tramite il suo Id
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniAnonime/getDeletedSegnalazioneAnonimaById/{Id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    //Deserializza la risposta Json in un oggetto SegnalazioneAnonimaView
+                    var segnalazione = await response.Content.ReadFromJsonAsync<SegnalazioneAnonimaView>();
+
+                    if (segnalazione != null)
+                    {
+                        //ritorno la vista con i dettagli della segnalazione
+                        return View("DeleteSegnAnonima", segnalazione);
+                    }
+                }
+
+                //Gestione dei casi in cui la segnalazione non è stata trovata
+                ViewBag.ErrorMessage = "Segnalazione non trovata";
+                return View("Errore");
+            }
+            catch(HttpRequestException ex)
+            {
+                ViewBag.ErrorMessage = $"Errore di rete: {ex.Message}";
+                return View("Errore");
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPut]
+        public async Task<IActionResult> Delete([FromBody] int id)
+        {
+            try
+            {
+                if (id == 0)
+                {
+                    Console.WriteLine("Errore");
+                }
+
+                string jwt = Request.Cookies["jwtToken"];
+
+                if (string.IsNullOrEmpty(jwt))
+                {
+                    ModelState.AddModelError(string.Empty, "Token non trovato. Accedi nuovamente.");
+                    return View();
+                }
+
+                //Recupera l' Id Utente dalla claim del token Jwt
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+                {
+                    ModelState.AddModelError(string.Empty, "ID Utente non valido nel token. Accedi nuovamente.");
+                    return View();
+                }
+
+
+                //Aggiungo l' header di autorizzazione: IMPORTANTISSIMA DA AGGIUNGERE ALTRIMENTI E'SEMPRE 401
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+
+
+                var response = await _client.PutAsync($"{baseAddress}/SegnalazioniAnonime/{id}", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Json(new { success = true, message = "Segnalazione eliminata con successo." });
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return Json(new { success = false, message = $"Errore API: {error}" });
+                }
+            }
+            catch(Exception ex)
+            {
+                return Json(new { success = false, message = $"Errore: {ex.Message}" });
             }
         }
 
