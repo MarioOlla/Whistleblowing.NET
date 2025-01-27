@@ -161,14 +161,13 @@ namespace Whistleblowing.NET.Controllers
                         Console.WriteLine($"RuoloClaim decodificato: {ruoloClaim}");
                     }
 
-
                     //Processo il ruolo trovato
                     if (!string.IsNullOrEmpty(ruoloClaim) && Enum.TryParse<Ruolo>(ruoloClaim, out var userRole))
                     {
                         if (userRole == Ruolo.UTENTE)
                         {
                             TempData["SuccessMessage"] = "Segnalazione inviata con successo!";
-                            return RedirectToAction("GetMySegnalazioniAnonima");
+                            return RedirectToAction("Index","Home");
                         }
                         else if (userRole == Ruolo.OPERATORE)
                         {
