@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Web;
 using Whistleblowing.NETAPI.Crypto;
 using Whistleblowing.NETAPI.Data;
 using Whistleblowing.NETAPI.DTO;
@@ -267,22 +268,24 @@ namespace Whistleblowing.NETAPI.Controllers
 
 			//Restituisce il PDF come File
 			return File(pdfBytes, "application/pdf", $"segnalazione_{segnalazioneAnonimaId}.pdf");
-		}
+        }
 
 
-        /// <summary>
-        /// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
-        /// </summary>
-        /// <param name="decryptedUserHashed"></param>
-        /// <returns></returns>
-        [HttpGet("DecryptUserHashed")]
+
+/// <summary>
+/// metodo che utilizzo per ottenere il dettaglio di una segnalazione Regular via file.Pdf
+/// </summary>
+/// <param name="decryptedUserHashed"></param>
+/// <returns></returns>
+[HttpGet("DecryptUserHashed")]
         //[Authorize]
-        public async Task<IActionResult> DecryptUserHashed([FromQuery] string userHashed, string pwd)
+        public async Task<IActionResult> DecryptUserHashed(string userHashed, string pwd)
         {
             if (pwd == null)
             {
-				return BadRequest("Nessuna password fornita per la lettura");
+                return BadRequest("Nessuna password fornita per la lettura");
             }
+
             // Recupero la chiave crittografica per la decifratura
             var cryptoKey = _cryptoService.fetchCryptoInfo();
             if (cryptoKey == null)
@@ -301,8 +304,20 @@ namespace Whistleblowing.NETAPI.Controllers
                 return BadRequest($"Errore: password non corretta. Verifica che la password sia corretta.");
             }
 
+            // Decodifica la stringa URL per ripristinare i caratteri speciali (es. '+')
+            // Prima controlliamo se la stringa contiene caratteri URL-encoded, ripristinando i '+' come simbolo
+            string fixedUserHashed = userHashed.Replace(" ", "+"); // Ripristina i '+' che potrebbero essere stati trasformati in spazi
             // Decodifica l'UserHashed dalla stringa base64 e tenta di decifrarlo
-            byte[] encryptedData = Convert.FromBase64String(userHashed);
+            byte[] encryptedData;
+            try
+            {
+                encryptedData = Convert.FromBase64String(fixedUserHashed);
+            }
+            catch (FormatException ex)
+            {
+                return BadRequest($"Formato base64 non valido: {ex.Message}");
+            }
+
             string decryptedUserData;
             try
             {
@@ -319,7 +334,7 @@ namespace Whistleblowing.NETAPI.Controllers
             {
                 var id = userDetails[0];
                 var email = userDetails[1];
-				var codiceFiscale = userDetails[2];
+                var codiceFiscale = userDetails[2];
                 return Ok(new { Id = id, Email = email, CodiceFiscale = codiceFiscale });
             }
             else
@@ -327,6 +342,7 @@ namespace Whistleblowing.NETAPI.Controllers
                 return BadRequest("Formato dati decifrati non valido.");
             }
         }
+
 
 
 

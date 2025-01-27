@@ -29,6 +29,11 @@ namespace Whistleblowing.NET.Controllers
             _contextAccessor = _contextAccs;
         }
 
+        public IActionResult Cerca()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
@@ -202,7 +207,39 @@ namespace Whistleblowing.NET.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DecryptUserHashed(string userHashed, string pwd)
+        {
+            if (string.IsNullOrWhiteSpace(userHashed) || string.IsNullOrWhiteSpace(pwd))
+            {
+                ViewBag.ErrorMessage = "Entrambi i campi sono obbligatori.";
+                return View("Errore");
+            }
+
+            try
+            {
+                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniAnonime/DecryptUserHashed?userHashed={userHashed}&pwd={pwd}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var decryptedData = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<dynamic>(decryptedData);
+
+                    return View("UserHashed", result);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = await response.Content.ReadAsStringAsync();
+                    return View("Errore");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = $"Errore durante il processo di decrittazione: {ex.Message}";
+                return View("Errore");
+            }
 
 
-    }
+        }
+        }
 }
