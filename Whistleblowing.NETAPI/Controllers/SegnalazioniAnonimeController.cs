@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Web;
@@ -343,8 +344,120 @@ namespace Whistleblowing.NETAPI.Controllers
             }
         }
 
+        [HttpGet("segnalazioneAnonimaModifica/{id}")]
+        public async Task<IActionResult> GetSegnalazioneModifica(int id)
+        {
+            var segnalazione = await _context.SegnalazioneAnonymous.FirstOrDefaultAsync(s => s.Id == id);
+
+            if (segnalazione == null)
+            {
+                return NotFound();
+            }
+
+            // Mappatura dei campi dal modello dell'entità al DTO
+            var dto = new SegnalazioneAnonimaDTOModifica
+            {
+                Id = segnalazione.Id,
+                FattoRiferitoA = segnalazione.FattoRiferitoA ?? string.Empty, // Evita valori null
+                DataEvento = segnalazione.DataEvento, // Assumendo che DataEvento sia già nullable in entrambi i modelli
+                LuogoEvento = segnalazione.LuogoEvento ?? string.Empty,
+                SoggettoColpevole = segnalazione.SoggettoColpevole ?? string.Empty,
+                AreaAziendale = segnalazione.AreaAziendale ?? string.Empty,
+                SoggettiPrivatiCoinvolti = segnalazione.SoggettiPrivatiCoinvolti ?? string.Empty,
+                ImpreseCoinvolte = segnalazione.ImpreseCoinvolte ?? string.Empty,
+                PubbliciUfficialiPaCoinvolti = segnalazione.PubbliciUfficialiPaCoinvolti ?? string.Empty,
+                ModalitaConoscenzaFatto = segnalazione.ModalitaConoscenzaFatto ?? string.Empty,
+                SoggettiReferentiFatto = segnalazione.SoggettiReferentiFatto ?? string.Empty,
+                AmmontarePagamentoOAltraUtilita = segnalazione.AmmontarePagamentoOAltraUtilita ?? string.Empty,
+                CircostanzeViolenzaMinaccia = segnalazione.CircostanzeViolenzaMinaccia ?? string.Empty,
+                DescrizioneFatto = segnalazione.DescrizioneFatto ?? string.Empty,
+                MotivazioneFattoIllecito = segnalazione.MotivazioneFattoIllecito ?? string.Empty,
+                Note = segnalazione.Note ?? string.Empty,
+                status = segnalazione.status
+            };
+
+            return Ok(dto);
+        }
+
+        /// <summary>
+        /// API per modificare una segnalazione Anonima, consentito solo agli utenti con ruolo OPERATORE
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="segnalazioneAnonimaDTO"></param>
+        /// <returns></returns>
+        [HttpPost("PutSegnalazioneAnonima")]
+        [Authorize]
+        public async Task<ActionResult> PutSegnalazioneAnonima([FromQuery] int userid, SegnalazioneAnonimaDTOModifica segnalazione)
+        {
+            //Recupero l' utente dal token JWT
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+            //Verifico che il claim esista e sia valido 
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            {
+
+                Console.WriteLine("ciao jwt " + userIdClaim);
+                return Problem("Token JWT invalido o mancante.");
+            }
+
+            //Trovo l' utente nel database
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
 
 
+            //se l' utente è null restituisco errore
+            if (user == null)
+            {
+                return NotFound("Utente non trovato");
+            }
+
+            //Verifico se l'utente è un OPERATORE
+            var isOperatore = user.Ruolo == Ruolo.OPERATORE;
+
+            //se l' utente non è OPERATORE, ritorno errore di accesso negato
+            if (!isOperatore)
+            {
+                return Forbid("Accesso negato: solo gli utenti con codice OPERATORE possono modificare le segnalazioni");
+            }
+
+            //trovo la segnalazione da modificare
+            var segnalazioneEdit = await _context.SegnalazioneAnonymous
+                .FirstOrDefaultAsync(s => s.Id == segnalazione.Id);
+
+            //se la segnalazione è null restituisco errore
+            if (segnalazioneEdit == null)
+            {
+                return Problem("Non è stata trovata alcuna segnalazione con l' id fornito!");
+            }
+
+            //aggiorno i campi della segnalazione con i campi forniti dal DTO 
+            if (!segnalazione.FattoRiferitoA.IsNullOrEmpty()) segnalazioneEdit.FattoRiferitoA = segnalazione.FattoRiferitoA;
+            if (segnalazione.DataEvento.HasValue) segnalazioneEdit.DataEvento = segnalazione.DataEvento;
+            if (!segnalazione.LuogoEvento.IsNullOrEmpty()) segnalazioneEdit.LuogoEvento = segnalazione.LuogoEvento;
+            if (!segnalazione.SoggettoColpevole.IsNullOrEmpty()) segnalazioneEdit.SoggettoColpevole = segnalazione.SoggettoColpevole;
+            if (!segnalazione.AreaAziendale.IsNullOrEmpty()) segnalazioneEdit.AreaAziendale = segnalazione.AreaAziendale;
+            if (!segnalazione.SoggettiPrivatiCoinvolti.IsNullOrEmpty()) segnalazioneEdit.SoggettiPrivatiCoinvolti = segnalazione.SoggettiPrivatiCoinvolti;
+            if (!segnalazione.ImpreseCoinvolte.IsNullOrEmpty()) segnalazioneEdit.ImpreseCoinvolte = segnalazione.ImpreseCoinvolte;
+            if (!segnalazione.PubbliciUfficialiPaCoinvolti.IsNullOrEmpty()) segnalazioneEdit.PubbliciUfficialiPaCoinvolti = segnalazione.PubbliciUfficialiPaCoinvolti;
+            if (!segnalazione.ModalitaConoscenzaFatto.IsNullOrEmpty()) segnalazioneEdit.ModalitaConoscenzaFatto = segnalazione.ModalitaConoscenzaFatto;
+            if (!segnalazione.SoggettiReferentiFatto.IsNullOrEmpty()) segnalazioneEdit.SoggettiReferentiFatto = segnalazione.SoggettiReferentiFatto;
+            if (!segnalazione.AmmontarePagamentoOAltraUtilita.IsNullOrEmpty()) segnalazioneEdit.AmmontarePagamentoOAltraUtilita = segnalazione.AmmontarePagamentoOAltraUtilita;
+            if (!segnalazione.CircostanzeViolenzaMinaccia.IsNullOrEmpty()) segnalazioneEdit.CircostanzeViolenzaMinaccia = segnalazione.CircostanzeViolenzaMinaccia;
+            if (!segnalazione.DescrizioneFatto.IsNullOrEmpty()) segnalazioneEdit.DescrizioneFatto = segnalazione.DescrizioneFatto;
+            if (!segnalazione.MotivazioneFattoIllecito.IsNullOrEmpty()) segnalazioneEdit.MotivazioneFattoIllecito = segnalazione.MotivazioneFattoIllecito;
+            if (segnalazione.status.HasValue) segnalazioneEdit.status = segnalazione.status.Value;
+            if (!segnalazione.Note.IsNullOrEmpty()) segnalazioneEdit.Note = segnalazione.Note;
+
+            //eseguo la modifica dei dati
+            _context.SegnalazioneAnonymous.Update(segnalazioneEdit);
+
+            //salvo le modifiche effettuate
+            await _context.SaveChangesAsync();
+
+            return Ok(segnalazioneEdit);
+
+
+
+        }
 
     }
 }

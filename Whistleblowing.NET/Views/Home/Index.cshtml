@@ -496,10 +496,58 @@
 
     </script>
 
-    <div id="docs-content" class="content">
+
+    <!-- Modale -->
+    <div id="modale-conferma" class="modal">
+        <div class="modal-content">
+            <h4>Conferma Segnalazione Anonima</h4>
+            <p>Stai per inviare una segnalazione anonima, non ne potrai visionare i dettagli. Riceverai una email quando il sistema la prenderà in carico, sei sicuro di voler procedere? </p>
+        </div>
+        <div class="modal-footer">
+            <button id="conferma-modale" class="btn">Conferma</button>
+            <button id="annulla-modale" class="btn-flat modal-close">Annulla</button>
+        </div>
+    </div>
+
+
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            const anonimoCheckbox = document.getElementById("anonimo");
+            const segnalazioneForm = document.getElementById("segnalazione-form");
+            const modale = document.getElementById("modale-conferma");
+            const confermaModaleBtn = document.getElementById("conferma-modale");
+            const annullaModaleBtn = document.getElementById("annulla-modale");
+
+            // Ruolo utente disponibile in una variabile (può essere passato dal backend)
+            const userRole = "UTENTE"; // Sostituisci con il valore dinamico del ruolo utente
+
+            // Mostra il modale solo se il ruolo è UTENTE
+            anonimoCheckbox.addEventListener("change", function () {
+                if (anonimoCheckbox.checked && userRole === "UTENTE") {
+                    const instance = M.Modal.init(modale);
+                    instance.open();
+                }
+            });
+
+            // Gestione conferma modale
+            confermaModaleBtn.addEventListener("click", function () {
+                segnalazioneForm.submit(); // Invia il form
+            });
+
+            // Gestione annullamento (opzionale)
+            annullaModaleBtn.addEventListener("click", function () {
+                anonimoCheckbox.checked = false; // Deseleziona la checkbox
+            });
+        });
+
+
+    </script>
+
+      <div id="docs-content" class="content">
         <h5>Docs & Links</h5>
         <p>Contenuto della sezione Docs & Links.</p>
-    </div>
+      </div>
   
 
     <!-- Import jQuery and Materialize JS -->
