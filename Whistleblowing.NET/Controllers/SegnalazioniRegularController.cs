@@ -31,11 +31,25 @@ namespace Whistleblowing.NET.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10, string searchCode = "", string searchDate = "")
         {
             try
             {
-                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}");
+                // Costruisci l'URL con i parametri di ricerca
+                var url = $"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}";
+
+                if (!string.IsNullOrEmpty(searchCode))
+                {
+                    url += $"&searchCode={searchCode}";
+                }
+
+                if (!string.IsNullOrEmpty(searchDate))
+                {
+                    url += $"&searchDate={searchDate}";
+                }
+
+                // Effettua la richiesta al server
+                var response = await _client.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -46,9 +60,10 @@ namespace Whistleblowing.NET.Controllers
 
                     var jsonResponse = await response.Content.ReadAsStringAsync();
 
-                    // Deserializza l'oggetto che contiene i dati e i metadati di paginazione
+                    // Deserializza la risposta
                     var result = System.Text.Json.JsonSerializer.Deserialize<PaginatedResponse<PaginatedSegnalazioniRegularViewModel>>(jsonResponse, options);
 
+                    // Crea il ViewModel per passarlo alla vista
                     var viewModel = new PaginatedSegnalazioniRegularViewModel
                     {
                         SegnalazioniRegulars = result.Data,
@@ -56,6 +71,10 @@ namespace Whistleblowing.NET.Controllers
                         PageSize = result.PageSize,
                         TotalItems = result.TotalItems
                     };
+
+                    // Passa i parametri di ricerca alla vista tramite ViewData
+                    ViewData["SearchCode"] = searchCode;
+                    ViewData["SearchDate"] = searchDate;
 
                     return View("Index", viewModel);
                 }
@@ -68,6 +87,8 @@ namespace Whistleblowing.NET.Controllers
                 return View(new PaginatedSegnalazioniRegularViewModel());
             }
         }
+
+
 
         // Classe helper per gestire la risposta paginata
         public class PaginatedResponse<T>
@@ -393,7 +414,7 @@ namespace Whistleblowing.NET.Controllers
             {
                 return NotFound(); // Se l'API non restituisce un successo, mostra NotFound
             }
-
+            
             // Deserializza la risposta JSON in un oggetto DTO usando Newtonsoft.Json
             var jsonString = await response.Content.ReadAsStringAsync();
             var segnalazione = JsonConvert.DeserializeObject<SegnalazionRegularDTOModifica>(jsonString);

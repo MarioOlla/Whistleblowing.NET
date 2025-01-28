@@ -65,6 +65,17 @@
 <div class="border-grey bg-white tab-content mt-3">
     <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="table-responsive">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <form method="get" asp-action="Index">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="searchCode" placeholder="Codice Segnalazione" value="@ViewData["SearchCode"]" />
+                            <input type="date" class="form-control" name="searchDate" value="@ViewData["SearchDate"]" />
+                            <button class="btn btn-primary" type="submit">Cerca</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <table class="styled-table">
                 <thead>
                     <tr>
@@ -77,7 +88,9 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     @if (Model.SegnalazioniRegulars != null && Model.SegnalazioniRegulars.Count > 0)
+
                     {
                         foreach (var segnalazione in Model.SegnalazioniRegulars)
                         {
