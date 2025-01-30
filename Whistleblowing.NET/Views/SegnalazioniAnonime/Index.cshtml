@@ -176,6 +176,28 @@
 
 
         </div>
+
+
+
+
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Assicurati che jQuery sia incluso -->
+
+        <script>
+            $(document).ready(() => {
+                setTimeout(() => {
+                    const alertElement = $("#success-alert");
+                    if (alertElement.length) {
+                        alertElement.fadeOut(500, () => {
+                            alertElement.remove(); // Rimuove completamente l'elemento dal DOM
+                        });
+                    }
+                }, 5000); // Timeout di 5 secondi
+            });
+        </script>
+
+
 @* 
         @await Html.PartialAsync("_DeleteConfirmationPartial")
 
