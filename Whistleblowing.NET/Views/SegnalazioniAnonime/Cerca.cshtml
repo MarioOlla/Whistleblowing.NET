@@ -9,24 +9,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whistleblowing</title>
 
-    <style> 
+    <style>
+        /* Contenitore del form per centrare tutto */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 70vh; /* Ridotto per alzare il form */
+            margin-top: -50px; /* Sposta tutto leggermente più in alto */
+        }
 
+        /* Contenitore per gli input con spaziatura uniforme */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; /* Aggiunge spazio tra gli elementi */
+        }
+
+        /* Stile per input e textarea */
+        textarea.materialize-textarea,
+        input.materialize-textarea {
+            width: 100%;
+            max-width: 400px; /* Imposta una larghezza massima */
+            min-width: 250px; /* Evita che diventi troppo stretto */
+            min-height: 3rem;
+            box-sizing: border-box;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Stile del pulsante */
+        .btn-custom {
+            background-color: #26A69A;
+            color: white;
+            border: none;
+            cursor: pointer;
+            align-content:center;
+            text-align-last:auto;
+            width: 200px; /* Larghezza fissa per il pulsante */
+            margin-top: 10px;
+        }
+
+            .btn-custom:hover {
+                background-color: #1e8e85;
+            }
     </style>
 </head>
 <body>
-    <h2>Trova Segnalazione</h2>
-    <form asp-controller="SegnalazioniAnonime" asp-action="DecryptUserHashed" method="GET">
-        <div>
-            <label for="userHashed">Codice Segnalazione (Nota)</label>
-            <!-- Modificato campo input in textarea -->
-            <textarea id="userHashed" name="userHashed" placeholder="Inserire il codice della segnalazione" required></textarea>
-        </div>
-        <div>
-            <label for="pwd">Password</label>
-            <input type="password" id="pwd" name="pwd" placeholder="Inserisci password" required />
-        </div>
-        <button type="submit">Trova Segnalazione</button>
-    </form>
+    <div class="form-container">
+        <h2>Trova Segnalazione</h2>
+        <form asp-controller="SegnalazioniAnonime" asp-action="DecryptUserHashed" method="GET" class="form-group">
+            <div>
+                <label for="userHashed">Codice Segnalazione (Nota)</label>
+                <textarea id="userHashed" name="userHashed" class="materialize-textarea" placeholder="Inserire il codice della segnalazione" required></textarea>
+            </div>
+            <div>
+                <label for="pwd">Password</label>
+                <input type="password" class="materialize-textarea" id="pwd" name="pwd" placeholder="Inserisci password" required />
+            </div>
+            <button type="submit" class="btn btn-custom">Trova Segnalazione</button>
+        </form>
+    </div>
 </body>
-
 </html>
