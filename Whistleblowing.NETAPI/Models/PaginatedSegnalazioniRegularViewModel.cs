@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Whistleblowing.NETAPI.Models.view;
 
@@ -14,6 +15,11 @@ namespace Whistleblowing.NETAPI.Models
 
         [Column("SoggettoColpevole")]
         public string? SoggettoColpevole { get; set; }
+        [Required]
+        [EnumDataType(typeof(Status), ErrorMessage = "Lo status deve essere APERTO, LAVORAZIONE o CHIUSO.")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Status? status { get; set; }
+
 
         [Column("is_deleted")]
         public bool? IsDeleted { get; set; }

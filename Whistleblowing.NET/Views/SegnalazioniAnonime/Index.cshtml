@@ -87,6 +87,8 @@
 
                         <th class="text-center font-weight-bold">Data Evento</th>
                         <th class="text-center font-weight-bold">Soggetto Colpevole</th>
+                        <th class="text-center font-weight-bold">Stato</th>
+
                         <th class="text-center font-weight-bold">Azioni</th>
                     </tr>
                 </thead>
@@ -100,6 +102,11 @@
 
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+                                <td style="vertical-align: middle; text-align: center;">
+                                    <span class="badge bg-@GetStatusColor(segnalazione.status.ToString()) text-white">
+                                        @segnalazione.status.ToString().ToLower()
+                                    </span>
+                                </td>
 
                                 <!-- Colonna Azioni centrata -->
                                 <td class="text-center" style="vertical-align: middle;">
@@ -260,3 +267,19 @@
                 }, 5000); // Timeout di 5 secondi
             });
         </script> *@
+
+
+        @functions {
+            public string GetStatusColor(string status)
+            {
+                switch (status)
+                {
+                    case "APERTO":
+                        return "success"; // Light green
+                    case "CHIUSO":
+                        return "danger"; // Light red
+                    default:
+                        return "warning"; // Light yellow
+                }
+            }
+        }

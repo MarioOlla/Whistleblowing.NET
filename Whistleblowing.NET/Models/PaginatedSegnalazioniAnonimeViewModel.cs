@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NET.Models
@@ -15,6 +16,10 @@ namespace Whistleblowing.NET.Models
 
         [Column("soggetto_colpevole")]
         public string? SoggettoColpevole { get; set; }
+        [Required]
+        [EnumDataType(typeof(Status), ErrorMessage = "Lo status deve essere APERTO, LAVORAZIONE o CHIUSO.")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Status? status { get; set; }
 
 
         // Aggiungi questa proprietà

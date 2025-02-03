@@ -32,6 +32,26 @@
         vertical-align: middle;
     }
 
+    .success {
+        background-color: #28a745; /* Verde */
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    .danger {
+        background-color: #dc3545; /* Rosso */
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    .warning {
+        background-color: #ffc107; /* Giallo */
+        color: white;
+        padding: 5px;
+        border-radius: 4px;
+    }
     
    
 
@@ -84,6 +104,8 @@
                         </th>
                         <th>Data Evento</th>
                         <th class="text-center font-weight-bold">Soggetto Colpevole</th>
+                        <th class="text-center font-weight-bold">Stato</th>
+
                         <th class="text-center font-weight-bold">Azioni</th>
                     </tr>
                 </thead>
@@ -102,6 +124,12 @@
                                 </td>
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.DataEvento?.ToString("yyyy-MM-dd")</td>
                                 <td class="text-center" style="vertical-align: middle;">@segnalazione.SoggettoColpevole</td>
+                                <td style="vertical-align: middle; text-align: center;">
+                                    <span class="badge bg-@GetStatusColor(segnalazione.status.ToString()) text-white">
+                                        @segnalazione.status.ToString().ToLower()
+                                    </span>
+                                </td>
+
                                 <td class="text-center" style="vertical-align: middle;">
                                     <a class="btn btn-primary btn-sm" asp-controller="SegnalazioniRegular" asp-action="ModificaSegnalazioneRegular" asp-route-id="@segnalazione.Id_segnalazioneRegular">
                                         <i class="bi bi-pencil-square"></i> Modifica
@@ -237,3 +265,18 @@
                 }, 5000); // Timeout di 5 secondi
             });
 </script>
+
+        @functions {
+            public string GetStatusColor(string status)
+            {
+                switch (status)
+                {
+                    case "APERTO":
+                        return "success"; // Light green
+                    case "CHIUSO":
+                        return "danger"; // Light red
+                    default:
+                        return "warning"; // Light yellow
+                }
+            }
+        }

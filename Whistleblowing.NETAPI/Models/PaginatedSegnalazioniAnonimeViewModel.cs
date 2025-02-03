@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Whistleblowing.NETAPI.Models
 {
@@ -17,8 +19,16 @@ namespace Whistleblowing.NETAPI.Models
         public string? SoggettoColpevole { get; set; }
 
         [Column("is_deleted")]
+
+   
         public bool? IsDeleted { get; set; }
 
+
+        [Required]
+        [EnumDataType(typeof(Status), ErrorMessage = "Lo status deve essere APERTO, LAVORAZIONE o CHIUSO.")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+
+        public Status? status { get; set; }
         // Aggiungi questa proprietà
         public List<PaginatedSegnalazioniAnonimeViewModel>? SegnalazioniAnonymous { get; set; }
 
