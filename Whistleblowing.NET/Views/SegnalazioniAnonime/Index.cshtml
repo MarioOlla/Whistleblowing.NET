@@ -106,7 +106,7 @@
                                     <a href="@Url.Action("getSegnalazioneAnonimaById", "SegnalazioniAnonime", new { id = segnalazione.segnalazione_anonima_id })" class="text-info" style="font-size: 1.5em; margin-right: 10px;">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="@Url.Action("GetDeletedSegnalazioneRegularById", "SegnalazioniRegular", new { id = segnalazione.segnalazione_anonima_id })" class="text-danger" style="font-size: 1.5em;">
+                                    <a href="@Url.Action("GetDeletedSegnalazioneAnonimaById", "SegnalazioniAnonime", new { id = segnalazione.segnalazione_anonima_id })" class="text-danger" style="font-size: 1.5em;">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -195,7 +195,7 @@
         </script>
 
 
-@* 
+
         @await Html.PartialAsync("_DeleteConfirmationPartial")
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -204,7 +204,7 @@
         <script>
             $('#deleteModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Pulsante che ha aperto il modale
-                var id = button.data('idSegnalazioneRegular'); // ID della segnalazione
+                var id = button.data('segnalazioneanonimaid'); // ID della segnalazione
                 $('#confirmDeleteButton').data('id', id); // Memorizza l'ID nel pulsante di conferma
             });
 
@@ -217,7 +217,7 @@
             // Funzione per eliminare una segnalazione
             function deleteSegnalazione(id) {
                 $.ajax({
-                    url: '/SegnalazioniRegular/Delete', // URL dell'endpoint API
+                    url: '/SegnalazioniAnonime/Delete', // URL dell'endpoint API
                     type: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({ id: id }), // Passa l'ID come payload JSON
@@ -256,7 +256,7 @@
                     }
                 }, 5000); // Timeout di 5 secondi
             });
-        </script> *@
+        </script> 
 
 
         @functions {
