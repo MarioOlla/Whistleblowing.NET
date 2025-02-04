@@ -35,7 +35,7 @@ namespace Whistleblowing.NET.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10, string status = "", DateTime? searchDate = null)
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10, string status = "", int? segnalazioneId =null,DateTime? searchDate = null)
         {
             try
             {
@@ -51,6 +51,12 @@ namespace Whistleblowing.NET.Controllers
                 {
                     url += $"&searchDate={searchDate.Value:yyyy-MM-dd}"; // Formatta la data come stringa
                 }
+
+                if (segnalazioneId.HasValue)
+                {
+                    url += $"&segnalazioneId={segnalazioneId.Value}";
+                }
+
 
                 var response = await _client.GetAsync(url);
 

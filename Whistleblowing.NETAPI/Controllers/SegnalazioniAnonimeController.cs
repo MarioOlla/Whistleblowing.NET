@@ -93,6 +93,8 @@ namespace Whistleblowing.NETAPI.Controllers
         [HttpGet("GetAllSegnalazioniAnonimeTotali")]
         public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali(
             [FromQuery] int pageNumber = 1,
+            [FromQuery] int? segnalazioneId = null,
+
             [FromQuery] int pageSize = 10,
             [FromQuery] string? status = null,
             [FromQuery] DateTime? searchDate = null) // Aggiunto filtro per la data
@@ -119,6 +121,11 @@ namespace Whistleblowing.NETAPI.Controllers
             if (searchDate.HasValue)
             {
                 query = query.Where(s => s.DataEvento == searchDate.Value.Date);
+            }
+
+            if (segnalazioneId != null)
+            {
+                query = query.Where(s=> s.segnalazione_anonima_id == segnalazioneId.Value);
             }
 
             // Contiamo il numero totale di segnalazioni filtrate
