@@ -35,11 +35,24 @@ namespace Whistleblowing.NET.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10, string status = "", DateTime? searchDate = null)
         {
             try
             {
-                var response = await _client.GetAsync($"{baseAddress}/SegnalazioniAnonime/GetAllSegnalazioniAnonimeTotali?pageNumber={pageNumber}&pageSize={pageSize}");
+                // Costruisce la query string dinamicamente
+                var url = $"{baseAddress}/SegnalazioniAnonime/GetAllSegnalazioniAnonimeTotali?pageNumber={pageNumber}&pageSize={pageSize}";
+
+                if (!string.IsNullOrEmpty(status))
+                {
+                    url += $"&status={status}";
+                }
+
+                if (searchDate.HasValue)
+                {
+                    url += $"&searchDate={searchDate.Value:yyyy-MM-dd}"; // Formatta la data come stringa
+                }
+
+                var response = await _client.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -69,7 +82,7 @@ namespace Whistleblowing.NET.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = $"Errore: {ex.Message}";
-                return View(new PaginatedSegnalazioniRegularViewModel());
+                return View(new PaginatedSegnalazioniAnonimeViewModel());
             }
         }
 

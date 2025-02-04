@@ -66,14 +66,53 @@
             </div>
 
         }
-    
+<style>
+    .custom-date {
+        border: 2px solid #007bff; /* Bordo blu */
+        border-radius: 6px; /* Bordi arrotondati */
+        padding: 8px; /* Spaziatura interna */
+        background-color: #f8f9fa; /* Grigio chiaro */
+        width: 100%; /* Occupa tutta la colonna */
+    }
+</style>
+
+<form id="filterForm" method="get" asp-controller="SegnalazioniAnonime" asp-action="Index">
+    <div class="row g-3 align-items-end">
+        <!-- Campo Stato -->
+        <div class="col-md-4">
+            <label for="status" class="form-label"><strong>Stato:</strong></label>
+            <select class="form-select" asp-for="status" name="status">
+                <option value="">Tutte</option>
+                <option value="APERTO">Aperto</option>
+                <option value="LAVORAZIONE">Lavorazione</option>
+                <option value="CHIUSO">Chiuso</option>
+            </select>
+        </div>
+
+        <!-- Campo Data con stile personalizzato -->
+        <div class="col-md-4">
+            <label for="searchDate" class="form-label"><strong>Data:</strong></label>
+            <input type="date" class="custom-date" id="searchDate" name="searchDate" value="@ViewData["SearchDate"]">
+        </div>
+
+        <!-- Pulsante Cerca -->
+        <div class="col-md-4 text-start text-md-end">
+            <button type="submit" class="btn btn-primary">
+                Cerca <i class="bi bi-search"></i>
+            </button>
+
+        </div>
+    </div>
+</form>
+
+
 <div class="border-grey bg-white tab-content">
     <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="table-responsive">
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th class="text-center font-weight-bold">Codice</th>
+                        <th class="text-center font-weight-bold">Codice#</th>
 
                         <th class="text-center font-weight-bold">Data Evento</th>
                         <th class="text-center font-weight-bold">Soggetto Colpevole</th>

@@ -89,13 +89,35 @@
         <div class="table-responsive">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <form method="get" asp-action="Index">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="searchCode" placeholder="Codice Segnalazione" value="@ViewData["SearchCode"]" />
-                            <input type="date" class="form-control" name="searchDate" value="@ViewData["SearchDate"]" />
-                            <button class="btn btn-primary" type="submit">Cerca</button>
+                    <form id="filterForm" method="get" asp-controller="SegnalazioniRegolari" asp-action="Index">
+                        <div class="row g-3 align-items-end">
+                            <!-- Campo Stato -->
+                            <div class="col-md-4">
+                                <label for="status" class="form-label"><strong>Stato:</strong></label>
+                                <select class="form-select" asp-for="status" name="status">
+                                    <option value="">Tutte</option>
+                                    <option value="APERTO">Aperto</option>
+                                    <option value="LAVORAZIONE">Lavorazione</option>
+                                    <option value="CHIUSO">Chiuso</option>
+                                </select>
+                            </div>
+
+                            <!-- Campo Data con stile personalizzato -->
+                            <div class="col-md-4">
+                                <label for="searchDate" class="form-label"><strong>Data:</strong></label>
+                                <input type="date" class="custom-date" id="searchDate" name="searchDate" value="@ViewData["SearchDate"]">
+                            </div>
+
+                            <!-- Pulsante Cerca -->
+                            <div class="col-md-4 text-start text-md-end">
+                                <button type="submit" class="btn btn-primary">
+                                    Cerca <i class="bi bi-search"></i>
+                                </button>
+
+                            </div>
                         </div>
                     </form>
+
                 </div>
             </div>
             <table class="styled-table">

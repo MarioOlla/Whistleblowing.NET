@@ -90,30 +90,47 @@ namespace Whistleblowing.NETAPI.Controllers
             return Ok(paginatedResult);
         }
 
-
-        /// <summary>
-        /// Endpoint che serve per ottenere tutte le segnalazioni indipendentemente dall'utente
-        /// </summary>
-        /// <param name="pageNumber">Numero della pagina da visualizzare</param>
-        /// <param name="pageSize">Numero di elementi per pagina</param>
-        /// <returns>Risultato paginato con tutte le segnalazioni</returns>
         [HttpGet("GetAllSegnalazioniAnonimeTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAllSegnalazioniAnonimeTotali(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? status = null,
+            [FromQuery] DateTime? searchDate = null) // Aggiunto filtro per la data
         {
+            // Inizializza la query filtrando solo le segnalazioni non eliminate
+            IQueryable<PaginatedSegnalazioniAnonimeViewModel> query = _context.paginatedSegnalazioniAnonimeViewModels
+                .Where(s => s.IsDeleted == false);
 
-            // Recupera il numero totale di segnalazioni
-            var totalRecords = await _context.paginatedSegnalazioniAnonimeViewModels.Where(s => s.IsDeleted == false).CountAsync();
+            // Filtro per stato
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                if (Enum.TryParse(typeof(Status), status, true, out var statusEnum))
+                {
+                    var statusValue = (Status)statusEnum;
+                    query = query.Where(s => s.status == statusValue);
+                }
+                else
+                {
+                    return BadRequest(new { message = "Stato non valido. Usa APERTO, LAVORAZIONE o CHIUSO." });
+                }
+            }
 
+            // Filtro per data (cerca segnalazioni con la stessa data)
+            if (searchDate.HasValue)
+            {
+                query = query.Where(s => s.DataEvento == searchDate.Value.Date);
+            }
 
-            // Applica la paginazione
-            var segnalazioniQuery = _context.paginatedSegnalazioniAnonimeViewModels
-                .Where(s => s.IsDeleted == false)
+            // Contiamo il numero totale di segnalazioni filtrate
+            int totalRecords = await query.CountAsync();
+
+            // Applichiamo la paginazione
+            var segnalazioniAnonime = await query
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
+                .Take(pageSize)
+                .ToListAsync();
 
-            var segnalazioniAnonime = await segnalazioniQuery.ToListAsync();
-
-            // Crea il risultato paginato con i metadati
+            // Creiamo il risultato paginato con i metadati
             var paginatedResult = new
             {
                 TotalItems = totalRecords,
@@ -124,7 +141,6 @@ namespace Whistleblowing.NETAPI.Controllers
 
             return Ok(paginatedResult);
         }
-
 
 
         /// <summary>
