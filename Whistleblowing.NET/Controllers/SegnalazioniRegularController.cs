@@ -31,21 +31,26 @@ namespace Whistleblowing.NET.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10, string searchCode = "", string searchDate = "")
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10, string status = "", int? segnalazioneId = null, DateTime? searchDate = null)
         {
             try
             {
                 // Costruisci l'URL con i parametri di ricerca
                 var url = $"{baseAddress}/SegnalazioniRegular/GetAllSegnalazioniRegularTotali?pageNumber={pageNumber}&pageSize={pageSize}";
 
-                if (!string.IsNullOrEmpty(searchCode))
+                if (!string.IsNullOrEmpty(status))
                 {
-                    url += $"&searchCode={searchCode}";
+                    url += $"&status={status}";
                 }
 
-                if (!string.IsNullOrEmpty(searchDate))
+                if (searchDate.HasValue)
                 {
-                    url += $"&searchDate={searchDate}";
+                    url += $"&searchDate={searchDate.Value:yyyy-MM-dd}"; // Formatta la data come stringa
+                }
+
+                if (segnalazioneId.HasValue)
+                {
+                    url += $"&segnalazioneId={segnalazioneId.Value}";
                 }
 
                 // Effettua la richiesta al server
@@ -72,10 +77,7 @@ namespace Whistleblowing.NET.Controllers
                         TotalItems = result.TotalItems
                     };
 
-                    // Passa i parametri di ricerca alla vista tramite ViewData
-                    ViewData["SearchCode"] = searchCode;
-                    ViewData["SearchDate"] = searchDate;
-
+         
                     return View("Index", viewModel);
                 }
 

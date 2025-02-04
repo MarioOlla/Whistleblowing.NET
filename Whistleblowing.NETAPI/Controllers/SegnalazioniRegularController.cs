@@ -178,13 +178,46 @@ namespace Whistleblowing.NETAPI.Controllers
         /// <param name="pageSize">Numero di elementi per pagina</param>
         /// <returns>Risultato paginato con tutte le segnalazioni</returns>
         [HttpGet("GetAllSegnalazioniRegularTotali")]
-        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int userId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAllSegnalazioniRegularTotali(int userId, [FromQuery] int pageNumber = 1,
+            [FromQuery] int? segnalazioneId = null,
+
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? status = null,
+            [FromQuery] DateTime? searchDate = null)
         {
             var user = await _context.User.FindAsync(userId);
 
             // Recupera il numero totale di segnalazioni
             var totalRecords = await _context.paginatedSegnalazioniRegularViewModels.Where(s => s.IsDeleted == false).CountAsync();
-                
+            IQueryable<PaginatedSegnalazioniAnonimeViewModel> query = _context.paginatedSegnalazioniAnonimeViewModels
+                .Where(s => s.IsDeleted == false);
+
+
+            // Filtro per stato
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                if (Enum.TryParse(typeof(Status), status, true, out var statusEnum))
+                {
+                    var statusValue = (Status)statusEnum;
+                    query = query.Where(s => s.status == statusValue);
+                }
+                else
+                {
+                    return BadRequest(new { message = "Stato non valido. Usa APERTO, LAVORAZIONE o CHIUSO." });
+                }
+            }
+
+            // Filtro per data (cerca segnalazioni con la stessa data)
+            if (searchDate.HasValue)
+            {
+                query = query.Where(s => s.DataEvento == searchDate.Value.Date);
+            }
+
+            if (segnalazioneId != null)
+            {
+                query = query.Where(s => s.segnalazione_anonima_id == segnalazioneId.Value);
+            }
+
 
             // Applica la paginazione
             var segnalazioniQuery = _context.paginatedSegnalazioniRegularViewModels
